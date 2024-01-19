@@ -1,10 +1,13 @@
 
+import {Input} from "@nextui-org/react"
 
 export default function(){
     return (
         <div>
             <form>
-                login
+                <div>
+                    <Input />
+                </div>
             </form>
         </div>
     )
