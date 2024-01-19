@@ -1,4 +1,4 @@
-import { Input, Button } from "@nextui-org/react"
+import { Input, Button, Link } from "@nextui-org/react"
 
 export default function () {
     return (
@@ -25,10 +25,14 @@ export default function () {
 
                     </div>
 
-                    <Button size="lg" color="primary" variant="solid">Submit</Button>
+                    <Button size="lg" color="primary" variant="solid">Sign Up</Button>
 
                 </div>
             </form>
+            <div className="flex flex-row gap-2 px-2 py-4 justify-center items-center">
+                <div>Already have an account?</div>
+                <Link href={"/login"} showAnchorIcon={true}>Log in</Link>
+            </div>
         </div>
     )
 }
