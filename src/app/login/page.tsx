@@ -2,6 +2,8 @@
 import LoginForm from "@/features/LoginForm"
 import FormWrapper from "@/layouts/FormWrapper"
 
+import Footer from "@/layouts/Footer"
+
 export default function () {
     return (
         <main className="min-h-screen flex flex-col">
@@ -11,6 +13,7 @@ export default function () {
                 </FormWrapper>
             </div>
 
+            <Footer />
         </main>
     )
 }

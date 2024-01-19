@@ -1,10 +1,10 @@
 
-import Image from "next/image"
-import SignupForm from "@/features/SignupForm"
-import IokeepLogo from "@/assets/iokeeplogo.svg"
 
+import SignupForm from "@/features/SignupForm"
 
 import FormWrapper from "@/layouts/FormWrapper"
+
+import Footer from "@/layouts/Footer"
 
 export default function () {
     return (
@@ -17,7 +17,7 @@ export default function () {
 
 
             </div>
-
+            <Footer />
         </main>
 
     )
