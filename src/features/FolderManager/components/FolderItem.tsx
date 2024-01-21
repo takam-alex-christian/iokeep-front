@@ -9,7 +9,9 @@ import { faFolder } from "@fortawesome/free-regular-svg-icons"
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons"
 
 interface FolderItemProps {
-    isSelected: boolean
+    name: string ,
+    isSelected: boolean,
+    creationDate?: Date
 }
 
 export default function (props: FolderItemProps) {
@@ -37,7 +39,7 @@ export default function (props: FolderItemProps) {
                     <FontAwesomeIcon icon={faFolder} />
 
                     <div>
-                        New project
+                        {props.name}
                     </div>
                 </div>
             </Button>
