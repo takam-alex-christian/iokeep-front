@@ -59,9 +59,9 @@ export default function () {
                         <AnimatePresence>
                             {folderManagerState.showFolderInput &&
                                 <motion.div
-                                    initial={{opacity: 0}}
-                                    animate={{opacity: 1}}
-                                    exit={{opacity: 0}}
+                                    initial={{opacity: 0, y: -40, height: 0}}
+                                    animate={{opacity: 1, y: 0, height: 40}}
+                                    exit={{opacity: 0, y: -40, height: 0}}
                                 >
                                     <FolderInput />
                                 </motion.div>
