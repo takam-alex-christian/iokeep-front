@@ -9,6 +9,7 @@ import FolderItem from "./components/FolderItem";
 import { FolderManagerReducerActionType, FolderManagerStateType } from "./types"
 
 import folderTestData from "@/data/test/folders.json"
+import FolderInput from "./components/FolderInput";
 
 
 function folderManagerReducer(prevState: FolderManagerStateType, action: FolderManagerReducerActionType): FolderManagerStateType {
@@ -44,6 +45,9 @@ export default function () {
                         })}
 
                     </ul>
+                    <div>
+                        <FolderInput />
+                    </div>
                 </AccordionItem>
             </Accordion>
 

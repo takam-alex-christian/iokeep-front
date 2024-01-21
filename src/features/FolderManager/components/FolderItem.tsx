@@ -62,8 +62,6 @@ export default function (props: FolderItemProps) {
                             <FontAwesomeIcon className="opacity-0" ref={optionButtonScope} icon={faEllipsisVertical} />
                         </Button>
 
-
-
                     </DropdownTrigger>
                     <DropdownMenu>
                         <DropdownItem key={"edit"}>
