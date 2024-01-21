@@ -1,25 +1,34 @@
 [
     {
+        "folderId": "0",
         "name": "education",
-        "creationDate": "01-21-2024"
+        "creationDate": "01-21-2024",
+        "isSelected": true
     },
     {
+        "folderId": "1",
         "name": "movies",
         "creationDate": "01-21-2024"
+
     },
     {
+        "folderId": "2",
         "name": "projects",
         "creationDate": "01-21-2024"
+
     },
     {
+        "folderId": "3",
         "name": "monday's collection",
         "creationDate": "01-21-2024"
     },
     {
+        "folderId": "4",
         "name": "favorite songs",
         "creationDate": "01-21-2024"
     },
     {
+        "folderId": "5",
         "name": "data bank",
         "creationDate": "01-21-2024"
     }
