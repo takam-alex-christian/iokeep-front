@@ -21,6 +21,7 @@ export default function () {
         <form onSubmit={folderSubmitHandler}>
             <div className="flex flex-row gap-2 items-center">
                 <Input
+                    autoFocus
                     startContent={<FontAwesomeIcon className="text-sm" icon={faFolder} />}
                     placeholder="folder name"
                     variant="flat"

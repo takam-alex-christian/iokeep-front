@@ -39,34 +39,36 @@ export default function () {
             <Accordion defaultExpandedKeys={["0"]}>
                 <AccordionItem key={0} isCompact={false} title={"Folders"}>
                     <div className="flex flex-col gap-2">
-                        <ul className="flex flex-col gap-0">
-                            {folderTestData.map((eachFolder, i) => {
-                                return (
-                                    <li key={i}>
-                                        <FolderItem
-                                            key={i}
-                                            folderManagerDispatch={folderManagerDispatch}
-                                            folderId={eachFolder.folderId}
-                                            name={eachFolder.name}
-                                            isSelected={folderManagerState.selectedFolderId == eachFolder.folderId}
-                                        />
-                                    </li>
-                                )
-                            })}
+                        <div>
+                            <ul className="flex flex-col gap-0">
+                                {folderTestData.map((eachFolder, i) => {
+                                    return (
+                                        <li key={i}>
+                                            <FolderItem
+                                                key={i}
+                                                folderManagerDispatch={folderManagerDispatch}
+                                                folderId={eachFolder.folderId}
+                                                name={eachFolder.name}
+                                                isSelected={folderManagerState.selectedFolderId == eachFolder.folderId}
+                                            />
+                                        </li>
+                                    )
+                                })}
 
-                        </ul>
+                            </ul>
 
-                        <AnimatePresence>
-                            {folderManagerState.showFolderInput &&
-                                <motion.div
-                                    initial={{opacity: 0, y: -40, height: 0}}
-                                    animate={{opacity: 1, y: 0, height: 40}}
-                                    exit={{opacity: 0, y: -40, height: 0}}
-                                >
-                                    <FolderInput />
-                                </motion.div>
-                            }
-                        </AnimatePresence>
+                            <AnimatePresence>
+                                {folderManagerState.showFolderInput &&
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -40, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: 40 }}
+                                        exit={{ opacity: 0, y: -40, height: 0 }}
+                                    >
+                                        <FolderInput />
+                                    </motion.div>
+                                }
+                            </AnimatePresence>
+                        </div>
 
                         <div>
                             <Button
