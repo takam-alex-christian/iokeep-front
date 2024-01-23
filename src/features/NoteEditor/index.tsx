@@ -1,16 +1,19 @@
 "use client"
 
-//export the lexical editor
+//nextui imports
 
 import { Button, ButtonProps, Divider } from "@nextui-org/react"
 
+//font awesome lib imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-import { faBold, faItalic, faHeading, faUnderline } from "@fortawesome/free-solid-svg-icons"
+import { faBold, faItalic, faHeading, faUnderline, faRotateBackward, faRotateForward } from "@fortawesome/free-solid-svg-icons"
 
 import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons"
 
-import { FORMAT_TEXT_COMMAND, $getSelection, $isRangeSelection } from "lexical"
+
+//lexical imports
+import { FORMAT_TEXT_COMMAND, CAN_UNDO_COMMAND, UNDO_COMMAND, REDO_COMMAND, CAN_REDO_COMMAND,$getSelection, $isRangeSelection } from "lexical"
 
 import { $setBlocksType } from "@lexical/selection"
 
@@ -25,6 +28,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
 import { ContentEditable } from "@lexical/react/LexicalContentEditable"
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
+import { useEffect } from "react"
 
 
 
@@ -82,24 +86,48 @@ function CustomToolBar() {
             const editorSelection = $getSelection();
 
             if ($isRangeSelection(editorSelection)) {
-                console.log("is range selection")
                 $setBlocksType(editorSelection, () => $createHeadingNode("h1"));
-            } else console.log("lie")
+            }
         })
 
-
     }
+
+    // useEffect(()=>{
+        
+    //     editor.registerCommand(CAN_UNDO_COMMAND, (payload)=>{
+    //         console.log(`content of the can_undo_command payload ${payload}`)
+    //         return false
+    //     }, 1)
+    // }, [editor])
+
+    function undoButtonHandler(){
+        //@ts-ignore
+        editor.dispatchCommand(UNDO_COMMAND);
+    }
+
+    function redoButtonHandler(){
+        //@ts-ignore
+        editor.dispatchCommand(REDO_COMMAND);
+    }
+
     return (
         <div className="flex flex-row gap-2 justify-between p-2 bg-default-100 rounded-xl">
-            <div className="flex flex-row gap-2">
-                <div>
-                    <ToolButton onPress={headingButtonHandler}><FontAwesomeIcon icon={faHeading} /></ToolButton>
+            <div className="flex flex-row flex-grow gap-6">
+                <div className="flex flex-row gap-0 bg-default/20 rounded-xl">
+                    <ToolButton onPress={undoButtonHandler}><FontAwesomeIcon icon={faRotateBackward} /></ToolButton>
+                    <ToolButton onPress={redoButtonHandler}><FontAwesomeIcon icon={faRotateForward} /></ToolButton>
                 </div>
-                <Divider orientation="vertical" />
-                <div className="flex flex-row gap-0">
-                    <ToolButton onPress={italicButtonHandler}><FontAwesomeIcon icon={faItalic} /></ToolButton>
-                    <ToolButton onPress={boldButtonHandler}><FontAwesomeIcon icon={faBold} /></ToolButton>
-                    <ToolButton onPress={underlineButtonHandler}><FontAwesomeIcon icon={faUnderline} /></ToolButton>
+                
+                <div className="flex flex-row gap-2 flex-grow ">
+                    <div>
+                        <ToolButton onPress={headingButtonHandler}><FontAwesomeIcon icon={faHeading} /></ToolButton>
+                    </div>
+                    {/* <Divider orientation="vertical" /> */}
+                    <div className="flex flex-row gap-0">
+                        <ToolButton onPress={italicButtonHandler}><FontAwesomeIcon icon={faItalic} /></ToolButton>
+                        <ToolButton onPress={boldButtonHandler}><FontAwesomeIcon icon={faBold} /></ToolButton>
+                        <ToolButton onPress={underlineButtonHandler}><FontAwesomeIcon icon={faUnderline} /></ToolButton>
+                    </div>
                 </div>
 
 
@@ -108,7 +136,7 @@ function CustomToolBar() {
             <div>
                 <ToolButton ><FontAwesomeIcon className="text-lg" icon={faFloppyDisk} /></ToolButton>
             </div>
-            
+
         </div>
     )
 }
