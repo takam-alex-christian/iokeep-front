@@ -167,7 +167,7 @@ function TextEditor() {
                     <div className=" relative flex flex-col flex-grow py-2 px-6 bg-">
                         <RichTextPlugin
                             contentEditable={<ContentEditable className=" focus-within:outline-none flex-grow py-4" />}
-                            placeholder={<div className="absolute top-6 left-6 z-10">Don't stop writing...</div>}
+                            placeholder={<div className="absolute top-6 left-6 z-10 text-neutral-400">Don't stop writing...</div>}
                             ErrorBoundary={LexicalErrorBoundary}
                         />
                     </div>
