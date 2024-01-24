@@ -28,6 +28,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
 import { ContentEditable } from "@lexical/react/LexicalContentEditable"
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
+
 import { useEffect } from "react"
 
 
@@ -36,6 +37,7 @@ const theme = {
     heading: {
         h1: "text-lg font-semibold my-2"
     },
+    paragraph:"my-2",
     text: {
         bold: 'font-bold',
         // code: '',
@@ -110,6 +112,16 @@ function CustomToolBar() {
         editor.dispatchCommand(REDO_COMMAND);
     }
 
+    function saveButtonHandler(){
+        // console.log(editor.getEditorState())
+        const someJson = editor.getEditorState().toJSON() //this version of the editor state can be stringified and stored
+
+        someJson.root.children.forEach((eachChildren)=>{ // how you can go through each children node
+            // console.log(eachChildren.type == "heading")
+        })
+
+    }
+
     return (
         <div className="flex flex-row gap-2 justify-between p-2 bg-default-100 rounded-xl">
             <div className="flex flex-row flex-grow gap-6">
@@ -129,12 +141,9 @@ function CustomToolBar() {
                         <ToolButton onPress={underlineButtonHandler}><FontAwesomeIcon icon={faUnderline} /></ToolButton>
                     </div>
                 </div>
-
-
-
             </div>
             <div>
-                <ToolButton ><FontAwesomeIcon className="text-lg" icon={faFloppyDisk} /></ToolButton>
+                <ToolButton onPress={saveButtonHandler} ><FontAwesomeIcon className="text-lg" icon={faFloppyDisk} /></ToolButton>
             </div>
 
         </div>
@@ -167,7 +176,7 @@ function TextEditor() {
                     <div className=" relative flex flex-col flex-grow py-2 px-6 bg-">
                         <RichTextPlugin
                             contentEditable={<ContentEditable className=" focus-within:outline-none flex-grow py-4" />}
-                            placeholder={<div className="absolute top-6 left-6 z-10 text-neutral-400">Don't stop writing...</div>}
+                            placeholder={<div className="absolute top-8 left-6 z-10 text-neutral-400">Don't stop writing...</div>}
                             ErrorBoundary={LexicalErrorBoundary}
                         />
                     </div>
