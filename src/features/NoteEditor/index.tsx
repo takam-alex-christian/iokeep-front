@@ -123,7 +123,7 @@ function CustomToolBar() {
     }
 
     return (
-        <div className="flex flex-row gap-2 justify-between p-2 bg-default-100 rounded-xl">
+        <div className="flex flex-row gap-2 justify-between p-2 bg-default/10 rounded-t-xl">
             <div className="flex flex-row flex-grow gap-6">
                 <div className="flex flex-row gap-0 bg-default/20 rounded-xl">
                     <ToolButton onPress={undoButtonHandler}><FontAwesomeIcon icon={faRotateBackward} /></ToolButton>
@@ -169,9 +169,9 @@ function TextEditor() {
 
             {/* lexical editor */}
             <LexicalComposer initialConfig={initialConfig}>
-                <div className=" flex-grow flex flex-col gap-0 bg-neutral-100 rounded-xl">
+                <div className=" flex-grow flex flex-col gap-0 bg-white shadow-sm rounded-xl">
                     <CustomToolBar />
-                    <Divider orientation="horizontal" />
+                    {/* <Divider orientation="horizontal" /> */}
                     {/* <Divider orientation="horizontal" /> */}
                     <div className=" relative flex flex-col flex-grow py-2 px-6 bg-">
                         <RichTextPlugin
