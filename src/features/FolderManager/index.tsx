@@ -35,9 +35,11 @@ export default function () {
     }
 
     return (
-        <div className="p-4">
+        <div className="px-4 py-0">
             <Accordion defaultExpandedKeys={["0"]}>
-                <AccordionItem key={0} isCompact={false} title={"Folders"}>
+                <AccordionItem
+                    // classNames={{ title: "" }}
+                    key={0} isCompact={false} title={"Folders"}>
                     <div className="flex flex-col gap-2">
                         <div>
                             <ul className="flex flex-col gap-0">
