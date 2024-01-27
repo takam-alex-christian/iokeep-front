@@ -18,18 +18,20 @@ type NoteItemProps = {
 export default function NoteItem(props: NoteItemProps) {
 
     return (
-        <Button key={props.noteId} className="flex flex-row justify-start text-left h-fit p-0 w-full bg-transparent" >
+        <Button key={props.noteId} className="flex flex-row justify-start text-left h-fit px-0 py-2 w-full bg-transparent" >
             <div className="flex flex-col gap-0 p-3 rounded-lg bg-none w-full ">
-                
-                <div className="text-base py-0 font-semibold text-default-600 overflow-hidden overflow-ellipsis">{props.description[0]}</div>
-                
 
-                <div className="flex flex-row gap-3 text-default-400">
-                    <p className="text-default-500 ">{props.creationDate.day}/{props.creationDate.month}/{props.creationDate.year}</p>
-                    <p className="overflow-hidden overflow-ellipsis flex-grow"> {props.description[1]}</p>
+                <div className="text-base py-0 font-semibold text-default-600 overflow-hidden overflow-ellipsis">{props.description[0]}</div>
+
+
+                <div className="flex flex-col gap-1 ">
+                    {/* {peak first p after heading} */}
+                    <p className="overflow-hidden overflow-ellipsis flex-grow text-default-400"> {props.description[1]}</p>
+                    {/* date p */}
+                    <p className="text-sm text-default-400">{props.creationDate.day} {props.creationDate.month} {props.creationDate.year}</p>
                 </div>
             </div>
-            
+
         </Button>
-        )
+    )
 }
