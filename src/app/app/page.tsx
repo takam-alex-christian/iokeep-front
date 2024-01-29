@@ -20,7 +20,7 @@ export default function () {
                     </div>
                     <div className="flex flex-row gap-8 flex-grow">
                         
-                        <div className="w-2/5 rounded-xl">
+                        <div className="w-2/5 rounded-xl bg-neutral-50">
                             {/* noteManager */}
                             <NoteManager />
                         </div>
