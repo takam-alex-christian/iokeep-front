@@ -4,8 +4,8 @@ type FolderManagerStateType = {
     showFolderInput: boolean
 }
 
-type FolderManagerReducerActionType = {type: "changedSelectedFolder", payload: {folderId: string}} 
-                                    | {type: "toggledFolderInput"}
+type FolderManagerReducerActionType = {type: "toggledFolderInput"}
+// | {type: "changedSelectedFolder", payload: {folderId: string}} 
 
 interface FolderItemProps {
     folderId: string,

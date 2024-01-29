@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useReducer } from "react"
+import { useReducer, useContext} from "react"
 
 import { Accordion, AccordionItem, Button } from "@nextui-org/react";
 
@@ -16,10 +16,12 @@ import { FolderManagerReducerActionType, FolderManagerStateType } from "./types"
 import folderTestData from "@/data/test/folders.json"
 import FolderInput from "./components/FolderInput";
 
+import {liveDataContext} from "@/contexts/liveDataContext"
+
 
 function folderManagerReducer(prevState: FolderManagerStateType, action: FolderManagerReducerActionType): FolderManagerStateType {
     switch (action.type) {
-        case "changedSelectedFolder": return { ...prevState, selectedFolderId: action.payload.folderId }
+        // case "changedSelectedFolder": return { ...prevState, selectedFolderId: action.payload.folderId }
         case "toggledFolderInput": return { ...prevState, showFolderInput: !prevState.showFolderInput }
         default: return prevState
     }
@@ -27,6 +29,8 @@ function folderManagerReducer(prevState: FolderManagerStateType, action: FolderM
 }
 
 export default function () {
+
+    const {liveAppData, liveAppDataDispatch} = useContext(liveDataContext)
 
     const [folderManagerState, folderManagerDispatch] = useReducer(folderManagerReducer, { selectedFolderId: folderTestData[0].folderId, showFolderInput: false })
 
