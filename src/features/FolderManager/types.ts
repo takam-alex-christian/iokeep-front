@@ -1,19 +1,20 @@
 
 type FolderManagerStateType = {
-    selectedFolderId: string,
-    showFolderInput: boolean
+
+    showFolderInput: boolean,
+    folderItems: FolderItemType[]
 }
 
-type FolderManagerReducerActionType = {type: "toggledFolderInput"}
-// | {type: "changedSelectedFolder", payload: {folderId: string}} 
+type FolderManagerReducerActionType = {type: "folderItemsInitialized", payload: {folderItems: FolderItemType[]}} | {type: "toggledFolderInput"}
+
+type FolderItemType = {folderId: string, name: string, creationDate: string}
 
 interface FolderItemProps {
     folderId: string,
     name: string,
-    isSelected: boolean,
     creationDate?: Date,
     folderManagerDispatch: React.Dispatch<FolderManagerReducerActionType>
 
 }
 
-export type {FolderManagerReducerActionType, FolderManagerStateType, FolderItemProps}
+export type {FolderManagerReducerActionType, FolderManagerStateType, FolderItemProps, FolderItemType}

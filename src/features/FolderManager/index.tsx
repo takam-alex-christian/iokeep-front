@@ -1,6 +1,6 @@
 "use client"
 
-import { useReducer, useContext} from "react"
+import { useReducer, useContext, useEffect} from "react"
 
 import { Accordion, AccordionItem, Button } from "@nextui-org/react";
 
@@ -11,7 +11,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
 import FolderItem from "./components/FolderItem";
 
-import { FolderManagerReducerActionType, FolderManagerStateType } from "./types"
+import { FolderManagerReducerActionType, FolderManagerStateType, FolderItemType } from "./types"
 
 import folderTestData from "@/data/test/folders.json"
 import FolderInput from "./components/FolderInput";
@@ -21,6 +21,7 @@ import {liveDataContext} from "@/contexts/liveDataContext"
 
 function folderManagerReducer(prevState: FolderManagerStateType, action: FolderManagerReducerActionType): FolderManagerStateType {
     switch (action.type) {
+        case "folderItemsInitialized": {return {...prevState, folderItems: action.payload.folderItems}}
         // case "changedSelectedFolder": return { ...prevState, selectedFolderId: action.payload.folderId }
         case "toggledFolderInput": return { ...prevState, showFolderInput: !prevState.showFolderInput }
         default: return prevState
@@ -28,15 +29,32 @@ function folderManagerReducer(prevState: FolderManagerStateType, action: FolderM
 
 }
 
+async function loadTestData(){
+    return folderTestData
+}
+
 export default function () {
 
     const {liveAppData, liveAppDataDispatch} = useContext(liveDataContext)
 
-    const [folderManagerState, folderManagerDispatch] = useReducer(folderManagerReducer, { selectedFolderId: folderTestData[0].folderId, showFolderInput: false })
+    const [folderManagerState, folderManagerDispatch] = useReducer(folderManagerReducer, {showFolderInput: false, folderItems: []})
 
     function toggleFolderInputHandler() {
         folderManagerDispatch({ type: "toggledFolderInput" })
     }
+
+    useEffect(()=>{
+        //initilize selectedFolder once folder data is loaded
+        loadTestData().then((loadedFolderData: FolderItemType[])=>{
+            // initialize the folder items
+            folderManagerDispatch({type: "folderItemsInitialized", payload: {folderItems: loadedFolderData}})
+            
+            liveAppDataDispatch({type: "changedSelectedFolder", payload: {folderId: loadedFolderData.length > 0 ? loadedFolderData[0].folderId : ""}})
+        }, (e)=>{
+            console.log(e)
+        })
+        
+    }, [])
 
     return (
         <div className="px-4 py-0">
@@ -47,7 +65,7 @@ export default function () {
                     <div className="flex flex-col gap-2">
                         <div>
                             <ul className="flex flex-col gap-0">
-                                {folderTestData.map((eachFolder, i) => {
+                                {folderManagerState.folderItems.map((eachFolder, i) => {
                                     return (
                                         <li key={i}>
                                             <FolderItem
@@ -55,11 +73,12 @@ export default function () {
                                                 folderManagerDispatch={folderManagerDispatch}
                                                 folderId={eachFolder.folderId}
                                                 name={eachFolder.name}
-                                                isSelected={folderManagerState.selectedFolderId == eachFolder.folderId}
                                             />
                                         </li>
                                     )
                                 })}
+
+                                
 
                             </ul>
 

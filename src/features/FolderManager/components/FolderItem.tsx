@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 
 import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, } from "@nextui-org/react"
 
@@ -12,8 +12,12 @@ import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons"
 
 import { FolderItemProps} from "../types"
 
+import {liveDataContext} from "@/contexts/liveDataContext"
+
 
 export default function (props: FolderItemProps) {
+
+    const {liveAppData, liveAppDataDispatch} = useContext(liveDataContext)
 
     const [optionButtonScope, animateOptionButton] = useAnimate() //as in animate option button scrope
 
@@ -30,7 +34,9 @@ export default function (props: FolderItemProps) {
     }, [itemState.isHovered])
 
     function folderItemPressHandler(){
-        props.folderManagerDispatch({type:"changedSelectedFolder", payload: {folderId: props.folderId}})
+        
+        liveAppDataDispatch({type: "changedSelectedFolder", payload: {folderId: props.folderId}})
+
         console.log("folderManagerSelectedId changed to a new id");
     }
 
@@ -39,7 +45,7 @@ export default function (props: FolderItemProps) {
             <Button
 
                 onPress={folderItemPressHandler}
-                className={`w-full justify-start ${props.isSelected ? "bg-opacity-40 bg-default" : "bg-none"}`} 
+                className={`w-full justify-start ${props.folderId == liveAppData.selectedFolderId ? "bg-opacity-40 bg-default" : "bg-none"}`} 
                 size="md" 
                 variant="light"
                 
