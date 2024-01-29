@@ -1,8 +1,9 @@
 [
     {
-        "notedId": "2h3n22k129ds09",
+        "noteId": "2h3n22k129ds09",
         "description": ["the first text node displayed as a title", "the second node "],
         "editorState": {},
+        "folderId": "0",
         "creationDate": { 
             "day": "Monday",
             "month": "February",
@@ -21,9 +22,10 @@
         }
     },
     {
-        "notedId": "asdf8a8sd9f0asdf90sadf",
+        "noteId": "asdf8a8sd9f0asdf90sadf",
         "description": ["Falling in love with the world", "it all begins from my flight to china"],
         "editorState": {},
+        "folderId": "0",
         "creationDate": { 
             "day": "Tuesday",
             "month": "February",
@@ -42,9 +44,10 @@
         }
     },
     {
-        "notedId": "372829830288734",
+        "noteId": "372829830288734",
         "description": ["tbest people come as a result of us doing good things", "I don't know if that's true, i just made that up "],
         "editorState": {},
+        "folderId": "2",
         "creationDate": { 
             "day": "Tuesday",
             "month": "February",
@@ -63,9 +66,10 @@
         }
     },
     {
-        "notedId": "23723400948273720",
+        "noteId": "23723400948273720",
         "description": ["The world is not what it seems", "people are actually good"],
         "editorState": {},
+        "folderId": "1",
         "creationDate": { 
             "day": "Wednesday",
             "month": "February",
@@ -84,9 +88,10 @@
         }
     },
     {
-        "notedId": "12782e990273074",
+        "noteId": "12782e990273074",
         "description": ["Who takes a note on a thurday", "to modify it on the nextday ? "],
         "editorState": {},
+        "folderId": "3",
         "creationDate": { 
             "day": "Thursday",
             "month": "February",
