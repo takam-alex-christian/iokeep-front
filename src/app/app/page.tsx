@@ -1,9 +1,9 @@
+
 import FolderManager from "@/features/FolderManager";
 import NoteEditor from "@/features/NoteEditor"
 import NoteManager from "@/features/NoteManager";
 import Footer from "@/layouts/Footer";
 import Navbar from "@/layouts/Navbar";
-import { Divider } from "@nextui-org/react";
 
 
 
@@ -24,7 +24,6 @@ export default function () {
                             {/* noteManager */}
                             <NoteManager />
                         </div>
-                        {/* <Divider orientation="vertical" /> */}
                         <div className="flex-grow w-3/5 flex flex-col ">
                             <NoteEditor />
                         </div>
