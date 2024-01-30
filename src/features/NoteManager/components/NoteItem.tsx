@@ -1,6 +1,6 @@
 "use client"
 
-import { Button, ListboxItem } from "@nextui-org/react"
+import { Button } from "@nextui-org/react"
 
 type NoteItemProps = {
     noteId: string,
