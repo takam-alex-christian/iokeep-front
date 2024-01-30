@@ -1,6 +1,8 @@
 "use client"
 
+import { useContext } from "react"
 import { Button } from "@nextui-org/react"
+import { liveDataContext } from "@/contexts/liveDataContext"
 
 type NoteItemProps = {
     noteId: string,
@@ -17,8 +19,14 @@ type NoteItemProps = {
 
 export default function NoteItem(props: NoteItemProps) {
 
+    const {liveAppData,liveAppDataDispatch} = useContext(liveDataContext)
+
+    function notePressHandler(){
+        liveAppDataDispatch({type: "changedSelectedNote", payload: {noteId: props.noteId}})
+    }
+
     return (
-        <Button key={props.noteId} className="flex flex-row justify-start text-left h-fit px-0 py-2 w-full bg-transparent" >
+        <Button onPress={notePressHandler} key={props.noteId} className={`flex flex-row justify-start text-left h-fit px-0 py-2 w-full ${liveAppData.selectedNoteId == props.noteId? "bg-default/45" :"bg-transparent"}`} >
             <div className="flex flex-col gap-0 p-3 rounded-lg bg-none w-full ">
 
                 <div className="text-base py-0 font-semibold text-default-600 overflow-hidden overflow-ellipsis">{props.description[0]}</div>
