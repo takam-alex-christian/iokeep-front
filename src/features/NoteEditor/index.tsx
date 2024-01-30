@@ -1,7 +1,11 @@
 "use client"
 
-//nextui imports
 
+import { useContext, useEffect, useRef } from "react"
+
+import { liveDataContext } from "@/contexts/liveDataContext"
+
+//nextui imports
 import { Button, ButtonProps, Divider } from "@nextui-org/react"
 
 //font awesome lib imports
@@ -13,7 +17,7 @@ import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons"
 
 
 //lexical imports
-import { FORMAT_TEXT_COMMAND, CAN_UNDO_COMMAND, UNDO_COMMAND, REDO_COMMAND, CAN_REDO_COMMAND,$getSelection, $isRangeSelection } from "lexical"
+import { FORMAT_TEXT_COMMAND, CAN_UNDO_COMMAND, UNDO_COMMAND, REDO_COMMAND, CAN_REDO_COMMAND, $getSelection, $isRangeSelection } from "lexical"
 
 import { $setBlocksType } from "@lexical/selection"
 
@@ -29,7 +33,8 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
 import { ContentEditable } from "@lexical/react/LexicalContentEditable"
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
 
-import { useEffect } from "react"
+//test data
+import testNoteData from "@/data/test/notes.json"
 
 
 
@@ -37,7 +42,7 @@ const theme = {
     heading: {
         h1: "text-lg font-semibold my-2"
     },
-    paragraph:"my-2",
+    paragraph: "my-2",
     text: {
         bold: 'font-bold',
         // code: '',
@@ -95,30 +100,32 @@ function CustomToolBar() {
     }
 
     // useEffect(()=>{
-        
+
     //     editor.registerCommand(CAN_UNDO_COMMAND, (payload)=>{
     //         console.log(`content of the can_undo_command payload ${payload}`)
     //         return false
     //     }, 1)
     // }, [editor])
 
-    function undoButtonHandler(){
+    function undoButtonHandler() {
         //@ts-ignore
         editor.dispatchCommand(UNDO_COMMAND);
     }
 
-    function redoButtonHandler(){
+    function redoButtonHandler() {
         //@ts-ignore
         editor.dispatchCommand(REDO_COMMAND);
     }
 
-    function saveButtonHandler(){
+    function saveButtonHandler() {
         // console.log(editor.getEditorState())
         const someJson = editor.getEditorState().toJSON() //this version of the editor state can be stringified and stored
 
-        someJson.root.children.forEach((eachChildren)=>{ // how you can go through each children node
-            // console.log(eachChildren.type == "heading")
-        })
+        // someJson.root.children.forEach((eachChildren)=>{ // how you can go through each children node
+        //     // console.log(eachChildren.type == "heading")
+        // })
+
+        console.log(someJson)
 
     }
 
@@ -129,7 +136,7 @@ function CustomToolBar() {
                     <ToolButton onPress={undoButtonHandler}><FontAwesomeIcon icon={faRotateBackward} /></ToolButton>
                     <ToolButton onPress={redoButtonHandler}><FontAwesomeIcon icon={faRotateForward} /></ToolButton>
                 </div>
-                
+
                 <div className="flex flex-row gap-2 flex-grow ">
                     <div>
                         <ToolButton onPress={headingButtonHandler}><FontAwesomeIcon icon={faHeading} /></ToolButton>
@@ -150,10 +157,63 @@ function CustomToolBar() {
     )
 }
 
+//test note fetcher 
+async function loadTestNoteEditor(queryNoteId: string) {
+    
+    const foundNote = testNoteData.find(({ noteId }) => {
+        return queryNoteId == noteId
+    })
+
+    if (foundNote) return foundNote.editorState
+    else return {}
+}
+
+function AutoLoadSelectedNoteIntoEditor() {
+
+    const { liveAppData } = useContext(liveDataContext)
+
+    const [editorState] = useLexicalComposerContext()
+
+    useEffect(() => {
+        //save previous editorstate to deb
+
+        //fetch new note Editor
+        //load
+        if (liveAppData.selectedNoteId) {
+            loadTestNoteEditor(liveAppData.selectedNoteId!).then((fetchedEditorState) => {
+                if (Object.keys(fetchedEditorState).length > 0) {
+
+                    //should only be able to load if the fetched state is a valid editorstate
+                    try {
+                        //@ts-ignore
+                        editorState.setEditorState(editorState.parseEditorState(fetchedEditorState))
+                    } catch (e) {
+                        console.log(e)
+                    }
+
+
+                }
+            }, (e) => {
+                console.log(`failed for reason - ${e}`)
+            })
+        }
+
+
+    }, [liveAppData.selectedNoteId])
+
+
+    //     const editorState = editor.parseEditorState(editorStateJSONString);
+    //     editor.setEditorState(editorState);
+    return null
+
+}
 
 function TextEditor() {
 
+    const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext)
 
+
+    //ajust editor value to the selected note
 
     const initialConfig = {
         namespace: "TextEditor",
@@ -161,6 +221,7 @@ function TextEditor() {
         onError,
         nodes: [HeadingNode,]
     }
+
 
 
 
@@ -182,6 +243,7 @@ function TextEditor() {
                     </div>
 
                     <HistoryPlugin />
+                    <AutoLoadSelectedNoteIntoEditor />
                 </div>
 
             </LexicalComposer>
