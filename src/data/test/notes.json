@@ -2,7 +2,198 @@
     {
         "noteId": "2h3n22k129ds09",
         "description": ["the first text node displayed as a title", "the second node "],
-        "editorState": {},
+        "editorState": {
+            "root": {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "the first text node displayed as a title",
+                                "type": "text",
+                                "version": 1
+                            }
+                        ],
+                        "direction": "ltr",
+                        "format": "",
+                        "indent": 0,
+                        "type": "heading",
+                        "version": 1,
+                        "tag": "h1"
+                    },
+                    {
+                        "children": [
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "the second node ",
+                                "type": "text",
+                                "version": 1
+                            }
+                        ],
+                        "direction": "ltr",
+                        "format": "",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1
+                    },
+                    {
+                        "children": [
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "blabla blah Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam auctor arcu sed risus sagittis, fermentum ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 2,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "ullamcorper",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " risus sodales. Donec in enim sit amet turpis ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 9,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "fringilla",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " malesuada. Curabitur facilisis ex et erat dignissim, quis commodo tellus auctor.",
+                                "type": "text",
+                                "version": 1
+                            }
+                        ],
+                        "direction": "ltr",
+                        "format": "",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1
+                    },
+                    {
+                        "children": [
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "Mauris ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 1,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "pharetra",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " felis sed erat malesuada laoreet. Donec vulputate lacus mattis erat scelerisque ultrices. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras cursus tempor nisl, a ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 3,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "volutpat",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " diam tincidunt eleifend. Interdum et malesuada fames ac ante ipsum primis in faucibus. Proin sed mauris diam. ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 8,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "Nulla aliquet",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": ", leo nec iaculis rhoncus, ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 11,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "ipsum",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " ipsum pulvinar nulla, at accumsan risus turpis non velit. Duis.",
+                                "type": "text",
+                                "version": 1
+                            }
+                        ],
+                        "direction": "ltr",
+                        "format": "",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1
+                    }
+                ],
+                "direction": "ltr",
+                "format": "",
+                "indent": 0,
+                "type": "root",
+                "version": 1
+            }
+        },
         "folderId": "0",
         "creationDate": { 
             "day": "Monday",
@@ -24,7 +215,270 @@
     {
         "noteId": "asdf8a8sd9f0asdf90sadf",
         "description": ["Falling in love with the world", "it all begins from my flight to china"],
-        "editorState": {},
+        "editorState": {
+            "root": {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "Falling in love with the world",
+                                "type": "text",
+                                "version": 1
+                            }
+                        ],
+                        "direction": "ltr",
+                        "format": "",
+                        "indent": 0,
+                        "type": "heading",
+                        "version": 1,
+                        "tag": "h1"
+                    },
+                    {
+                        "children": [
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "it all begins from my flight to china",
+                                "type": "text",
+                                "version": 1
+                            }
+                        ],
+                        "direction": "ltr",
+                        "format": "",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1
+                    },
+                    {
+                        "children": [
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "b",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 1,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "labla blah Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam auctor arcu sed",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " risus sagittis, ferm",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 1,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "entum ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 3,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "ullamcorper",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 1,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " risus sodales. Donec in enim sit amet turpis ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 9,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "fringilla",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 1,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " males",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "uada. Curabitur facilisis ex et erat dignissim, quis commodo tellus auctor.",
+                                "type": "text",
+                                "version": 1
+                            }
+                        ],
+                        "direction": "ltr",
+                        "format": "",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1
+                    },
+                    {
+                        "children": [
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "Mauris ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 1,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "pharetra",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " felis sed erat malesuada laoreet. Donec vulputate lacus mattis erat scelerisque ",
+                                "type": "text",
+                                "version": 1
+                            }
+                        ],
+                        "direction": "ltr",
+                        "format": "",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1
+                    },
+                    {
+                        "children": [
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "ultrices. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras cursus tempor nisl, a",
+                                "type": "text",
+                                "version": 1
+                            }
+                        ],
+                        "direction": "ltr",
+                        "format": "",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1
+                    },
+                    {
+                        "children": [
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 3,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "volutpat",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " diam tincidunt eleifend. Interdum et malesuada fames ac ante ipsum primis in faucibus. Proin sed mauris diam. ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 8,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "Nulla aliquet",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": ", leo nec iaculis rhoncus, ",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 11,
+                                "mode": "normal",
+                                "style": "",
+                                "text": "ipsum",
+                                "type": "text",
+                                "version": 1
+                            },
+                            {
+                                "detail": 0,
+                                "format": 0,
+                                "mode": "normal",
+                                "style": "",
+                                "text": " ipsum pulvinar nulla, at accumsan risus turpis non velit. Duis.",
+                                "type": "text",
+                                "version": 1
+                            }
+                        ],
+                        "direction": "ltr",
+                        "format": "",
+                        "indent": 0,
+                        "type": "paragraph",
+                        "version": 1
+                    }
+                ],
+                "direction": "ltr",
+                "format": "",
+                "indent": 0,
+                "type": "root",
+                "version": 1
+            }
+        },
         "folderId": "0",
         "creationDate": { 
             "day": "Tuesday",
