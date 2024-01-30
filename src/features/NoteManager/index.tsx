@@ -47,13 +47,13 @@ export default function NoteManager() {
             <NoteToolBar />
 
             <div className="py-2 flex flex-col gap-0">
-                {notesManagerState.notes.map((eachNotes, i) => {
+                {notesManagerState.notes.map((eachNote, i) => {
                     return (
-                        <>
-                            <NoteItem key={i} noteId={eachNotes.noteId} creationDate={{ ...eachNotes.creationDate }} description={eachNotes.description} />
+                        <div key={eachNote.noteId}>
+                            <NoteItem key={eachNote.noteId} noteId={eachNote.noteId} creationDate={{ ...eachNote.creationDate }} description={eachNote.description} />
                             {notesManagerState.notes.length - 1 != i && <div className="px-3"><Divider className="bg-default/40" orientation="horizontal" /></div>}
 
-                        </>
+                        </div>
                     )
                 })}
             </div>
