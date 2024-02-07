@@ -26,7 +26,7 @@ function loginRequest({username, password}: {username: string, password: string}
 
 }
 
-function signupRequest({username, password}: {username: string, password: string}): Promise<{created: boolean}>{
+function signupRequest({username, password}: {username: string, password: string}): Promise<{success: boolean}>{
     return new Promise((signupResolve, signupReject)=>{
         
         const signupHeaders = new Headers()
