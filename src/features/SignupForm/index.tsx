@@ -1,28 +1,139 @@
 "use client"
 
-import React, { useState, useRef} from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { Input, Button, Link, user } from "@nextui-org/react"
 
+
+
 interface FormState {
-    username: string,
-    password: string,
-    confirmPassword: string
+    username: {
+        value: string,
+        isInValid: boolean,
+        errorMessage: string
+    },
+    password: {
+        value: string,
+        isInValid: boolean,
+        errorMessage: string
+    },
+    confirmPassword: {
+        value: string,
+        isInValid: boolean,
+        errorMessage: string
+    }
 }
+
 
 export default function () {
 
-
-
     const [formState, setFormState] = useState<FormState>({
-        username: "",
-        password: "",
-        confirmPassword: ""
+        username: {
+            value: "",
+            isInValid: false,
+            errorMessage: ""
+        },
+        password: {
+            value: "",
+            isInValid: false,
+            errorMessage: ""
+        },
+        confirmPassword: {
+            value: "",
+            isInValid: false,
+            errorMessage: ""
+        }
     })
-    
-    function formSubmitHandler(e: React.FormEvent){
+
+    useEffect(()=>{
+
+        validateUsername()
+        validatePassword()
+        validateConfirmPassword()
+
+    }, [formState.username.value, formState.password.value, formState.confirmPassword.value])
+
+    function usernameChangeHandler(value: string) {
+
+        setFormState((prevState: FormState) => { return { ...prevState, username: { ...prevState.username, value } } })
+
+    }
+
+    function validateUsername() {
+
+        let isInValid: boolean = false
+        let errorMessage: string = ""
+
+        if (formState.username.value.length == 0) {
+            isInValid = true;
+            errorMessage = "Username can not be empty!"
+        }
+
+        setFormState((prevState)=>{
+            return {...prevState, username: {...prevState.username, isInValid, errorMessage}}
+        })
+
+    }
+
+    function passwordChangeHandler(value: string) {
+        
+
+        setFormState((prevState: FormState) => { return { ...prevState, password: { ...prevState.password, value } } })
+    }
+
+    function validatePassword(){
+        let isInValid: boolean = false
+        let errorMessage: string = ""
+
+        if (formState.password.value.length == 0) {
+            isInValid = true;
+            errorMessage = "password can not be empty!"
+        }
+
+        setFormState((prevState)=>{
+            return {...prevState, password: {...prevState.password, isInValid, errorMessage}}
+        })
+    }
+
+    function confirmPasswordChangeHandler(value: string) {
+ 
+        setFormState((prevState: FormState) => { return { ...prevState, confirmPassword: { ...prevState.confirmPassword, value } } })
+    }
+
+    function validateConfirmPassword(){
+        let isInValid: boolean = false
+        let errorMessage: string = ""
+
+
+        if (formState.confirmPassword.value.length > 0) {
+            if (formState.password.value != formState.confirmPassword.value) {
+                isInValid = true;
+                errorMessage = "Both passwords don\'t match"
+            }
+        } else {
+            isInValid = true;
+            errorMessage = "password can not be empty!"
+        }
+
+        setFormState((prevState)=>{
+            return {...prevState, confirmPassword: {...prevState.confirmPassword, isInValid, errorMessage}}
+        })
+
+
+    }
+
+    function formSubmitHandler(e: React.FormEvent) {
+
         e.preventDefault()
+
+        setFormState((prevState) => {
+            return { ...prevState, submitted: true }
+        })
+
+
         console.log("sigup form submitted")
     }
+
+
     return (
         <div className="p-6 w-96">
             <form onSubmit={formSubmitHandler}>
@@ -31,11 +142,15 @@ export default function () {
                         <Input
                             key={0}
 
-                            value={formState.username}
-                            onValueChange={(usernameValue) => { setFormState((prevState: FormState) => { return { ...prevState, username: usernameValue } }) }}
+                            value={formState.username.value}
+                            onValueChange={usernameChangeHandler}
 
                             placeholder={"Username"}
-                            required={true}
+                            isRequired
+
+                            isInvalid={formState.username.isInValid}
+                            errorMessage={formState.username.errorMessage}
+
                             size="sm"
 
                             autoFocus={true}
@@ -43,13 +158,16 @@ export default function () {
                         />
                         <Input
                             key={1}
-                            value={formState.password}
-                            onValueChange={(passwordValue) => { setFormState((prevState: FormState) => { return { ...prevState, password: passwordValue } }) }}
+                            value={formState.password.value}
+                            onValueChange={passwordChangeHandler}
 
                             placeholder={"Password"}
 
                             type="password"
-                            required={true}
+                            isRequired
+
+                            isInvalid={formState.password.isInValid}
+                            errorMessage={formState.password.errorMessage}
                             size="sm"
 
                             autoComplete="off"
@@ -58,14 +176,19 @@ export default function () {
                         <Input
                             key={2}
 
-                            value={formState.confirmPassword}
-                            onValueChange={(confirmPasswordValue) => { setFormState((prevState: FormState) => { return { ...prevState, confirmPassword: confirmPasswordValue } }) }}
+                            value={formState.confirmPassword.value}
+                            onValueChange={confirmPasswordChangeHandler}
 
                             placeholder={"Confirm Password"}
 
                             type={"password"}
-                            required={true}
+                            isRequired
+
+                            isInvalid={formState.confirmPassword.isInValid}
+                            errorMessage={formState.confirmPassword.errorMessage}
+
                             size="sm"
+
 
                             autoComplete="off"
                         />
