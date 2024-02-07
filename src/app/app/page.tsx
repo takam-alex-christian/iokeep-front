@@ -1,4 +1,6 @@
 
+"use client"
+
 import FolderManager from "@/features/FolderManager";
 import NoteEditor from "@/features/NoteEditor"
 import NoteManager from "@/features/NoteManager";
@@ -6,8 +8,33 @@ import Footer from "@/layouts/Footer";
 import Navbar from "@/layouts/Navbar";
 
 
+import { getAccessToken } from "@/lib/authUtils";
+import { useEffect } from "react";
+
+
 
 export default function () {
+
+    //verify token and query new token at every interval before token expire
+    //access_token lifetime is 10 minutes
+
+    
+
+    useEffect(()=>{
+
+        const gati = setInterval(()=>{ //get access token interval
+            getAccessToken().then(({success})=>{
+                console.log("new auth token received")
+            }).catch((err)=>{
+                console.log(err)
+            })
+        }, 600000)
+
+        return ()=>{
+            clearInterval(gati)
+        }
+        
+    }, [])
 
     return (
         <main className="flex flex-col gap-6 min-h-screen bg-default-100">
