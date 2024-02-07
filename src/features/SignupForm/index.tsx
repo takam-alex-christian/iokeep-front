@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react"
 import { Input, Button, Link, user } from "@nextui-org/react"
 import { signupRequest } from "@/lib/authUtils"
 
-
+import { useRouter } from "next/navigation"
 
 interface FormState {
     username: {
@@ -51,6 +51,8 @@ export default function () {
             isEngaged: false,
         }
     })
+
+    const router = useRouter()
 
     useEffect(() => {
         
@@ -136,7 +138,9 @@ export default function () {
         e.preventDefault()
 
         signupRequest({username: formState.username.value, password: formState.username.value}).then(({success})=>{
-            if (success) alert("user created")
+            if (success) {
+                router.push("/login")
+            }
             else alert("failed to create user")
         }).catch((err)=>{
             console.log(err)
