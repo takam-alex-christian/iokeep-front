@@ -6,6 +6,8 @@ import { Input, Button, Link } from "@nextui-org/react"
 
 import {loginRequest} from "@/lib/authUtils"
 
+import {useRouter} from "next/navigation"
+
 interface FormState {
     username: string,
     password: string
@@ -17,6 +19,8 @@ export default function () {
         username: "",
         password: ""
     })
+
+    const router = useRouter()
 
 
     //test code
@@ -34,7 +38,11 @@ export default function () {
         loginRequest({username: formState.username, password: formState.password}).then(({authed})=>{
             if(process.env.NODE_ENV === 'development') console.log(`loginRequest Response ${authed}`)
             if (authed){
-                alert("you are login successfully")
+                
+                // alert("you are login successfully")
+
+                router.push("/app")
+
             }
         }).catch((err)=>{
             console.log(err)
