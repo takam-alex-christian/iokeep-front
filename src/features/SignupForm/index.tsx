@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import { Input, Button, Link, user } from "@nextui-org/react"
+import { signupRequest } from "@/lib/authUtils"
 
 
 
@@ -134,10 +135,12 @@ export default function () {
 
         e.preventDefault()
 
-        setFormState((prevState) => {
-            return { ...prevState, submitted: true }
+        signupRequest({username: formState.username.value, password: formState.username.value}).then(({success})=>{
+            if (success) alert("user created")
+            else alert("failed to create user")
+        }).catch((err)=>{
+            console.log(err)
         })
-
 
         console.log("sigup form submitted")
     }
