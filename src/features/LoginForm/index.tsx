@@ -4,6 +4,8 @@ import React, {useEffect, useState} from "react"
 
 import { Input, Button, Link } from "@nextui-org/react"
 
+import {loginRequest} from "@/lib/authUtils"
+
 interface FormState {
     username: string,
     password: string
@@ -24,6 +26,22 @@ export default function () {
 
     function formSubmitHandler(e: React.FormEvent){
         e.preventDefault()
+
+        //validate inputs
+
+
+        //initiate request
+        loginRequest({username: formState.username, password: formState.password}).then(({authed})=>{
+            if(process.env.NODE_ENV === 'development') console.log(`loginRequest Response ${authed}`)
+            if (authed){
+                alert("you are login successfully")
+            }
+        }).catch((err)=>{
+            console.log(err)
+        })
+
+
+
         console.log("Log in Form")
     }
     return (
@@ -47,6 +65,7 @@ export default function () {
 
                             placeholder={"Username"}
                             required={true}
+                            
                             size="sm"
                             
                             autoComplete="username"
@@ -77,7 +96,7 @@ export default function () {
                         />
                     </div>
 
-                    <Button size="lg" color="primary" variant="solid">Log in</Button>
+                    <Button size="lg" color="primary" variant="solid" type="submit">Log in</Button>
 
                 </div>
             </form>
