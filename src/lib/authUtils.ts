@@ -48,4 +48,16 @@ function signupRequest({username, password}: {username: string, password: string
     })
 }
 
-export {loginRequest, signupRequest}
+function getAccessToken(): Promise <{success: boolean}>{
+    return new Promise((resolve, reject)=>{
+        fetch(`/be/auth/access_token`, {
+            method: "POST"
+        }).then((res)=>{
+            resolve({...res.json()})
+        }).catch((err)=>{
+            reject(err)
+        })
+    })
+}
+
+export {loginRequest, signupRequest, getAccessToken}
