@@ -9,17 +9,20 @@ interface FormState {
     username: {
         value: string,
         isInValid: boolean,
-        errorMessage: string
+        errorMessage: string,
+        isEngaged: boolean //can only start validating a component if it has been engaged
     },
     password: {
         value: string,
         isInValid: boolean,
-        errorMessage: string
+        errorMessage: string,
+        isEngaged: boolean
     },
     confirmPassword: {
         value: string,
         isInValid: boolean,
-        errorMessage: string
+        errorMessage: string,
+        isEngaged: boolean
     }
 }
 
@@ -30,31 +33,37 @@ export default function () {
         username: {
             value: "",
             isInValid: false,
-            errorMessage: ""
+            errorMessage: "",
+            isEngaged: false
         },
         password: {
             value: "",
             isInValid: false,
-            errorMessage: ""
+            errorMessage: "",
+            isEngaged: false,
+
         },
         confirmPassword: {
             value: "",
             isInValid: false,
-            errorMessage: ""
+            errorMessage: "",
+            isEngaged: false,
         }
     })
 
-    useEffect(()=>{
+    useEffect(() => {
+        
+        if (formState.username.isEngaged) validateUsername()
 
-        validateUsername()
-        validatePassword()
-        validateConfirmPassword()
+        if(formState.password.isEngaged) validatePassword()
+        
+        if(formState.confirmPassword.isEngaged) validateConfirmPassword()
 
     }, [formState.username.value, formState.password.value, formState.confirmPassword.value])
 
     function usernameChangeHandler(value: string) {
 
-        setFormState((prevState: FormState) => { return { ...prevState, username: { ...prevState.username, value } } })
+        setFormState((prevState: FormState) => { return { ...prevState, username: { ...prevState.username, value , isEngaged: true} } })
 
     }
 
@@ -68,19 +77,19 @@ export default function () {
             errorMessage = "Username can not be empty!"
         }
 
-        setFormState((prevState)=>{
-            return {...prevState, username: {...prevState.username, isInValid, errorMessage}}
+        setFormState((prevState) => {
+            return { ...prevState, username: { ...prevState.username, isInValid, errorMessage,  } }
         })
 
     }
 
     function passwordChangeHandler(value: string) {
-        
 
-        setFormState((prevState: FormState) => { return { ...prevState, password: { ...prevState.password, value } } })
+        
+        setFormState((prevState: FormState) => { return { ...prevState, password: { ...prevState.password, value , isEngaged: true} } })
     }
 
-    function validatePassword(){
+    function validatePassword() {
         let isInValid: boolean = false
         let errorMessage: string = ""
 
@@ -89,17 +98,17 @@ export default function () {
             errorMessage = "password can not be empty!"
         }
 
-        setFormState((prevState)=>{
-            return {...prevState, password: {...prevState.password, isInValid, errorMessage}}
+        setFormState((prevState) => {
+            return { ...prevState, password: { ...prevState.password, isInValid, errorMessage } }
         })
     }
 
     function confirmPasswordChangeHandler(value: string) {
- 
-        setFormState((prevState: FormState) => { return { ...prevState, confirmPassword: { ...prevState.confirmPassword, value } } })
+
+        setFormState((prevState: FormState) => { return { ...prevState, confirmPassword: { ...prevState.confirmPassword, value, isEngaged: true } } })
     }
 
-    function validateConfirmPassword(){
+    function validateConfirmPassword() {
         let isInValid: boolean = false
         let errorMessage: string = ""
 
@@ -114,8 +123,8 @@ export default function () {
             errorMessage = "password can not be empty!"
         }
 
-        setFormState((prevState)=>{
-            return {...prevState, confirmPassword: {...prevState.confirmPassword, isInValid, errorMessage}}
+        setFormState((prevState) => {
+            return { ...prevState, confirmPassword: { ...prevState.confirmPassword, isInValid, errorMessage } }
         })
 
 
