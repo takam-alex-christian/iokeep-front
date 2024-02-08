@@ -1,5 +1,6 @@
 
 
+
 function loginRequest({username, password}: {username: string, password: string}): Promise<{authed: boolean}>{
     return new Promise((loginResolve, loginReject)=>{
 
@@ -60,4 +61,16 @@ function getAccessToken(): Promise <{success: boolean}>{
     })
 }
 
-export {loginRequest, signupRequest, getAccessToken}
+function logoutRequest (): Promise<{loggedOut: boolean, error: boolean, errorMessage: string}>{
+    return new Promise((logoutResolve, logoutReject)=>{
+        fetch('/be/auth/logout', {
+            method: "PATCH"
+        }).then((res)=>{
+            logoutResolve(res.json())
+        }).catch((err)=>{
+            logoutReject(err)
+        })
+    })
+}
+
+export {loginRequest, signupRequest, getAccessToken, logoutRequest}
