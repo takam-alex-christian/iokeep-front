@@ -5,7 +5,7 @@ import FolderManager from "@/features/FolderManager";
 import NoteEditor from "@/features/NoteEditor"
 import NoteManager from "@/features/NoteManager";
 import Footer from "@/layouts/Footer";
-import Navbar from "@/layouts/Navbar";
+import Navbar from "@/features/NavbarFeature";
 
 
 import { getAccessToken } from "@/lib/authUtils";
