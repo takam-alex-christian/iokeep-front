@@ -124,6 +124,8 @@ export default function () {
                             value={formState.username.value}
                             onValueChange={usernameChangeHandler}
 
+                            // className="focus-within:outline-dashed focus-within:outline-8 focus-within:outline-red-700"
+
                             type="text"
                             name="username"
 
@@ -136,6 +138,7 @@ export default function () {
 
                             size="sm"
 
+                            autoFocus
                             autoComplete="username"
 
                         />
