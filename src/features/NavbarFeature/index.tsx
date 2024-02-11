@@ -20,7 +20,7 @@ export default function () {
         logoutRequest().then((responseJson)=>{
             if (!responseJson.error){
                 if (responseJson.loggedOut){
-                    router.push("/")
+                    router.replace("/login")
                 }
             }else {
                 //maybe show a modal to communicate the error with user for improved user experience
