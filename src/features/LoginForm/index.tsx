@@ -1,50 +1,111 @@
 "use client"
 
-import React, {useEffect, useState} from "react"
+import React, { useEffect, useState } from "react"
 
 import { Input, Button, Link } from "@nextui-org/react"
 
-import {loginRequest} from "@/lib/authUtils"
+import { loginRequest } from "@/lib/authUtils"
 
-import {useRouter} from "next/navigation"
+import { useRouter } from "next/navigation"
+
+interface FormTextInputType {
+    value: string,
+    isInvalid: boolean,
+    errorMessage: string,
+    isEngaged: boolean
+}
 
 interface FormState {
-    username: string,
-    password: string
+    username: FormTextInputType,
+    password: FormTextInputType
 }
 
 export default function () {
 
+    const initialTextInputData = {
+        value: "",
+        isInvalid: false,
+        errorMessage: "",
+        isEngaged: false
+    }
+
     const [formState, setFormState] = useState<FormState>({
-        username: "",
-        password: ""
+        username: initialTextInputData,
+        password: initialTextInputData
     })
 
     const router = useRouter()
 
+    useEffect(() => {
 
-    //test code
-    useEffect(()=>{
-        console.log(formState)
-    }, [formState])
+        if (formState.username.isEngaged) validateUsername()
 
-    function formSubmitHandler(e: React.FormEvent){
+        if (formState.password.isEngaged) validatePassword()
+
+    }, [formState.username.value, formState.password.value])
+
+
+    function usernameChangeHandler(value: string) {
+
+        setFormState((prevState) => {
+            return { ...prevState, username: { ...prevState.username, value, isEngaged: true } }
+        })
+
+    }
+
+    function validateUsername() {
+
+        let isInValid: boolean = false
+        let errorMessage: string = ""
+
+        if (formState.username.value.length == 0) {
+            isInValid = true;
+            errorMessage = "Username can not be empty!"
+        }
+
+        setFormState((prevState) => {
+            return { ...prevState, username: { ...prevState.username, isInValid, errorMessage, } }
+        })
+    }
+
+    function passwordChangeHandler(value: string) {
+        setFormState((prevState) => {
+            return { ...prevState, password: { ...prevState.password, value, isEngaged: true } }
+        })
+    }
+
+    function validatePassword() {
+        let isInValid: boolean = false
+        let errorMessage: string = ""
+
+        if (formState.password.value.length == 0) {
+            isInValid = true;
+            errorMessage = "password can not be empty!"
+        }
+
+        setFormState((prevState) => {
+            return { ...prevState, password: { ...prevState.password, isInValid, errorMessage } }
+        })
+    }
+
+
+    function formSubmitHandler(e: React.FormEvent) {
         e.preventDefault()
 
         //validate inputs
 
 
         //initiate request
-        loginRequest({username: formState.username, password: formState.password}).then(({authed})=>{
-            if(process.env.NODE_ENV === 'development') console.log(`loginRequest Response ${authed}`)
-            if (authed){
-                
+        loginRequest({ username: formState.username.value, password: formState.password.value }).then(({ authed }) => {
+            if (process.env.NODE_ENV === 'development') console.log(`loginRequest Response ${authed}`)
+            if (authed) {
+
                 // alert("you are login successfully")
 
-                router.push("/app")
+                router.replace("/app")
 
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
 
@@ -59,23 +120,22 @@ export default function () {
                     <div className="flex flex-col gap-2">
                         <Input
                             key={0}
-                            
-                            value={formState.username}
-                            onValueChange={(usernameValue)=>{
-                                setFormState((prevFormState: FormState)=>{
-                                    return {...prevFormState, username: usernameValue}
-                                })
-                            }}
-                            
+
+                            value={formState.username.value}
+                            onValueChange={usernameChangeHandler}
+
                             type="text"
                             name="username"
-                            
+
 
                             placeholder={"Username"}
-                            required={true}
-                            
+                            isRequired
+
+                            isInvalid={formState.username.isInvalid}
+                            errorMessage={formState.username.errorMessage}
+
                             size="sm"
-                            
+
                             autoComplete="username"
 
                         />
@@ -86,18 +146,19 @@ export default function () {
 
                             key={1}
 
-                            value={formState.password}
-                            onValueChange={(passwordValue)=>{
-                                setFormState((prevFormState: FormState)=>{
-                                    return {...prevFormState, password: passwordValue}
-                                })
-                            }}
-                            
+                            value={formState.password.value}
+                            onValueChange={passwordChangeHandler}
+
                             type={"password"}
                             name="password"
 
                             placeholder={"Password"}
-                            required={true}
+
+                            isRequired
+
+                            isInvalid={formState.password.isInvalid}
+                            errorMessage={formState.password.errorMessage}
+
                             size="sm"
 
                             autoComplete="password"
