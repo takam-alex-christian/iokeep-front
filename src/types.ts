@@ -8,6 +8,11 @@ type LiveDataState = {
 
 type LiveDataDispatchAction = {type: "changedSelectedFolder", payload: {folderId: string}} | {type: "changedSelectedNote", payload: {noteId: string}}
 
+type  AuthJsonResponse = { // all auth requests
+    success: boolean,
+    info: string,
+    error: null | {message: string}
+    timeStamp: number
+}
 
-
-export type {LiveDataState, LiveDataDispatchAction}
+export type {LiveDataState, LiveDataDispatchAction, AuthJsonResponse}

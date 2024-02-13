@@ -1,11 +1,5 @@
 
-//this interface should match that from be AuthFeature type
-interface AuthJsonResponse {
-    success: boolean,
-    info: string,
-    error: null | {message: string}
-    timeStamp: number
-}
+import { AuthJsonResponse } from "@/types";
 
 function loginRequest({username, password}: {username: string, password: string}): Promise<AuthJsonResponse>{
     return new Promise((loginResolve, loginReject)=>{
