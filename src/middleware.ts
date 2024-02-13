@@ -3,11 +3,10 @@ import { NextRequest, NextResponse, NextMiddleware } from "next/server";
 
 import { cookies } from "next/headers"
 
-
+import { AuthJsonResponse } from "./types";
 
 
 export async function middleware(req: NextRequest) {
-
 
     //check for authentication
     // console.log(cookies().getAll())
@@ -18,13 +17,23 @@ export async function middleware(req: NextRequest) {
         authHeaders.append("Authorization", `Bearer ${cookies().get("refresh_token")?.value}`)
 
         try {
-            let authResponseData = await fetch(`${process.env.BE_URL}/auth/refresh_token`, {
+
+            let authResponse: AuthJsonResponse = await fetch(`${process.env.BE_URL}/auth/refresh_token`, {
                 headers: authHeaders,
                 method: "POST",
             }).then((authResponse => authResponse.json()))
 
-            if (!authResponseData.isVerified || !authResponseData.isValid) return NextResponse.redirect(new URL("/login", req.url))
-            else return NextResponse.next()
+            if (authResponse.error){
+                // ideally return 
+                console.log(authResponse.error.message)
+                return NextResponse.redirect(new URL("/login", req.nextUrl.basePath))
+            }else {
+                if (!authResponse.success) return NextResponse.redirect(new URL("/login", req.url))
+                else {
+                    return NextResponse.next()
+                }
+
+            }
 
         } catch (err) {
             console.log(err)
@@ -33,6 +42,7 @@ export async function middleware(req: NextRequest) {
     } else {
         return NextResponse.redirect(new URL("/login", req.url));
     }
+
 
 
 }
