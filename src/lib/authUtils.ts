@@ -1,20 +1,26 @@
 
+//this interface should match that from be AuthFeature type
+interface AuthJsonResponse {
+    success: boolean,
+    info: string,
+    error: null | {message: string}
+    timeStamp: number
+}
 
-
-function loginRequest({username, password}: {username: string, password: string}): Promise<{authed: boolean}>{
+function loginRequest({username, password}: {username: string, password: string}): Promise<AuthJsonResponse>{
     return new Promise((loginResolve, loginReject)=>{
 
         const loginHeaders = new Headers()
         
         loginHeaders.append("Content-Type", "application/json");
 
-        const raw = JSON.stringify({username, password})
+        const jsonBody = JSON.stringify({username, password})
 
 
         fetch(`/be/auth/login`, {
             method: "POST",
             headers: loginHeaders,
-            body: raw
+            body: jsonBody
             // redirect: "follow"
         }).then((res)=>{
             return loginResolve(res.json())
@@ -27,19 +33,19 @@ function loginRequest({username, password}: {username: string, password: string}
 
 }
 
-function signupRequest({username, password}: {username: string, password: string}): Promise<{success: boolean}>{
+function signupRequest({username, password}: {username: string, password: string}): Promise<AuthJsonResponse>{
     return new Promise((signupResolve, signupReject)=>{
         
         const signupHeaders = new Headers()
 
         signupHeaders.append("Content-Type", "application/json");
 
-        const raw = JSON.stringify({username, password})
+        const jsonBody = JSON.stringify({username, password})
 
         fetch(`/be/auth/signup`, {
             method: "POST",
             headers: signupHeaders,
-            body: raw
+            body: jsonBody
         }).then((res)=>{
             return signupResolve(res.json())
         }, (err)=>{
@@ -49,19 +55,21 @@ function signupRequest({username, password}: {username: string, password: string
     })
 }
 
-function getAccessToken(): Promise <{success: boolean}>{
+function getAccessToken(): Promise <AuthJsonResponse>{
     return new Promise((resolve, reject)=>{
         fetch(`/be/auth/access_token`, {
             method: "POST"
         }).then((res)=>{
             resolve({...res.json()})
         }).catch((err)=>{
+            console.log(err);
             reject(err)
         })
     })
 }
 
-function logoutRequest (): Promise<{loggedOut: boolean, error: boolean, errorMessage: string}>{
+//solve this on be
+function logoutRequest (): Promise<AuthJsonResponse>{
     return new Promise((logoutResolve, logoutReject)=>{
         fetch('/be/auth/logout', {
             method: "PATCH"

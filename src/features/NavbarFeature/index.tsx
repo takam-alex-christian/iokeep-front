@@ -10,20 +10,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRightFromBracket, faCircleHalfStroke } from "@fortawesome/free-solid-svg-icons"
 import { logoutRequest } from "@/lib/authUtils"
 
-import {useRouter} from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export default function () {
 
     const router = useRouter()
 
-    function logoutButtonHandler(){
-        logoutRequest().then((responseJson)=>{
-            if (!responseJson.error){
-                if (responseJson.loggedOut){
-                    router.replace("/login")
-                }
-            }else {
+    function logoutButtonHandler() {
+        logoutRequest().then((jsonResponse) => {
+            if (jsonResponse.error) {
                 //maybe show a modal to communicate the error with user for improved user experience
+                alert(jsonResponse.error.message)
+
+            } else {
+
+                if (jsonResponse.success) {
+                    router.replace("/login")
+                } else {
+                    alert(jsonResponse.info)
+                }
             }
         })
     }

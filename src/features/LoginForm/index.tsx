@@ -96,22 +96,27 @@ export default function () {
 
 
         //initiate request
-        loginRequest({ username: formState.username.value, password: formState.password.value }).then(({ authed }) => {
-            if (process.env.NODE_ENV === 'development') console.log(`loginRequest Response ${authed}`)
-            if (authed) {
+        loginRequest({ username: formState.username.value, password: formState.password.value }).then((jsonResponse) => {
 
-                // alert("you are login successfully")
+            if (process.env.NODE_ENV === 'development') console.log(`loginRequest Response ${jsonResponse}`)
 
-                router.replace("/app")
+            if (jsonResponse.error) {
 
+                alert(jsonResponse.error.message)
+
+            } else {
+                if (jsonResponse.success) {
+                    router.replace("/app")
+
+                } else {
+                    alert(jsonResponse.info)
+                }
             }
+
         }).catch((err) => {
             console.log(err)
         })
 
-
-
-        console.log("Log in Form")
     }
     return (
         <div className="p-6 w-96 flex flex-col gap-0">

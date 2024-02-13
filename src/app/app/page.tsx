@@ -18,22 +18,26 @@ export default function () {
     //verify token and query new token at every interval before token expire
     //access_token lifetime is 10 minutes
 
-    
 
-    useEffect(()=>{
 
-        const gati = setInterval(()=>{ //get access token interval
-            getAccessToken().then(({success})=>{
+    useEffect(() => {
+
+        const gati = setInterval(() => { //get access token interval
+            getAccessToken().then((jsonResponse) => {
+                if (jsonResponse.error) alert(jsonResponse.error.message)
+                else {
+                    if (!jsonResponse.success) alert(jsonResponse.info)
+                }
                 console.log("new auth token received")
-            }).catch((err)=>{
+            }).catch((err) => {
                 console.log(err)
             })
-        }, 600000)
+        }, 600000) // this time corresponds to the validity period of a token, ideally should be a few tens of seconds lower than the actual token validity period
 
-        return ()=>{
+        return () => {
             clearInterval(gati)
         }
-        
+
     }, [])
 
     return (
@@ -46,7 +50,7 @@ export default function () {
                         <FolderManager />
                     </div>
                     <div className="flex flex-row gap-8 flex-grow">
-                        
+
                         <div className="w-2/5 rounded-xl bg-neutral-50">
                             {/* noteManager */}
                             <NoteManager />

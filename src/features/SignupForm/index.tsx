@@ -55,18 +55,18 @@ export default function () {
     const router = useRouter()
 
     useEffect(() => {
-        
+
         if (formState.username.isEngaged) validateUsername()
 
-        if(formState.password.isEngaged) validatePassword()
-        
-        if(formState.confirmPassword.isEngaged) validateConfirmPassword()
+        if (formState.password.isEngaged) validatePassword()
+
+        if (formState.confirmPassword.isEngaged) validateConfirmPassword()
 
     }, [formState.username.value, formState.password.value, formState.confirmPassword.value])
 
     function usernameChangeHandler(value: string) {
 
-        setFormState((prevState: FormState) => { return { ...prevState, username: { ...prevState.username, value , isEngaged: true} } })
+        setFormState((prevState: FormState) => { return { ...prevState, username: { ...prevState.username, value, isEngaged: true } } })
 
     }
 
@@ -81,15 +81,15 @@ export default function () {
         }
 
         setFormState((prevState) => {
-            return { ...prevState, username: { ...prevState.username, isInValid, errorMessage,  } }
+            return { ...prevState, username: { ...prevState.username, isInValid, errorMessage, } }
         })
 
     }
 
     function passwordChangeHandler(value: string) {
 
-        
-        setFormState((prevState: FormState) => { return { ...prevState, password: { ...prevState.password, value , isEngaged: true} } })
+
+        setFormState((prevState: FormState) => { return { ...prevState, password: { ...prevState.password, value, isEngaged: true } } })
     }
 
     function validatePassword() {
@@ -137,16 +137,22 @@ export default function () {
 
         e.preventDefault()
 
-        signupRequest({username: formState.username.value, password: formState.username.value}).then(({success})=>{
-            if (success) {
-                router.push("/login")
+        //activate a loading state
+
+        signupRequest({ username: formState.username.value, password: formState.username.value }).then((jsonResponse) => {
+
+            if (jsonResponse.error) alert(jsonResponse.error.message)
+            else {
+
+                if (jsonResponse.success) router.push("/login") //communicate to the user that they just singed up and should login to access app
+                else alert(jsonResponse.info)
+        
             }
-            else alert("failed to create user")
-        }).catch((err)=>{
+
+        }).catch((err) => {
             console.log(err)
         })
 
-        console.log("sigup form submitted")
     }
 
 
