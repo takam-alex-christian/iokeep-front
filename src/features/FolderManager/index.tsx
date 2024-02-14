@@ -48,12 +48,12 @@ export default function () {
     }
 
     return (
-        <div className="px-4 py-0">
+        <div className="px-0 py-0">
             <Accordion defaultExpandedKeys={["0"]}>
                 <AccordionItem
                     // classNames={{ title: "" }}
-                    key={0} isCompact={false} title={"Folders"}>
-                    <div className="flex flex-col gap-2">
+                    key={0} isCompact={false} title={"Folders"} classNames={{heading: "px-2"}}>
+                    <div className="flex flex-col gap-2 px-2">
                         <div>
                             {/* display loading component here when isLoading */}
 
