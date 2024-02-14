@@ -12,6 +12,27 @@ type FolderDataType = {
     creationDate: string
 }
 
+async function createFolder(folderName: string){
+
+    //refer to CreateFolderJsonResponse type definition in be folderManagerFeature 
+    //jsonResponse: CreateFolderJsonResponse
+
+    const cfHeaders = new Headers()
+
+    cfHeaders.append('Content-Type', 'application/json')
+
+    const cfBody = JSON.stringify({folderName})
+
+    const jsonResponse: {success: boolean, error: null | {message: string}, timeStamp: number} = await fetch('be/folders', {
+        method: "POST",
+        headers: cfHeaders,
+        body: cfBody
+    }).then((res)=> res.json())
+
+    return jsonResponse
+
+}
+
 function useFolders(){
     
     // refer to jsonResponse type definition for ReadFolderJsonResponse
@@ -29,4 +50,6 @@ function useFolders(){
     
 }
 
-export {useFolders}
+
+
+export {useFolders, createFolder}
