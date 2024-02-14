@@ -63,9 +63,7 @@ export default function () {
                                         <li key={i}>
                                             <FolderItem
                                                 key={i}
-                                                folderManagerDispatch={folderManagerDispatch}
-                                                folderId={eachFolder._id}
-                                                name={eachFolder.folderName}
+                                                {...eachFolder}
                                             />
                                         </li>
                                     )

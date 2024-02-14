@@ -10,12 +10,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFolder } from "@fortawesome/free-regular-svg-icons"
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons"
 
-import { FolderItemProps} from "../types"
-
 import {liveDataContext} from "@/contexts/liveDataContext"
+import { FolderDataType } from "@/types"
+import { deleteFolder } from "@/lib/folderUtils"
 
 
-export default function (props: FolderItemProps) {
+export default function (props: FolderDataType) {
 
     const {liveAppData, liveAppDataDispatch} = useContext(liveDataContext)
 
@@ -33,9 +33,22 @@ export default function (props: FolderItemProps) {
         else animateOptionButton(optionButtonScope.current, { opacity: 0 }, { duration: 0.4 })
     }, [itemState.isHovered])
 
+    function folderDeleteHandler(){
+        
+        deleteFolder(props._id).then((jsonResponse)=>{
+            if (!jsonResponse.error){
+                if (jsonResponse.success) alert("folder deleted successfully") // remove folder from folderData
+                else alert("failed")
+            }else {
+                console.log(jsonResponse.error.message)
+            }
+        })
+
+    }
+
     function folderItemPressHandler(){
         
-        liveAppDataDispatch({type: "changedSelectedFolder", payload: {folderId: props.folderId}})
+        liveAppDataDispatch({type: "changedSelectedFolder", payload: {folderId: props._id}})
 
         console.log("folderManagerSelectedId changed to a new id");
     }
@@ -45,7 +58,7 @@ export default function (props: FolderItemProps) {
             <Button
 
                 onPress={folderItemPressHandler}
-                className={`w-full justify-start ${props.folderId == liveAppData.selectedFolderId ? "bg-opacity-40 bg-default" : "bg-none"}`} 
+                className={`w-full justify-start ${props._id == liveAppData.selectedFolderId ? "bg-opacity-40 bg-default" : "bg-none"}`} 
                 size="md" 
                 variant="light"
                 
@@ -56,7 +69,7 @@ export default function (props: FolderItemProps) {
                     <FontAwesomeIcon icon={faFolder} />
 
                     <div>
-                        {props.name}
+                        {props.folderName}
                     </div>
                 </div>
             </Button>
@@ -73,7 +86,7 @@ export default function (props: FolderItemProps) {
                         <DropdownItem key={"edit"}>
                             Rename
                         </DropdownItem>
-                        <DropdownItem className="text-danger" key={"delete"} color="danger" variant="flat">
+                        <DropdownItem onPress={folderDeleteHandler} className="text-danger" key={"delete"} color="danger" variant="flat">
                             Delete
                         </DropdownItem>
                     </DropdownMenu>

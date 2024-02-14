@@ -45,6 +45,18 @@ function useFolders(){
     
 }
 
+async function deleteFolder(_id: string){
+    
+    const dlHeaders = new Headers()
+
+    const jsonResponse: {success: boolean, error: null | {message: string}, timeStamp: number} = await fetch(`be/folders/${_id}`, {
+        method: "DELETE",
+        headers: dlHeaders
+    }).then((res)=> res.json())
+
+    return jsonResponse
+}
 
 
-export {useFolders, createFolder}
+
+export {useFolders, createFolder, deleteFolder}
