@@ -16,15 +16,14 @@ function useFolders(){
     
     // refer to jsonResponse type definition for ReadFolderJsonResponse
     
-    const {data: jsonResponse, error, isLoading} = useSWR(`/be/folders`, fetcher)
+    const {data: jsonResponse, error, isLoading} = useSWR(`be/folders`, fetcher)
 
-    let folderData: Array<FolderDataType> = jsonResponse.data || []
-
-    if (jsonResponse.error) console.log(jsonResponse.error)
-
+    let folderData: Array<FolderDataType> = []
+    
+    if (!isLoading && !error) folderData = jsonResponse.data
+    
     return {
         folderData,
-        error,
         isLoading
     }
     
