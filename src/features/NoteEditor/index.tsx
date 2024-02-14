@@ -35,6 +35,7 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
 
 //test data
 import testNoteData from "@/data/test/notes.json"
+import { createNote } from "@/lib/noteUtils"
 
 
 
@@ -72,6 +73,9 @@ function ToolButton(props: ButtonProps) {
 }
 
 function CustomToolBar() {
+
+    const {liveAppData} = useContext(liveDataContext)
+
     const [editor] = useLexicalComposerContext()
 
     function boldButtonHandler() {
@@ -119,13 +123,18 @@ function CustomToolBar() {
 
     function saveButtonHandler() {
         // console.log(editor.getEditorState())
-        const someJson = editor.getEditorState().toJSON() //this version of the editor state can be stringified and stored
+        const editorState = JSON.stringify(editor.getEditorState().toJSON()) //this version of the editor state can be stringified and stored
 
-        // someJson.root.children.forEach((eachChildren)=>{ // how you can go through each children node
-        //     // console.log(eachChildren.type == "heading")
-        // })
+        if (liveAppData.selectedFolderId) createNote({editorState, folderId: liveAppData.selectedFolderId}).then((jsonResponse)=>{
+            if (!jsonResponse.error){
+                if (jsonResponse.success) alert("note created") //noteId can be stored to current editor
+                else alert("failed to save note")
+            }else {
+                console.log(jsonResponse.error.message)
+            }
+        })
 
-        console.log(someJson)
+        console.log(editorState)
 
     }
 
