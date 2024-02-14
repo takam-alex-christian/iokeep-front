@@ -17,6 +17,7 @@ import folderTestData from "@/data/test/folders.json"
 import FolderInput from "./components/FolderInput";
 
 import {liveDataContext} from "@/contexts/liveDataContext"
+import { useFolders } from "@/lib/folderUtils";
 
 
 function folderManagerReducer(prevState: FolderManagerStateType, action: FolderManagerReducerActionType): FolderManagerStateType {
@@ -39,6 +40,8 @@ export default function () {
 
     const [folderManagerState, folderManagerDispatch] = useReducer(folderManagerReducer, {showFolderInput: false, folderItems: []})
 
+    const {folderData, isLoading} = useFolders()
+
     function toggleFolderInputHandler() {
         folderManagerDispatch({ type: "toggledFolderInput" })
     }
@@ -56,6 +59,8 @@ export default function () {
         
     }, [])
 
+    
+
     return (
         <div className="px-4 py-0">
             <Accordion defaultExpandedKeys={["0"]}>
@@ -64,23 +69,23 @@ export default function () {
                     key={0} isCompact={false} title={"Folders"}>
                     <div className="flex flex-col gap-2">
                         <div>
-                            <ul className="flex flex-col gap-0">
-                                {folderManagerState.folderItems.map((eachFolder, i) => {
+                            {/* display loading component here when isLoading */}
+
+                            {!isLoading && <ul className="flex flex-col gap-0">
+                                {folderData.map((eachFolder, i) => {
                                     return (
                                         <li key={i}>
                                             <FolderItem
                                                 key={i}
                                                 folderManagerDispatch={folderManagerDispatch}
-                                                folderId={eachFolder.folderId}
-                                                name={eachFolder.name}
+                                                folderId={eachFolder._id}
+                                                name={eachFolder.folderName}
                                             />
                                         </li>
                                     )
                                 })}
 
-                                
-
-                            </ul>
+                            </ul>}
 
                             <AnimatePresence>
                                 {folderManagerState.showFolderInput &&
