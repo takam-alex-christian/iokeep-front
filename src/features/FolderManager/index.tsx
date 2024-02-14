@@ -1,6 +1,6 @@
 "use client"
 
-import { useReducer, useContext, useEffect} from "react"
+import { useReducer, useContext, useEffect } from "react"
 
 import { Accordion, AccordionItem, Button } from "@nextui-org/react";
 
@@ -11,39 +11,39 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons"
 
 import FolderItem from "./components/FolderItem";
 
-import { FolderManagerReducerActionType, FolderManagerStateType, FolderItemType } from "./types"
+import { FolderManagerReducerActionType, FolderManagerStateType } from "./types"
 
 import folderTestData from "@/data/test/folders.json"
 import FolderInput from "./components/FolderInput";
 
-import {liveDataContext} from "@/contexts/liveDataContext"
+import { liveDataContext } from "@/contexts/liveDataContext"
 import { useFolders } from "@/lib/folderUtils";
 
 
 function folderManagerReducer(prevState: FolderManagerStateType, action: FolderManagerReducerActionType): FolderManagerStateType {
     switch (action.type) {
-        case "folderItemsInitialized": {return {...prevState, folderItems: action.payload.folderItems}}
-        // case "changedSelectedFolder": return { ...prevState, selectedFolderId: action.payload.folderId }
+        case "changedSelectedFolder": return { ...prevState, selectedFolderId: action.payload.folderId }
         case "toggledFolderInput": return { ...prevState, showFolderInput: !prevState.showFolderInput }
         default: return prevState
     }
 
 }
 
-async function loadTestData(){
-    return folderTestData
-}
-
 export default function () {
 
-    const {liveAppData, liveAppDataDispatch} = useContext(liveDataContext)
+    const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext)
 
-    const [folderManagerState, folderManagerDispatch] = useReducer(folderManagerReducer, {showFolderInput: false, folderItems: []})
+    const [folderManagerState, folderManagerDispatch] = useReducer(folderManagerReducer, { showFolderInput: false, selectedFolderId: null })
 
-    const {folderData, isLoading} = useFolders()
+    const { folderData, isLoading } = useFolders()
+    
+    useEffect(()=>{
+        if(!isLoading && folderData.length > 0) liveAppDataDispatch({type: "changedSelectedFolder", payload: {folderId: folderData[0]._id}})
+    }, [isLoading])
+    
 
     function toggleFolderInputHandler() {
-        
+
         folderManagerDispatch({ type: "toggledFolderInput" })
     }
 
