@@ -92,7 +92,9 @@ export default function () {
     return (
         <form onSubmit={folderSubmitHandler}>
             <div className="flex flex-row gap-2 items-center ">
-                <Tooltip placement="right" isOpen={formState.foldername.isInvalid} offset={20} showArrow={true} content={formState.foldername.errorMessage} color="default">
+                <Tooltip placement="right" isOpen={formState.foldername.isInvalid} offset={20} showArrow={true} content={
+                    <div className="h-10 flex justify-center items-center">{formState.foldername.errorMessage}</div>
+                } color="default">
                     <Input
                         autoFocus
 
