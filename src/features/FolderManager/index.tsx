@@ -43,23 +43,9 @@ export default function () {
     const {folderData, isLoading} = useFolders()
 
     function toggleFolderInputHandler() {
+        
         folderManagerDispatch({ type: "toggledFolderInput" })
     }
-
-    useEffect(()=>{
-        //initilize selectedFolder once folder data is loaded
-        loadTestData().then((loadedFolderData: FolderItemType[])=>{
-            // initialize the folder items
-            folderManagerDispatch({type: "folderItemsInitialized", payload: {folderItems: loadedFolderData}})
-            
-            liveAppDataDispatch({type: "changedSelectedFolder", payload: {folderId: loadedFolderData.length > 0 ? loadedFolderData[0].folderId : ""}})
-        }, (e)=>{
-            console.log(e)
-        })
-        
-    }, [])
-
-    
 
     return (
         <div className="px-4 py-0">
