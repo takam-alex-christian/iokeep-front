@@ -1,5 +1,7 @@
 
+import { liveDataContext } from "@/contexts/liveDataContext"
 import { NoteItemDataType } from "@/types"
+import { useContext } from "react"
 import useSWR from "swr"
 
 
@@ -22,13 +24,15 @@ async function createNote(noteData: { editorState: string, folderId: string }) {
     return jsonResponse
 }
 
-function useNotes(folderId: string) {
+function useNotes() {
 
     /** 
      * data below is of type {error: {message: string} | null, data: Array<Reduced notes>, timeStamp}
     */
 
-    const { data, error, isLoading } = useSWR(`be/notes?folderId=${folderId}`, fetcher)
+    const {liveAppData} = useContext(liveDataContext)
+
+    const { data, error, isLoading } = liveAppData.selectedFolderId? useSWR(`be/notes?folderId=${liveAppData.selectedFolderId}`, fetcher) : {data: {data: null}, isLoading: false, error: null}
 
     return {
         notesData: (!isLoading && !error ? data.data : []) as Array<NoteItemDataType>,
@@ -38,19 +42,7 @@ function useNotes(folderId: string) {
 
 }
 
-function useNote(noteId: string) {
-
-    const { data, error, isLoading } = useSWR(`be/notes/${noteId}`, fetcher);
-
-    return {
-        noteData: !isLoading && !error ? data.data : null,
-        isLoading,
-        error
-    }
-
-}
 
 
 
-
-export { createNote, useNotes, useNote}
+export { createNote, useNotes}

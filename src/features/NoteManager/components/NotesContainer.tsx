@@ -15,7 +15,7 @@ export default function () {
 
     const {liveAppData} = useContext(liveDataContext)
 
-    const {notesData, isLoading, error} = useNotes(liveAppData.selectedFolderId!) //because this componenet renders its content only when folders are done loading
+    const {notesData, isLoading, error} = useNotes() //because this componenet renders its content only when folders are done loading
     
     return (
         <div className="py-2 flex flex-col gap-0">
