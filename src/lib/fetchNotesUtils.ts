@@ -41,4 +41,4 @@ function patchNote(){ //passing entries to be changed and their new values, must
     }
 }
 
-export {useNotes, fetchEditorState}
+// export {useNotes, fetchEditorState}
