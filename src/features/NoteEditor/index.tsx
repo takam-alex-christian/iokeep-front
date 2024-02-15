@@ -1,7 +1,7 @@
 "use client"
 
 
-import { useContext, useEffect, useRef } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 
 import { liveDataContext } from "@/contexts/liveDataContext"
 
@@ -17,7 +17,7 @@ import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons"
 
 
 //lexical imports
-import { FORMAT_TEXT_COMMAND, CAN_UNDO_COMMAND, UNDO_COMMAND, REDO_COMMAND, CAN_REDO_COMMAND, $getSelection, $isRangeSelection } from "lexical"
+import { FORMAT_TEXT_COMMAND, CAN_UNDO_COMMAND, UNDO_COMMAND, REDO_COMMAND, CAN_REDO_COMMAND, $getSelection, $isRangeSelection, CLEAR_HISTORY_COMMAND } from "lexical"
 
 import { $setBlocksType } from "@lexical/selection"
 
@@ -35,7 +35,9 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
 
 //test data
 import testNoteData from "@/data/test/notes.json"
-import { createNote } from "@/lib/noteUtils"
+import { createNote, useNote } from "@/lib/noteUtils"
+import { useNotes } from "@/lib/fetchNotesUtils"
+import { useSelectedNote } from "./libs/customHooks"
 
 
 
@@ -74,7 +76,7 @@ function ToolButton(props: ButtonProps) {
 
 function CustomToolBar() {
 
-    const {liveAppData} = useContext(liveDataContext)
+    const { liveAppData } = useContext(liveDataContext)
 
     const [editor] = useLexicalComposerContext()
 
@@ -125,11 +127,11 @@ function CustomToolBar() {
         // console.log(editor.getEditorState())
         const editorState = JSON.stringify(editor.getEditorState().toJSON()) //this version of the editor state can be stringified and stored
 
-        if (liveAppData.selectedFolderId) createNote({editorState, folderId: liveAppData.selectedFolderId}).then((jsonResponse)=>{
-            if (!jsonResponse.error){
+        if (liveAppData.selectedFolderId) createNote({ editorState, folderId: liveAppData.selectedFolderId }).then((jsonResponse) => {
+            if (!jsonResponse.error) {
                 if (jsonResponse.success) alert("note created") //noteId can be stored to current editor
                 else alert("failed to save note")
-            }else {
+            } else {
                 console.log(jsonResponse.error.message)
             }
         })
@@ -166,61 +168,23 @@ function CustomToolBar() {
     )
 }
 
-//test note fetcher 
-async function loadTestNoteEditor(queryNoteId: string) {
-    
-    const foundNote = testNoteData.find(({ noteId }) => {
-        return queryNoteId == noteId
-    })
-
-    if (foundNote) return foundNote.editorState
-    else return {}
-}
 
 function AutoLoadSelectedNoteIntoEditor() {
 
-    const { liveAppData } = useContext(liveDataContext)
-
     const [editorState] = useLexicalComposerContext()
 
-    useEffect(() => {
-        //save previous editorstate to deb
+    const { isLoading, noteData } = useSelectedNote()
 
-        //fetch new note Editor
-        //load
-        if (liveAppData.selectedNoteId) {
-            loadTestNoteEditor(liveAppData.selectedNoteId!).then((fetchedEditorState) => {
-                if (Object.keys(fetchedEditorState).length > 0) {
+    if (!isLoading && noteData) {
+        editorState.dispatchCommand(CLEAR_HISTORY_COMMAND, undefined)
+        editorState.setEditorState(editorState.parseEditorState(noteData.editorState))
+    }
 
-                    //should only be able to load if the fetched state is a valid editorstate
-                    try {
-                        //@ts-ignore
-                        editorState.setEditorState(editorState.parseEditorState(fetchedEditorState))
-                    } catch (e) {
-                        console.log(e)
-                    }
-
-
-                }
-            }, (e) => {
-                console.log(`failed for reason - ${e}`)
-            })
-        }
-
-
-    }, [liveAppData.selectedNoteId])
-
-
-    //     const editorState = editor.parseEditorState(editorStateJSONString);
-    //     editor.setEditorState(editorState);
     return null
 
 }
 
 function TextEditor() {
-
-    const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext)
-
 
     //ajust editor value to the selected note
 
@@ -230,9 +194,6 @@ function TextEditor() {
         onError,
         nodes: [HeadingNode,]
     }
-
-
-
 
     return (
         <div className="flex flex-col flex-grow ">
@@ -252,9 +213,10 @@ function TextEditor() {
                     </div>
 
                     <HistoryPlugin />
-                    <AutoLoadSelectedNoteIntoEditor />
+
                 </div>
 
+                <AutoLoadSelectedNoteIntoEditor />
             </LexicalComposer>
         </div>
     )
