@@ -35,8 +35,7 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
 
 //test data
 import testNoteData from "@/data/test/notes.json"
-import { createNote } from "@/lib/noteUtils"
-import { useNotes } from "@/lib/fetchNotesUtils"
+import { createNote, useNotes } from "@/lib/noteUtils"
 import { useSelectedNote } from "./libs/customHooks"
 
 
@@ -169,31 +168,37 @@ function CustomToolBar() {
 }
 
 
-function AutoLoadSelectedNoteIntoEditor() {
+// function AutoLoadSelectedNoteIntoEditor() {
 
-    const [editorState] = useLexicalComposerContext()
+//     const [editorState] = useLexicalComposerContext()
 
-    const { isLoading, noteData } = useSelectedNote()
+//     const { liveAppData } = useContext(liveDataContext)
 
-    if (!isLoading && noteData) {
-        editorState.dispatchCommand(CLEAR_HISTORY_COMMAND, undefined)
-        editorState.setEditorState(editorState.parseEditorState(noteData.editorState))
-    }
+//     const { isLoading, noteData } = useSelectedNote()
 
-    return null
 
-}
+//     if (!isLoading && noteData != null) {
+//         editorState.dispatchCommand(CLEAR_HISTORY_COMMAND, undefined)
+//         editorState.setEditorState(editorState.parseEditorState(noteData.editorState))
+//     }
 
-function TextEditor() {
+//     return null
+
+// }
+
+function TextEditor(props: { editorState?: string }) {
 
     //ajust editor value to the selected note
 
     const initialConfig = {
+        editorState: props.editorState,
         namespace: "TextEditor",
         theme,
         onError,
         nodes: [HeadingNode,]
     }
+
+    console.log(props.editorState)
 
     return (
         <div className="flex flex-col flex-grow ">
@@ -216,7 +221,7 @@ function TextEditor() {
 
                 </div>
 
-                <AutoLoadSelectedNoteIntoEditor />
+                {/* <AutoLoadSelectedNoteIntoEditor /> */}
             </LexicalComposer>
         </div>
     )
@@ -224,7 +229,8 @@ function TextEditor() {
 
 
 export default function NoteEditor() {
-    return (
-        <TextEditor />
-    )
+
+    const {noteData} = useSelectedNote()
+    return (<TextEditor key={noteData?._id} editorState={noteData?.editorState} />)
+
 }
