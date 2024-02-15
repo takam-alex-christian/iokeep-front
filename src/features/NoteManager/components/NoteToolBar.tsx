@@ -1,6 +1,6 @@
 
 
-import React from "react"
+import React, { useContext } from "react"
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 
@@ -8,11 +8,15 @@ import {faTrashCan} from "@fortawesome/free-regular-svg-icons"
 import {faPlus} from "@fortawesome/free-solid-svg-icons"
 
 import {Button} from "@nextui-org/react"
+import { liveDataContext } from "@/contexts/liveDataContext"
 
 export default function NoteToolBar(){
 
+    const {liveAppDataDispatch} = useContext(liveDataContext)
+
     function addButtonHandler(){
         console.log("create new note button")
+        liveAppDataDispatch({type: "changedSelectedNote", payload: {noteId: ""}})
     }
 
     function deleteButtonHandler(){

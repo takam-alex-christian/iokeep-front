@@ -198,8 +198,6 @@ function TextEditor(props: { editorState?: string }) {
         nodes: [HeadingNode,]
     }
 
-    console.log(props.editorState)
-
     return (
         <div className="flex flex-col flex-grow ">
 
@@ -229,8 +227,11 @@ function TextEditor(props: { editorState?: string }) {
 
 
 export default function NoteEditor() {
-
+    const {liveAppData} = useContext(liveDataContext)
     const {noteData} = useSelectedNote()
+
+    // if(liveAppData.selectedNoteId?.length == 0) return <TextEditor />
+
     return (<TextEditor key={noteData?._id} editorState={noteData?.editorState} />)
 
 }
