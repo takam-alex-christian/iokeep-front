@@ -35,7 +35,7 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
 
 //test data
 import testNoteData from "@/data/test/notes.json"
-import { createNote, useNote } from "@/lib/noteUtils"
+import { createNote } from "@/lib/noteUtils"
 import { useNotes } from "@/lib/fetchNotesUtils"
 import { useSelectedNote } from "./libs/customHooks"
 
