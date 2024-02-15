@@ -1,5 +1,10 @@
 
+import { NoteItemDataType } from "@/types"
+import useSWR from "swr"
 
+
+// @ts-ignore
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 async function createNote(noteData: {editorState: string, folderId: string}){
 
@@ -17,5 +22,21 @@ async function createNote(noteData: {editorState: string, folderId: string}){
     return jsonResponse
 }
 
+function useNotes(folderId: string){
 
-export {createNote}
+    /** 
+     * data below is of type {error: {message: string} | null, data: Array<Reduced notes>, timeStamp}
+    */
+   
+    const {data, error, isLoading} = useSWR(`be/notes?folderId=${folderId}`, fetcher)
+
+    return {
+        notesData: (!isLoading && !error? data.data : []) as Array<NoteItemDataType>,
+        isLoading,
+        error
+    }
+
+}
+
+
+export {createNote, useNotes}
