@@ -23,4 +23,11 @@ type  AuthJsonResponse = { // all auth requests
     timeStamp: number
 }
 
-export type {LiveDataState, LiveDataDispatchAction, AuthJsonResponse, FolderDataType}
+interface NoteItemDataType {
+    _id: string,
+    someNodes: Array<string> // of size 2
+    creationDate: string,
+    lastModified: string
+}
+
+export type {LiveDataState, LiveDataDispatchAction, AuthJsonResponse, FolderDataType, NoteItemDataType}
