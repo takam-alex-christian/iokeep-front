@@ -32,18 +32,20 @@ async function createNote(noteData: { editorState: string, folderId: string }) {
     return jsonResponse
 }
 
-function useNotes() { //relies on context data
+function useNotes() { //relies on context data 
 
     /** 
      * data below is of type {error: {message: string} | null, data: Array<Reduced notes>, timeStamp}
+     * do not run if not totally sure that context has been initialized
     */
 
     const {liveAppData} = useContext(liveDataContext)
 
-    const { data, error, isLoading } = liveAppData.selectedFolderId? useSWR(`be/notes?folderId=${liveAppData.selectedFolderId}`, fetcher) : {data: {data: null}, isLoading: false, error: null}
+    const { data, error, isLoading, mutate} = useSWR(liveAppData.selectedFolderId ? `be/notes?folderId=${liveAppData.selectedFolderId}` : null, fetcher)
 
     return {
-        notesData: (!isLoading && !error ? data.data : []) as Array<NoteItemDataType>,
+        notesData: data as Array<NoteItemDataType>,
+        mutate,
         isLoading,
         error
     }
@@ -71,10 +73,12 @@ async function deleteNote(_id: string){
     const dnHeaders = new Headers()
     dnHeaders.append("Content-Type", "application/json")
 
-    return fetch(`be/notes/${_id}`, {
+    const jsonResponse: GenericJsonResponse = await fetch(`be/notes/${_id}`, {
         method: "DELETE",
         headers: dnHeaders,
     }).then(res=>res.json())
+
+    return jsonResponse
 }
 
 
