@@ -13,13 +13,11 @@ import NoteItem from "./NoteItem"
 export default function () {
 
 
-    const {liveAppData} = useContext(liveDataContext)
-
     const {notesData, isLoading, error} = useNotes() //because this componenet renders its content only when folders are done loading
     
     return (
         <div className="py-2 flex flex-col gap-0">
-            {!isLoading && notesData.map((eachNote, i) => {
+            {!isLoading && notesData?.map((eachNote, i) => {
                 return (
                     <div key={eachNote._id}>
                         <NoteItem key={eachNote._id} {...eachNote} />
