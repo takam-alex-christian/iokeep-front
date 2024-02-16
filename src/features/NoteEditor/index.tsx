@@ -35,7 +35,7 @@ import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
 
 //test data
 import testNoteData from "@/data/test/notes.json"
-import { createNote, useNotes } from "@/lib/noteUtils"
+import { createNote, updateNote, useNotes } from "@/lib/noteUtils"
 import { useSelectedNote } from "./libs/customHooks"
 
 
@@ -135,9 +135,10 @@ function CustomToolBar(props: { _id?: string }) {
         // console.log(editor.getEditorState())
         // const editorState = JSON.stringify(editor.getEditorState().toJSON()) //this version of the editor state can be stringified and stored
 
+        const editorState = JSON.stringify(editor.getEditorState().toJSON()) //this version of the editor state can be stringified and stored
+
 
         if (liveAppData.selectedFolderId && !props._id) {
-            const editorState = JSON.stringify(editor.getEditorState().toJSON()) //this version of the editor state can be stringified and stored
 
             createNote({ editorState, folderId: liveAppData.selectedFolderId }).then((jsonResponse) => {
                 if (!jsonResponse.error) {
@@ -149,7 +150,13 @@ function CustomToolBar(props: { _id?: string }) {
             })
 
         }else if (liveAppData.selectedFolderId && props._id){
-            // just update the note
+            updateNote({_id: props._id, editorState}).then((jsonResponse)=>{
+                if (!jsonResponse.error){
+                    console.log(`server says: ${jsonResponse.info}`)
+                }else {
+                    console.log(`error while updating note \nserver says: ${jsonResponse.error.message}`)
+                }
+            })
 
         }
 
