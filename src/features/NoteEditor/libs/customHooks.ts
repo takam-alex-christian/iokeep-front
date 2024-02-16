@@ -40,6 +40,8 @@ function useSelectedNote() { //incomplete
             }).catch((err)=>{
                 throw err
             })
+        }else {
+            setSelectedNoteState({isLoading: false, noteData: null})
         }
     }, [liveAppData.selectedNoteId])
 

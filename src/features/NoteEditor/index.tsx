@@ -11,7 +11,7 @@ import { Button, ButtonProps, Divider } from "@nextui-org/react"
 //font awesome lib imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-import { faBold, faItalic, faHeading, faUnderline, faRotateBackward, faRotateForward } from "@fortawesome/free-solid-svg-icons"
+import { faBold, faItalic, faHeading, faUnderline, faRotateBackward, faRotateForward, faPlus } from "@fortawesome/free-solid-svg-icons"
 
 import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons"
 
@@ -73,7 +73,7 @@ function ToolButton(props: ButtonProps) {
     )
 }
 
-function CustomToolBar() {
+function CustomToolBar(props: { _id?: string }) {
 
     const { liveAppData } = useContext(liveDataContext)
 
@@ -122,20 +122,38 @@ function CustomToolBar() {
         editor.dispatchCommand(REDO_COMMAND);
     }
 
+    function newButtonHandler() {
+        editor.update(() => {
+
+            const newEditorState = editor.getEditorState().toJSON()
+            newEditorState.root.children = []
+            editor.setEditorState(editor.parseEditorState(newEditorState))
+        })
+    }
+
     function saveButtonHandler() {
         // console.log(editor.getEditorState())
-        const editorState = JSON.stringify(editor.getEditorState().toJSON()) //this version of the editor state can be stringified and stored
+        // const editorState = JSON.stringify(editor.getEditorState().toJSON()) //this version of the editor state can be stringified and stored
 
-        if (liveAppData.selectedFolderId) createNote({ editorState, folderId: liveAppData.selectedFolderId }).then((jsonResponse) => {
-            if (!jsonResponse.error) {
-                if (jsonResponse.success) alert("note created") //noteId can be stored to current editor
-                else alert("failed to save note")
-            } else {
-                console.log(jsonResponse.error.message)
-            }
-        })
 
-        console.log(editorState)
+        if (liveAppData.selectedFolderId && !props._id) {
+            const editorState = JSON.stringify(editor.getEditorState().toJSON()) //this version of the editor state can be stringified and stored
+
+            createNote({ editorState, folderId: liveAppData.selectedFolderId }).then((jsonResponse) => {
+                if (!jsonResponse.error) {
+                    if (jsonResponse.success) alert("note created") //noteId can be stored to current editor
+                    else alert("failed to save note")
+                } else {
+                    console.log(jsonResponse.error.message)
+                }
+            })
+
+        }else if (liveAppData.selectedFolderId && props._id){
+            // just update the note
+
+        }
+
+        // console.log(editorState)
 
     }
 
@@ -186,7 +204,7 @@ function CustomToolBar() {
 
 // }
 
-function TextEditor(props: { editorState?: string }) {
+function TextEditor(props: { editorState?: string, _id?: string }) {
 
     //ajust editor value to the selected note
 
@@ -204,7 +222,7 @@ function TextEditor(props: { editorState?: string }) {
             {/* lexical editor */}
             <LexicalComposer initialConfig={initialConfig}>
                 <div className=" flex-grow flex flex-col gap-0 bg-white shadow-sm rounded-xl">
-                    <CustomToolBar />
+                    <CustomToolBar _id={props._id} />
                     {/* <Divider orientation="horizontal" /> */}
                     {/* <Divider orientation="horizontal" /> */}
                     <div className=" relative flex flex-col flex-grow py-2 px-6 bg-">
@@ -220,6 +238,7 @@ function TextEditor(props: { editorState?: string }) {
                 </div>
 
                 {/* <AutoLoadSelectedNoteIntoEditor /> */}
+
             </LexicalComposer>
         </div>
     )
@@ -227,11 +246,9 @@ function TextEditor(props: { editorState?: string }) {
 
 
 export default function NoteEditor() {
-    const {liveAppData} = useContext(liveDataContext)
-    const {noteData} = useSelectedNote()
 
-    // if(liveAppData.selectedNoteId?.length == 0) return <TextEditor />
+    const { noteData } = useSelectedNote()
 
-    return (<TextEditor key={noteData?._id} editorState={noteData?.editorState} />)
+    return (<TextEditor key={noteData?._id} _id={noteData?._id} editorState={noteData?.editorState} />)
 
 }
