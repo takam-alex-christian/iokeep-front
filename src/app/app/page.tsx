@@ -45,17 +45,17 @@ export default function () {
             <Navbar />
             <div className="flex-grow flex flex-row justify-center">
 
-                <div className="w-4/5 flex flex-row gap-8">
-                    <div className=" w-1/5">
+                <div className="w-4/5 grid grid-cols-5 gap-8">
+                    <div className=" col-span-1">
                         <FolderManager />
                     </div>
-                    <div className="flex flex-row gap-8 flex-grow">
+                    <div className=" col-span-4 grid grid-cols-5 gap-8 flex-grow">
 
-                        <div className="w-2/5 rounded-xl bg-neutral-50">
+                        <div className="col-span-2 rounded-xl bg-neutral-50">
                             {/* noteManager */}
                             <NoteManager />
                         </div>
-                        <div className="flex-grow w-3/5 flex flex-col ">
+                        <div className="col-span-3 flex-grow flex flex-col ">
                             <NoteEditor />
                         </div>
                     </div>
