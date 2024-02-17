@@ -75,7 +75,9 @@ function ToolButton(props: ButtonProps) {
 
 function CustomToolBar(props: { _id?: string }) {
 
-    const { liveAppData } = useContext(liveDataContext)
+    const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext)
+
+    const {notesData, mutate: mutateNotesData, isLoading: areNotesLoading, error: useNotesError} = useNotes()
 
     const [editor] = useLexicalComposerContext()
 
@@ -142,18 +144,24 @@ function CustomToolBar(props: { _id?: string }) {
 
             createNote({ editorState, folderId: liveAppData.selectedFolderId }).then((jsonResponse) => {
                 if (!jsonResponse.error) {
-                    if (jsonResponse.success) alert("note created") //noteId can be stored to current editor
+                    if (jsonResponse.success) {
+                        //mutate useNotes
+                        mutateNotesData([...notesData, {_id: jsonResponse.data?._id!, editorState}])
+                        //set selectedNoteId to new note id
+                        liveAppDataDispatch({type: "changedSelectedNote", payload: {noteId: jsonResponse.data?._id!}})
+                        // alert("note created")
+                    } //noteId can be stored to current editor
                     else alert("failed to save note")
                 } else {
                     console.log(jsonResponse.error.message)
                 }
             })
 
-        }else if (liveAppData.selectedFolderId && props._id){
-            updateNote({_id: props._id, editorState}).then((jsonResponse)=>{
-                if (!jsonResponse.error){
+        } else if (liveAppData.selectedFolderId && props._id) {
+            updateNote({ _id: props._id, editorState }).then((jsonResponse) => {
+                if (!jsonResponse.error) {
                     console.log(`server says: ${jsonResponse.info}`)
-                }else {
+                } else {
                     console.log(`error while updating note \nserver says: ${jsonResponse.error.message}`)
                 }
             })
