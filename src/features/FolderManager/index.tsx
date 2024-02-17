@@ -60,7 +60,6 @@ export default function () {
                                 {!isLoading && folderData && <motion.div
                                     initial={{opacity: 0, y:-8}}
                                     animate={{opacity: 1, y:0}}
-                                    exit={{opacity: 0, y:8}}
                                 >
                                     <ul className="flex flex-col gap-0">
                                         {folderData.map((eachFolder, i) => {
