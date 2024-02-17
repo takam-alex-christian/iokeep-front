@@ -7,6 +7,7 @@ import {  } from "@fortawesome/free-solid-svg-icons"
 
 import { Button, Input, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Spacer } from "@nextui-org/react"
 import { createFolder, useFolders } from "@/lib/folderUtils"
+import { FolderManagerReducerActionType } from "../types"
 
 type FormStateType = {
     foldername: {
@@ -17,7 +18,7 @@ type FormStateType = {
     }
 }
 
-export default function () {
+export default function (props: {folderManagerDispatch: React.Dispatch<FolderManagerReducerActionType>}) {
 
     const [formState, setFormState] = useState<FormStateType>({
         foldername: {
@@ -30,7 +31,7 @@ export default function () {
 
 
 
-    const { folderData, isLoading } = useFolders()
+    const { folderData, isLoading, mutate: mutateFolders} = useFolders()
 
     useEffect(() => {
 
@@ -76,7 +77,11 @@ export default function () {
             if(!jsonResponse.error){
                 if (jsonResponse.success){
                     //mutate folders
-                    alert("folder added")
+                    mutateFolders([...folderData, {_id: jsonResponse.data.folderId, folderName: formState.foldername.value}]) //empties first, to be fixed
+                    
+                    //hide folderInput
+                    props.folderManagerDispatch({type: "toggledFolderInput"})
+
                 }else{
                     alert("failed")
                 }

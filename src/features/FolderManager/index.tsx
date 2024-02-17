@@ -36,11 +36,11 @@ export default function () {
     const [folderManagerState, folderManagerDispatch] = useReducer(folderManagerReducer, { showFolderInput: false, selectedFolderId: null })
 
     const { folderData, isLoading } = useFolders()
-    
-    useEffect(()=>{
-        if(!isLoading && folderData.length > 0) liveAppDataDispatch({type: "changedSelectedFolder", payload: {folderId: folderData[0]._id}})
+
+    useEffect(() => {
+        if (!isLoading && folderData.length > 0) liveAppDataDispatch({ type: "changedSelectedFolder", payload: { folderId: folderData[0]._id } })
     }, [isLoading])
-    
+
 
     function toggleFolderInputHandler() {
 
@@ -52,33 +52,39 @@ export default function () {
             <Accordion defaultExpandedKeys={["0"]}>
                 <AccordionItem
                     // classNames={{ title: "" }}
-                    key={0} isCompact={false} title={"Folders"} classNames={{heading: "px-2"}}>
+                    key={0} isCompact={false} title={"Folders"} classNames={{ heading: "px-2" }}>
                     <div className="flex flex-col gap-2 px-2">
                         <div>
                             {/* display loading component here when isLoading */}
-
-                            {!isLoading && <ul className="flex flex-col gap-0">
-                                {folderData.map((eachFolder, i) => {
-                                    return (
-                                        <li key={i}>
-                                            <FolderItem
-                                                key={i}
-                                                {...eachFolder}
-                                            />
-                                        </li>
-                                    )
-                                })}
-
-                            </ul>}
-
                             <AnimatePresence>
+                                {!isLoading && folderData && <motion.div
+                                    initial={{opacity: 0, y:-8}}
+                                    animate={{opacity: 1, y:0}}
+                                    exit={{opacity: 0, y:8}}
+                                >
+                                    <ul className="flex flex-col gap-0">
+                                        {folderData.map((eachFolder, i) => {
+                                            return (
+                                                <li key={i}>
+                                                    <FolderItem
+                                                        key={i}
+                                                        {...eachFolder}
+                                                    />
+                                                </li>
+                                            )
+                                        })}
+
+                                    </ul>
+                                </motion.div>}
+
+
                                 {folderManagerState.showFolderInput &&
                                     <motion.div
                                         initial={{ opacity: 0, y: -40, height: 0 }}
                                         animate={{ opacity: 1, y: 0, height: 40 }}
                                         exit={{ opacity: 0, y: -40, height: 0 }}
                                     >
-                                        <FolderInput />
+                                        <FolderInput folderManagerDispatch={folderManagerDispatch} />
                                     </motion.div>
                                 }
                             </AnimatePresence>

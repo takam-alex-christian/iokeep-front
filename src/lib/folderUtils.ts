@@ -18,7 +18,7 @@ async function createFolder(folderName: string){
 
     const cfBody = JSON.stringify({folderName})
 
-    const jsonResponse: {success: boolean, error: null | {message: string}, timeStamp: number} = await fetch('be/folders', {
+    const jsonResponse: {success: boolean,data: {folderId: string}, error: null | {message: string}, timeStamp: number} = await fetch('be/folders', {
         method: "POST",
         headers: cfHeaders,
         body: cfBody
@@ -32,15 +32,13 @@ function useFolders(){
     
     // refer to jsonResponse type definition for ReadFolderJsonResponse
     
-    const {data: jsonResponse, error, isLoading} = useSWR(`be/folders`, fetcher)
-
-    let folderData: Array<FolderDataType> = []
-    
-    if (!isLoading && !error) folderData = jsonResponse.data
+    const {data, error, isLoading, mutate} = useSWR(`be/folders`, fetcher)
     
     return {
-        folderData,
-        isLoading
+        folderData: data as Array<FolderDataType>,
+        isLoading,
+        mutate,
+        error
     }
     
 }
