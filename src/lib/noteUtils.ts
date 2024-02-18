@@ -16,7 +16,7 @@ type GenericJsonResponse = {
     timeStamp: number
 }
 
-async function createNote(noteData: { editorState: string, folderId: string }) {
+async function createNote(noteData: { editorState: string, folderId: string, description: string[]}) {
 
     const cnHeaders = new Headers()
     cnHeaders.append("Content-Type", "application/json")
@@ -53,12 +53,12 @@ function useNotes() { //relies on context data
 }
 
 
-async function updateNote({_id, editorState}: {_id: string, editorState: string}){
+async function updateNote({_id, editorState, description}: {_id: string, editorState: string, description: string[]}){
 
     const unHeaders = new Headers()
     unHeaders.append("Content-Type", "application/json");
 
-    const unBody = JSON.stringify({editorState})
+    const unBody = JSON.stringify({editorState, description})
 
     const jsonResponse: GenericJsonResponse = await fetch(`be/notes/${_id}`, {
         method: "PATCH",

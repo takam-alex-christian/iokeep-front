@@ -1,7 +1,7 @@
 "use client"
 
 
-import { useContext, useEffect, useRef, useState } from "react"
+import { SetStateAction, useContext, useEffect, useRef, useState } from "react"
 
 import { liveDataContext } from "@/contexts/liveDataContext"
 
@@ -32,13 +32,15 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
 import { ContentEditable } from "@lexical/react/LexicalContentEditable"
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 
-//test data
-import testNoteData from "@/data/test/notes.json"
 import { createNote, updateNote, useNotes } from "@/lib/noteUtils"
 import { useSelectedNote } from "./libs/customHooks"
 
 
+interface CustomEditorStateType {
+    description: string[]
+}
 
 const theme = {
     heading: {
@@ -73,11 +75,11 @@ function ToolButton(props: ButtonProps) {
     )
 }
 
-function CustomToolBar(props: { _id?: string }) {
+function CustomToolBar(props: { _id?: string, customEditorState: CustomEditorStateType }) {
 
     const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext)
 
-    const {notesData, mutate: mutateNotesData, isLoading: areNotesLoading, error: useNotesError} = useNotes()
+    const { notesData, mutate: mutateNotesData, isLoading: areNotesLoading, error: useNotesError } = useNotes()
 
     const [editor] = useLexicalComposerContext()
 
@@ -124,15 +126,6 @@ function CustomToolBar(props: { _id?: string }) {
         editor.dispatchCommand(REDO_COMMAND);
     }
 
-    function newButtonHandler() {
-        editor.update(() => {
-
-            const newEditorState = editor.getEditorState().toJSON()
-            newEditorState.root.children = []
-            editor.setEditorState(editor.parseEditorState(newEditorState))
-        })
-    }
-
     function saveButtonHandler() {
         // console.log(editor.getEditorState())
         // const editorState = JSON.stringify(editor.getEditorState().toJSON()) //this version of the editor state can be stringified and stored
@@ -142,13 +135,14 @@ function CustomToolBar(props: { _id?: string }) {
 
         if (liveAppData.selectedFolderId && !props._id) {
 
-            createNote({ editorState, folderId: liveAppData.selectedFolderId }).then((jsonResponse) => {
+            console.log(`note create description ${props.customEditorState.description}`)
+            createNote({ editorState, folderId: liveAppData.selectedFolderId, description: props.customEditorState.description }).then((jsonResponse) => {
                 if (!jsonResponse.error) {
                     if (jsonResponse.success) {
                         //mutate useNotes
-                        mutateNotesData([...notesData, {_id: jsonResponse.data?._id!, editorState}])
+                        mutateNotesData([...notesData, { _id: jsonResponse.data?._id!, editorState, description: props.customEditorState.description}])
                         //set selectedNoteId to new note id
-                        liveAppDataDispatch({type: "changedSelectedNote", payload: {noteId: jsonResponse.data?._id!}})
+                        liveAppDataDispatch({ type: "changedSelectedNote", payload: { noteId: jsonResponse.data?._id! } })
                         // alert("note created")
                     } //noteId can be stored to current editor
                     else alert("failed to save note")
@@ -158,9 +152,18 @@ function CustomToolBar(props: { _id?: string }) {
             })
 
         } else if (liveAppData.selectedFolderId && props._id) {
-            updateNote({ _id: props._id, editorState }).then((jsonResponse) => {
+            console.log(`update editor description ${props.customEditorState.description}`)
+            updateNote({ _id: props._id, editorState, description: props.customEditorState.description }).then((jsonResponse) => {
                 if (!jsonResponse.error) {
                     console.log(`server says: ${jsonResponse.info}`)
+
+                    //mutate useNotes
+                    let newNotes = [...notesData]
+                    let updatedNoteIndex = newNotes.findIndex((eachNote)=>{return eachNote._id == props._id})
+                    newNotes[updatedNoteIndex].description = props.customEditorState.description
+                    
+                    mutateNotesData(newNotes)
+                        
                 } else {
                     console.log(`error while updating note \nserver says: ${jsonResponse.error.message}`)
                 }
@@ -219,9 +222,33 @@ function CustomToolBar(props: { _id?: string }) {
 
 // }
 
+/**
+ * custom lexical plugin that updates description
+ * @return null
+*/
+
+function UpdateNoteDescription(props: { setCustomEditorState: React.Dispatch<SetStateAction<CustomEditorStateType>> }): null {
+
+    const [editorState] = useLexicalComposerContext()
+
+    editorState.registerTextContentListener((editorTextContent) => {
+        //we can set the description of the current note on create
+
+        const editorTextArray = editorTextContent.split("\n").filter((eachText) => { return eachText.length > 0 })
+
+
+        props.setCustomEditorState((prevState) => { return { ...prevState, description: editorTextArray.slice(0, 2) } })
+
+    })
+
+    return null
+}
+
 function TextEditor(props: { editorState?: string, _id?: string }) {
 
-    //ajust editor value to the selected note
+    const [customEditorState, setCustomEditorState] = useState<CustomEditorStateType>({ //used to ensure inter communication of data between my custom plugins
+        description: []
+    })
 
     const initialConfig = {
         editorState: props.editorState,
@@ -231,13 +258,14 @@ function TextEditor(props: { editorState?: string, _id?: string }) {
         nodes: [HeadingNode,]
     }
 
+
     return (
         <div className="flex flex-col flex-grow ">
 
             {/* lexical editor */}
             <LexicalComposer initialConfig={initialConfig}>
                 <div className=" flex-grow flex flex-col gap-0 bg-white shadow-sm rounded-xl">
-                    <CustomToolBar _id={props._id} />
+                    <CustomToolBar _id={props._id} customEditorState={customEditorState} />
                     {/* <Divider orientation="horizontal" /> */}
                     {/* <Divider orientation="horizontal" /> */}
                     <div className=" relative flex flex-col flex-grow py-2 px-6 bg-">
@@ -249,6 +277,7 @@ function TextEditor(props: { editorState?: string, _id?: string }) {
                     </div>
 
                     <HistoryPlugin />
+                    <UpdateNoteDescription setCustomEditorState={setCustomEditorState} />
 
                 </div>
 

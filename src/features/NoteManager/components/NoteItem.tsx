@@ -16,14 +16,15 @@ export default function NoteItem(props: NoteItemDataType) {
     }
 
     return (
-        <Button onPress={notePressHandler} key={props._id} className={`flex flex-row justify-start text-left h-fit px-0 py-2 w-full ${liveAppData.selectedNoteId == props._id? "bg-default/45" :"bg-transparent"}`} >
+        <Button onPress={notePressHandler} key={props._id} className={`flex flex-row justify-start text-left h-fit px-0 py-2 w-full ${liveAppData.selectedNoteId == props._id? "bg-default/45" :"bg-transparent"}`}
+         >
             <div className="flex flex-col gap-0 p-3 rounded-lg bg-none w-full ">
 
-                <div className="text-base py-0 font-semibold text-default-600 overflow-hidden overflow-ellipsis">Note first textNode</div>
+                <div className="text-base py-0 font-semibold text-default-600 overflow-hidden overflow-ellipsis">{props.description.length > 0 ? props.description[0] : "no description"}</div>
 
                 <div className="flex flex-col gap-1 ">
                     {/* {peak first p after heading} */}
-                    <p className="overflow-hidden overflow-ellipsis flex-grow text-default-400">Note second textNode</p>
+                    <p className="overflow-hidden overflow-ellipsis flex-grow text-default-400">{props.description.length >=2 ? props.description[1] : ""}</p>
                     {/* date p */}
                     <p className="text-sm text-default-400">{noteCreationDate.getDate()} {noteCreationDate.getMonth()} {noteCreationDate.getFullYear()}</p>
                 </div>

@@ -25,7 +25,7 @@ type  AuthJsonResponse = { // all auth requests
 
 interface NoteItemDataType {
     _id: string,
-    someNodes: Array<string> // of size 2
+    description: Array<string> // of size 2
     creationDate: string,
     lastModified: string
 }
