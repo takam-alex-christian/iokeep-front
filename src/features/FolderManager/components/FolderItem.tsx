@@ -100,7 +100,7 @@ export default function (props: FolderDataType) {
                 </div>
             </Button>
             <div className="absolute right-0">
-                <Dropdown>
+                <Dropdown >
                     <DropdownTrigger>
 
                         <Button className="" size={"sm"} variant="light" isIconOnly>
@@ -108,7 +108,7 @@ export default function (props: FolderDataType) {
                         </Button>
 
                     </DropdownTrigger>
-                    <DropdownMenu>
+                    <DropdownMenu aria-label="folder menu">
                         <DropdownItem key={"edit"}>
                             Rename
                         </DropdownItem>
