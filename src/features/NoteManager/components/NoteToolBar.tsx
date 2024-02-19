@@ -18,7 +18,7 @@ export default function NoteToolBar(){
     const {notesData, mutate} = useNotes()
 
     function addButtonHandler(){
-        console.log("create new note button")
+        // console.log("create new note button")
         liveAppDataDispatch({type: "changedSelectedNote", payload: {noteId: ""}})
     }
 

@@ -268,7 +268,7 @@ function TextEditor(props: { editorState?: string, _id?: string }) {
                     <CustomToolBar _id={props._id} customEditorState={customEditorState} />
                     {/* <Divider orientation="horizontal" /> */}
                     {/* <Divider orientation="horizontal" /> */}
-                    <div className=" relative flex flex-col flex-grow py-2 px-6 bg-">
+                    <div className=" relative flex flex-col flex-grow py-2 px-6">
                         <RichTextPlugin
                             contentEditable={<ContentEditable className=" focus-within:outline-none flex-grow py-4" />}
                             placeholder={<div className="absolute top-8 left-6 z-10 text-neutral-400">Don't stop writing...</div>}
