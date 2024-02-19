@@ -1,13 +1,14 @@
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, SetStateAction } from "react"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFolder } from "@fortawesome/free-regular-svg-icons"
-import {  } from "@fortawesome/free-solid-svg-icons"
+import { } from "@fortawesome/free-solid-svg-icons"
 
 import { Button, Input, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Spacer } from "@nextui-org/react"
-import { createFolder, useFolders } from "@/lib/folderUtils"
+import { createFolder, renameFolder, useFolders } from "@/lib/folderUtils"
 import { FolderManagerReducerActionType } from "../types"
+import { FolderItemType } from "./FolderItem"
 
 type FormStateType = {
     foldername: {
@@ -18,20 +19,29 @@ type FormStateType = {
     }
 }
 
-export default function (props: {folderManagerDispatch: React.Dispatch<FolderManagerReducerActionType>}) {
+interface FolderInputProps {
+    create?: {
+        folderManagerDispatch: React.Dispatch<FolderManagerReducerActionType>
+    },
+    rename?: {
+        _id: string,
+        initialValue: string,
+        setCallerItemState: React.Dispatch<SetStateAction<FolderItemType>>
+    }
+}
+
+export default function (props: FolderInputProps) {
 
     const [formState, setFormState] = useState<FormStateType>({
         foldername: {
-            value: "",
+            value: props.rename? props.rename.initialValue : "",
             isEngaged: false,
             isInvalid: false,
             errorMessage: ""
         }
     })
 
-
-
-    const { folderData, isLoading, mutate: mutateFolders} = useFolders()
+    const { folderData, isLoading, mutate: mutateFolders } = useFolders()
 
     useEffect(() => {
 
@@ -73,24 +83,54 @@ export default function (props: {folderManagerDispatch: React.Dispatch<FolderMan
          * Display loading state
          * clear formState
         */
-        createFolder(formState.foldername.value).then((jsonResponse)=>{
-            if(!jsonResponse.error){
-                if (jsonResponse.success){
-                    //mutate folders
-                    mutateFolders([...folderData, {_id: jsonResponse.data.folderId, folderName: formState.foldername.value}]) //empties first, to be fixed
-                    
-                    //hide folderInput
-                    props.folderManagerDispatch({type: "toggledFolderInput"})
+        if (props.create) {
+            createFolder(formState.foldername.value).then((jsonResponse) => {
+                if (!jsonResponse.error) {
+                    if (jsonResponse.success) {
+                        //mutate folders
+                        mutateFolders([...folderData, { _id: jsonResponse.data.folderId, folderName: formState.foldername.value }]) //empties first, to be fixed
 
-                }else{
-                    alert("failed")
+                        //hide folderInput
+                        props.create?.folderManagerDispatch({ type: "toggledFolderInput" })
+
+                    } else {
+                        alert("failed")
+                    }
+                } else {
+                    setFormState((prevState) => {
+                        return { ...prevState, foldername: { ...prevState.foldername, errorMessage: jsonResponse.error!.message, isInvalid: true } }
+                    })
                 }
-            }else {
-                setFormState((prevState)=>{
-                    return {...prevState, foldername: {...prevState.foldername, errorMessage: jsonResponse.error!.message, isInvalid: true}}
-                })
-            }
-        })
+            })
+        }
+
+        if (props.rename){
+            renameFolder(props.rename._id, formState.foldername.value).then((jsonResponse)=>{
+                if (!jsonResponse.error){
+                    if (jsonResponse.success){
+
+                        //mutate updated folder
+                        let foldersCopy = folderData
+                        let updatedFolderId = foldersCopy.findIndex((eachFolder)=>{ return eachFolder._id == props.rename?._id})
+                        
+                        foldersCopy[updatedFolderId].folderName = formState.foldername.value
+
+                        mutateFolders(foldersCopy)
+
+                        props.rename?.setCallerItemState((prevState)=>{
+                            return {...prevState, isRenamed: false}
+                        })
+                    }else {
+
+                    }
+                }else {
+                    setFormState((prevState) => {
+                        return { ...prevState, foldername: { ...prevState.foldername, errorMessage: jsonResponse.error!.message, isInvalid: true } }
+                    })
+                }
+            })
+        }
+
 
     }
 

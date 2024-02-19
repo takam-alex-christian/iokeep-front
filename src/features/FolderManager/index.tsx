@@ -83,7 +83,7 @@ export default function () {
                                         animate={{ opacity: 1, y: 0, height: 40 }}
                                         exit={{ opacity: 0, y: -40, height: 0 }}
                                     >
-                                        <FolderInput folderManagerDispatch={folderManagerDispatch} />
+                                        <FolderInput create={{folderManagerDispatch}} />
                                     </motion.div>
                                 }
                             </AnimatePresence>

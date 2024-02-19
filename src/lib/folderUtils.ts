@@ -43,6 +43,22 @@ function useFolders(){
     
 }
 
+async function renameFolder(_id: string, folderName: string){
+    
+    const rfHeaders = new Headers()
+    rfHeaders.append("Content-Type", "application/json")
+
+    const rfBody = JSON.stringify({folderObject: {folderName}})
+
+    const jsonResponse = await fetch(`be/folders/${_id}`, {
+        method: "PATCH",
+        headers: rfHeaders,
+        body: rfBody
+    }).then(res => res.json())
+
+    return jsonResponse
+}
+
 async function deleteFolder(_id: string){
     
     const dlHeaders = new Headers()
@@ -57,4 +73,4 @@ async function deleteFolder(_id: string){
 
 
 
-export {useFolders, createFolder, deleteFolder}
+export {useFolders, createFolder, deleteFolder, renameFolder}
