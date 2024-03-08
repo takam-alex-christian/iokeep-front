@@ -17,7 +17,7 @@ import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons"
 
 
 //lexical imports
-import { FORMAT_TEXT_COMMAND, CAN_UNDO_COMMAND, UNDO_COMMAND, REDO_COMMAND, CAN_REDO_COMMAND, $getSelection, $isRangeSelection, CLEAR_HISTORY_COMMAND } from "lexical"
+import { FORMAT_TEXT_COMMAND, CLEAR_EDITOR_COMMAND, CAN_UNDO_COMMAND, UNDO_COMMAND, REDO_COMMAND, CAN_REDO_COMMAND, $getSelection, $isRangeSelection, CLEAR_HISTORY_COMMAND } from "lexical"
 
 import { $setBlocksType } from "@lexical/selection"
 
@@ -32,14 +32,15 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
 import { ContentEditable } from "@lexical/react/LexicalContentEditable"
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
+import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
 
 import { createNote, updateNote, useNotes } from "@/lib/noteUtils"
 import { useSelectedNote } from "./libs/customHooks"
 
 
 interface CustomEditorStateType {
-    description: string[]
+    description: string[],
+    isNoteDeleted: boolean
 }
 
 const theme = {
@@ -140,7 +141,7 @@ function CustomToolBar(props: { _id?: string, customEditorState: CustomEditorSta
                 if (!jsonResponse.error) {
                     if (jsonResponse.success) {
                         //mutate useNotes
-                        mutateNotesData([...notesData, { _id: jsonResponse.data?._id!, editorState, description: props.customEditorState.description}])
+                        mutateNotesData([...notesData, { _id: jsonResponse.data?._id!, editorState, description: props.customEditorState.description }])
                         //set selectedNoteId to new note id
                         liveAppDataDispatch({ type: "changedSelectedNote", payload: { noteId: jsonResponse.data?._id! } })
                         // alert("note created")
@@ -159,11 +160,11 @@ function CustomToolBar(props: { _id?: string, customEditorState: CustomEditorSta
 
                     //mutate useNotes
                     let newNotes = [...notesData]
-                    let updatedNoteIndex = newNotes.findIndex((eachNote)=>{return eachNote._id == props._id})
+                    let updatedNoteIndex = newNotes.findIndex((eachNote) => { return eachNote._id == props._id })
                     newNotes[updatedNoteIndex].description = props.customEditorState.description
-                    
+
                     mutateNotesData(newNotes)
-                        
+
                 } else {
                     console.log(`error while updating note \nserver says: ${jsonResponse.error.message}`)
                 }
@@ -244,10 +245,26 @@ function UpdateNoteDescription(props: { setCustomEditorState: React.Dispatch<Set
     return null
 }
 
+function AutoClearEditorOnDelete() {
+    const { liveAppData } = useContext(liveDataContext)
+
+    const [editor] = useLexicalComposerContext()
+
+    useEffect(() => {
+        if (!liveAppData.selectedNoteId) {
+            editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined)
+            editor.dispatchCommand(CLEAR_HISTORY_COMMAND, undefined)
+        }
+    }, [liveAppData.selectedNoteId])
+
+    return null
+}
+
 function TextEditor(props: { editorState?: string, _id?: string }) {
 
     const [customEditorState, setCustomEditorState] = useState<CustomEditorStateType>({ //used to ensure inter communication of data between my custom plugins
-        description: []
+        description: [],
+        isNoteDeleted: false,
     })
 
     const initialConfig = {
@@ -275,13 +292,12 @@ function TextEditor(props: { editorState?: string, _id?: string }) {
                             ErrorBoundary={LexicalErrorBoundary}
                         />
                     </div>
-
-                    <HistoryPlugin />
-                    <UpdateNoteDescription setCustomEditorState={setCustomEditorState} />
-
                 </div>
 
-                {/* <AutoLoadSelectedNoteIntoEditor /> */}
+                <HistoryPlugin />
+                <UpdateNoteDescription setCustomEditorState={setCustomEditorState} />
+                <ClearEditorPlugin />
+                <AutoClearEditorOnDelete />
 
             </LexicalComposer>
         </div>

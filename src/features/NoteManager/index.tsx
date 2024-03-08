@@ -19,7 +19,7 @@ export default function NoteManager() {
     // let's assume these notes are from the currently selected folder
 
     return (
-        <div className="flex flex-col gap-2 p-2">
+        <div className="flex flex-col h-full gap-2 p-2">
             <NoteToolBar />
             <NotesContainer />
         </div>

@@ -36,6 +36,7 @@ export default function NoteToolBar(){
                                 liveAppDataDispatch({type: "changedSelectedNote", payload: {noteId: newData[0]._id}})
                             }else {
                                 //inform user this folder is empty
+                                liveAppDataDispatch({type: "changedSelectedNote", payload: {noteId: ""}})
                             }
                         })
                         //select new not in the list

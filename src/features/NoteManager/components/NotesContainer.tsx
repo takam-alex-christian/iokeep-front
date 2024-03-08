@@ -8,6 +8,7 @@ import { useNotes } from "@/lib/noteUtils"
 import { useContext, useEffect } from "react"
 
 import NoteItem from "./NoteItem"
+import NoteSkeleton from "./NoteSkeleton"
 
 
 export default function () {
@@ -22,7 +23,6 @@ export default function () {
             liveAppDataDispatch({ type: "changedSelectedNote", payload: { noteId: notesData[0]._id } })
         } else liveAppDataDispatch({ type: "changedSelectedNote", payload: { noteId: "" } })
     }, [liveAppData.selectedFolderId, areNotesLoading])
-
 
     return (
         <div className="py-2 flex flex-col h-full gap-0">
@@ -47,8 +47,10 @@ export default function () {
                 </div>
             }
             {
-                (areFoldersLoading || areNotesLoading) && <div className="f">
-                    loading
+                (areFoldersLoading || areNotesLoading) && <div className="flex flex-col gap-2">
+                    <NoteSkeleton key={0} />
+                    <NoteSkeleton key={1} />
+                    <NoteSkeleton key={2} />
                 </div>
             }
         </div>
