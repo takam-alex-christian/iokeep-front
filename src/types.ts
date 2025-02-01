@@ -29,6 +29,7 @@ interface NoteItemDataType {
   description: Array<string>; // of size 2
   creationDate: string;
   lastModified: string;
+  isPublic: boolean;
 }
 
 export type {
