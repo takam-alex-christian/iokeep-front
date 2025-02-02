@@ -84,8 +84,8 @@ export default function () {
                     <ul className="flex flex-col gap-0">
                       {folderData.map((eachFolder, i) => {
                         return (
-                          <li key={i}>
-                            <FolderItem key={i} {...eachFolder} />
+                          <li key={eachFolder._id}>
+                            <FolderItem key={eachFolder._id} {...eachFolder} />
                           </li>
                         );
                       })}
