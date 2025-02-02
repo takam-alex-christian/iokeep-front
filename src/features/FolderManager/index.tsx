@@ -77,6 +77,7 @@ export default function () {
 
                 {!isLoading && folderData && (
                   <motion.div
+                    key={"folderItems"}
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
@@ -94,6 +95,7 @@ export default function () {
 
                 {folderManagerState.showFolderInput && (
                   <motion.div
+                    key={"newFolderForm"}
                     initial={{ opacity: 0, y: -40, height: 0 }}
                     animate={{ opacity: 1, y: 0, height: 40 }}
                     exit={{ opacity: 0, y: -40, height: 0 }}
