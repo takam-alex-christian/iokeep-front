@@ -28,7 +28,8 @@ interface NoteItemDataType {
   _id: string;
   description: Array<string>; // of size 2
   creationDate: string;
-  lastModified: string;
+  lastModifiedDate: string;
+  lastOpenedDate: string;
   isPublic: boolean;
 }
 
