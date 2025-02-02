@@ -21,6 +21,7 @@ import FolderInput from "./components/FolderInput";
 
 import { liveDataContext } from "@/contexts/liveDataContext";
 import { useFolders } from "@/lib/folderUtils";
+import FoldersSkeleton from "./components/FoldersSkeleton";
 
 function folderManagerReducer(
   prevState: FolderManagerStateType,
@@ -71,15 +72,29 @@ export default function () {
           classNames={{ heading: "px-2" }}
         >
           <div className="flex flex-col gap-2 px-2">
-            <div>
+            <div className="relative flex flex-col w-full h-fit">
               <AnimatePresence>
                 {/* display loading component here when isLoading */}
+                {isLoading && !folderData && (
+                  <motion.div
+                    key={"foldersSkeleton"}
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 1 }}
+                    exit={{
+                      opacity: 0,
+                      position: "absolute",
+                    }}
+                  >
+                    <FoldersSkeleton />
+                  </motion.div>
+                )}
 
                 {!isLoading && folderData && (
                   <motion.div
                     key={"folderItems"}
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
                   >
                     <ul className="flex flex-col gap-0">
                       {folderData.map((eachFolder, i) => {
