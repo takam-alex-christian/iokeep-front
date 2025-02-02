@@ -139,7 +139,7 @@ export default function () {
 
         //activate a loading state
 
-        signupRequest({ username: formState.username.value, password: formState.username.value }).then((jsonResponse) => {
+        signupRequest({ username: formState.username.value, password: formState.password.value }).then((jsonResponse) => {
 
             if (jsonResponse.error) alert(jsonResponse.error.message)
             else {

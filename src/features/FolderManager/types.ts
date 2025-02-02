@@ -1,20 +1,14 @@
+import { FolderDataType } from "@/types"
 
 type FolderManagerStateType = {
 
     showFolderInput: boolean,
-    folderItems: FolderItemType[]
+    selectedFolderId: string | null
 }
 
-type FolderManagerReducerActionType = {type: "folderItemsInitialized", payload: {folderItems: FolderItemType[]}} | {type: "toggledFolderInput"}
+type FolderManagerReducerActionType = {type: "toggledFolderInput"} | {type: "changedSelectedFolder", payload: {folderId: string}}
 
-type FolderItemType = {folderId: string, name: string, creationDate: string}
+// type FolderItemType = {folderId: string, name: string, creationDate: string}
 
-interface FolderItemProps {
-    folderId: string,
-    name: string,
-    creationDate?: Date,
-    folderManagerDispatch: React.Dispatch<FolderManagerReducerActionType>
 
-}
-
-export type {FolderManagerReducerActionType, FolderManagerStateType, FolderItemProps, FolderItemType}
+export type {FolderManagerReducerActionType, FolderManagerStateType, }

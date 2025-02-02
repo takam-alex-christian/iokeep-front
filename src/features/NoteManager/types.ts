@@ -13,4 +13,5 @@ type NoteItemType = {
     }
 }
 
+
 export type {NoteItemType}

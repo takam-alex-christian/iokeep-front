@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --surface: rgba(0, 0, 0, 0.05);
+}
