@@ -18,9 +18,9 @@ export default function () {
       //get access token interval
       getAccessToken()
         .then((jsonResponse) => {
-          if (jsonResponse.error) alert(jsonResponse.error.message);
+          if (jsonResponse.error) console.log(jsonResponse.error.message);
           else {
-            if (!jsonResponse.success) alert(jsonResponse.info);
+            if (!jsonResponse.success) console.log(jsonResponse.info);
           }
           console.log("new auth token received");
         })
