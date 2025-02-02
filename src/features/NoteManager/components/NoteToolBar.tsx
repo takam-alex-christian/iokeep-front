@@ -1,3 +1,4 @@
+"use client";
 import React, { useContext } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -5,11 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import { Button } from "@nextui-org/react";
+import { Button, Skeleton } from "@nextui-org/react";
 import { liveDataContext } from "@/contexts/liveDataContext";
 import { deleteNote, useNotes } from "@/lib/noteUtils";
 import { NoteItemDataType } from "@/types";
 import { useFolders } from "@/lib/folderUtils";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function NoteToolBar() {
   const { isLoading: isFolderLoading, folderData } = useFolders();
@@ -68,18 +70,40 @@ export default function NoteToolBar() {
   return (
     <div className="px-2">
       <div className="flex flex-row justify-between items-center">
-        <div className="">
-          {!isFolderLoading && (
-            <span className="text-xl font-semibold">
-              {
-                folderData[
-                  folderData.findIndex(({ _id }) => {
-                    return _id == liveAppData.selectedFolderId;
-                  })
-                ].folderName
-              }
-            </span>
-          )}
+        <div className="relative flex w-full items-center">
+          <AnimatePresence>
+            {isFolderLoading && liveAppData.selectedFolderId == null && (
+              <motion.div
+                key={"loadingFolderSkeleton"}
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className=" absolute flex w-full h-10"
+              >
+                <Skeleton key={0} className=" w-full h-full rounded-xl" />
+              </motion.div>
+            )}
+
+            {!isFolderLoading && liveAppData.selectedFolderId && (
+              <motion.div
+                key={"LoadedFolderName"}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="w-full"
+              >
+                <span className=" text-xl font-semibold">
+                  {
+                    folderData[
+                      folderData.findIndex(({ _id }) => {
+                        return _id == liveAppData.selectedFolderId;
+                      })
+                    ].folderName
+                  }
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
         <div className="flex flex-row justify-between">
           <Button
