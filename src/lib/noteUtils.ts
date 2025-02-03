@@ -14,6 +14,9 @@ type GenericJsonResponse = {
   timeStamp: number;
 };
 
+type CreateJsonResponseType = Omit<GenericJsonResponse, "data"> & {
+  data: Omit<NoteItemDataType, "editorState">;
+};
 function orderNotes(
   noteArr: Array<NoteItemDataType>,
   orderType: LiveDataState["noteOrder"]
@@ -82,7 +85,7 @@ async function createNote(noteData: {
 
   const cnBody = JSON.stringify(noteData);
 
-  const jsonResponse: GenericJsonResponse = await fetch(`be/notes`, {
+  const jsonResponse: CreateJsonResponseType = await fetch(`be/notes`, {
     method: "POST",
     headers: cnHeaders,
     body: cnBody,
