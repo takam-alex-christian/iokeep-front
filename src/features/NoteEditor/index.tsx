@@ -54,6 +54,7 @@ import { useSelectedNote } from "./libs/customHooks";
 import Share01Icon from "@/assets/share-01-stroke-rounded";
 import { AnimatePresence, motion } from "framer-motion";
 import Copy01Icon from "@/assets/copy-01-stroke-rounded";
+import { NoteItemDataType } from "@/types";
 
 interface CustomEditorStateType {
   description: string[];
@@ -181,10 +182,9 @@ function CustomToolBar(props: {
             mutateNotesData([
               ...notesData,
               {
-                _id: jsonResponse.data?._id!,
+                ...jsonResponse.data,
                 editorState,
-                description: props.customEditorState.description,
-              },
+              } as Partial<NoteItemDataType>,
             ]);
             //set selectedNoteId to new note id
             liveAppDataDispatch({

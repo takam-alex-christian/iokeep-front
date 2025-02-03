@@ -16,6 +16,7 @@ const config: Config = {
     extend: {
       colors: {
         surface: "var(--surface)",
+        subsurface: "#0000000A",
       },
     },
   },

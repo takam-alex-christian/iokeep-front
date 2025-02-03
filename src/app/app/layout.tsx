@@ -1,20 +1,27 @@
-"use client"
+"use client";
 
-import React, {useReducer} from "react";
+import React, { useReducer, useRef, useEffect } from "react";
 
-import { initialLiveData, liveDataContext, } from "@/contexts/liveDataContext";
+import { initialLiveData, liveDataContext } from "@/contexts/liveDataContext";
 
 import liveDataReducer from "@/lib/liveDataReducer";
 
 import { LiveDataDispatchAction, LiveDataState } from "@/types";
 
 export default function ({ children }: { children: React.ReactNode }) {
+  const [liveAppData, liveAppDataDispatch] = useReducer<
+    React.Reducer<LiveDataState, LiveDataDispatchAction>
+  >(liveDataReducer, initialLiveData);
 
-    const [liveAppData, liveAppDataDispatch] = useReducer<React.Reducer<LiveDataState, LiveDataDispatchAction>>(liveDataReducer, initialLiveData)
+  useEffect(() => {
+    let selectedTheme = window.localStorage.getItem("iokeepSelectedTheme");
 
-    return (
-        <liveDataContext.Provider value={{liveAppData, liveAppDataDispatch}}>
-            {children}
-        </liveDataContext.Provider>
-    )
+    if (selectedTheme) document.body.classList.add(selectedTheme);
+  }, []);
+
+  return (
+    <liveDataContext.Provider value={{ liveAppData, liveAppDataDispatch }}>
+      {children}
+    </liveDataContext.Provider>
+  );
 }
