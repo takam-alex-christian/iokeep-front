@@ -3,11 +3,16 @@
 type LiveDataState = {
   selectedFolderId: string | null;
   selectedNoteId: string | null;
+  noteOrder?: "cd" | "rcd" | "lmd" | "rlmd" | null; // creation date and last modified date respectively
 };
 
 type LiveDataDispatchAction =
   | { type: "changedSelectedFolder"; payload: { folderId: string } }
-  | { type: "changedSelectedNote"; payload: { noteId: string } };
+  | { type: "changedSelectedNote"; payload: { noteId: string } }
+  | {
+      type: "changedNoteOrder";
+      payload: { newNoteOrder: LiveDataState["noteOrder"] };
+    }; // newNoteOrder type is a lookup type obtained from LiveDataState
 
 type FolderDataType = {
   _id: string;
