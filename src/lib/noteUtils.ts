@@ -1,5 +1,5 @@
 import { liveDataContext } from "@/contexts/liveDataContext";
-import { NoteItemDataType } from "@/types";
+import { LiveDataState, NoteItemDataType } from "@/types";
 import { useContext } from "react";
 import useSWR from "swr";
 
@@ -13,6 +13,64 @@ type GenericJsonResponse = {
   error: null | { message: string };
   timeStamp: number;
 };
+
+function orderNotes(
+  noteArr: Array<NoteItemDataType>,
+  orderType: LiveDataState["noteOrder"]
+): Array<NoteItemDataType> {
+  if (!noteArr) {
+    return noteArr;
+  } else {
+    const outputNoteArr: Array<NoteItemDataType> = noteArr;
+
+    switch (orderType) {
+      case "cd": {
+        //algo to sort note by creation date
+        console.log(
+          outputNoteArr.sort((a, b) => {
+            return (
+              -new Date(a.creationDate).getTime() +
+              new Date(b.creationDate).getTime()
+            );
+          })
+        );
+        break;
+      }
+      case "rcd": {
+        outputNoteArr.sort((a, b) => {
+          return (
+            new Date(a.creationDate).getTime() -
+            new Date(b.creationDate).getTime()
+          );
+        });
+        break;
+      }
+      case "lmd": {
+        outputNoteArr.sort((a, b) => {
+          return (
+            -new Date(a.lastModifiedDate).getTime() +
+            new Date(b.lastModifiedDate).getTime()
+          );
+        });
+        break;
+      }
+      case "rlmd": {
+        outputNoteArr.sort((a, b) => {
+          return (
+            new Date(a.lastModifiedDate).getTime() -
+            new Date(b.lastModifiedDate).getTime()
+          );
+        });
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
+    return outputNoteArr;
+  }
+}
 
 async function createNote(noteData: {
   editorState: string;
@@ -50,8 +108,13 @@ function useNotes() {
     fetcher
   );
 
+  //order notes here
+
   return {
-    notesData: data as Array<NoteItemDataType>,
+    notesData: orderNotes(
+      data,
+      liveAppData.noteOrder
+    ) as Array<NoteItemDataType>,
     mutate,
     isLoading,
     error,
@@ -95,4 +158,4 @@ async function deleteNote(_id: string) {
   return jsonResponse;
 }
 
-export { createNote, useNotes, updateNote, deleteNote };
+export { createNote, useNotes, updateNote, deleteNote, orderNotes };
