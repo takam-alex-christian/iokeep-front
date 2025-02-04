@@ -43,7 +43,7 @@ export default function () {
   }
 
   return (
-    <header className="px-2 py-4 flex flex-row justify-center bg-white">
+    <header className="px-2 py-4 flex flex-row justify-center ">
       <div className="w-4/5 flex flex-row justify-between items-center ">
         {/* logo */}
         <Link href={"/app"}>

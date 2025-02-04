@@ -35,7 +35,7 @@ export default function () {
   }, []);
 
   return (
-    <main className="flex flex-col gap-6 min-h-screen bg-default-100">
+    <main className="flex flex-col gap-6 min-h-screen bg-background">
       <Navbar />
       <div className="flex-grow flex flex-row justify-center">
         <div className="w-4/5 grid grid-cols-5 gap-8">
@@ -43,7 +43,7 @@ export default function () {
             <FolderManager />
           </div>
           <div className=" col-span-4 grid grid-cols-5 gap-8 flex-grow">
-            <div className="col-span-2 rounded-xl bg-neutral-50">
+            <div className="col-span-2 rounded-xl">
               {/* noteManager */}
               <NoteManager />
             </div>

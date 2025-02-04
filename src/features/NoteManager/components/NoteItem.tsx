@@ -28,26 +28,24 @@ export default function NoteItem(props: NoteItemDataType) {
     <Button
       onPress={notePressHandler}
       key={props._id}
-      className={`flex flex-row justify-start text-left h-fit px-0 py-2 w-full ${
+      className={`flex flex-row justify-start text-left h-fit px-0 py-2 w-full text-foreground-900 ${
         liveAppData.selectedNoteId == props._id
-          ? "bg-default/45"
+          ? "bg-secondary-50"
           : "bg-transparent"
       }`}
     >
-      <div className="flex flex-col gap-0 p-3 rounded-lg bg-none w-full ">
-        <div className="text-base py-0 font-semibold text-default-600 overflow-hidden overflow-ellipsis">
-          {props.description.length > 0
-            ? props.description[0]
-            : "no description"}
+      <div className="flex flex-col gap-0 p-3 rounded-lg w-full ">
+        <div className="text-base py-0 font-semibold overflow-hidden overflow-ellipsis">
+          {props.description.length > 0 ? props.description[0] : "Empty note"}
         </div>
 
         <div className="flex flex-col gap-1 ">
           {/* {peak first p after heading} */}
-          <p className="overflow-hidden overflow-ellipsis flex-grow text-default-400">
+          <p className="overflow-hidden overflow-ellipsis flex-grow">
             {props.description.length >= 2 ? props.description[1] : ""}
           </p>
           {/* date p */}
-          <p className="text-sm text-default-400 flex flex-col gap-1">
+          <div className="text-sm  flex flex-col gap-1">
             {/* {noteCreationDate.getDate()} {noteCreationDate.getMonth()}{" "}
             {noteCreationDate.getFullYear()} */}
             <div>
@@ -58,7 +56,7 @@ export default function NoteItem(props: NoteItemDataType) {
               <span className="font-semibold">Last modified </span>
               {dateFormatter.format(noteLastModifiedDate)}
             </div>
-          </p>
+          </div>
         </div>
       </div>
     </Button>

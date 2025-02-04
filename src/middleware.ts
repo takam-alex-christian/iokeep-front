@@ -11,10 +11,10 @@ export async function middleware(req: NextRequest) {
     //check for authentication
     // console.log(cookies().getAll())
     //check for validity of refresh token
-    if (cookies().has("refresh_token")) {
+    if ((await cookies()).has("refresh_token")) {
         //verify refresh
         const authHeaders = new Headers();
-        authHeaders.append("Authorization", `Bearer ${cookies().get("refresh_token")?.value}`)
+        authHeaders.append("Authorization", `Bearer ${(await cookies()).get("refresh_token")?.value}`)
 
         try {
 

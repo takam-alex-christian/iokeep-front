@@ -133,7 +133,7 @@ export default function NoteToolBar() {
             )}
           </AnimatePresence>
         </div>
-        <div className="flex flex-row items-center justify-between bg-subsurface pl-2 rounded-xl">
+        <div className="flex flex-row items-center justify-between pl-2 rounded-xl">
           <div className="relative mr-2">
             <div className="">
               <Select
@@ -146,6 +146,8 @@ export default function NoteToolBar() {
                   listbox: "",
                   listboxWrapper: "w-fit",
                 }}
+                color="secondary"
+                variant="flat"
                 onChange={selectNoteOrderHandler}
               >
                 {Object.keys(noteOrderToText).map((eachKey) => {
@@ -167,6 +169,7 @@ export default function NoteToolBar() {
           </Button>
           <Button
             variant="light"
+            // color="danger"
             onPress={deleteButtonHandler}
             isIconOnly
             isDisabled={liveAppData.selectedNoteId ? false : true}

@@ -13,17 +13,52 @@ const config: Config = {
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      colors: {
-        // surface: "var(--surface)",
-        // subsurface: "#0000000A",
-      },
-    },
+    extend: {},
   },
   darkMode: "class",
   plugins: [
     heroui({
-      themes: {},
+      // prefix: "heroui",
+      themes: {
+        light: {
+          colors: {
+            background: { DEFAULT: "#fafaff" },
+            foreground: { DEFAULT: "#01012e" },
+            // content1: {},
+            primary: {
+              // "100": "#D3D3FF",
+              // "200": "#A6A6FF",
+              // "300": "#7A7AFF",
+              // "400": "#5959FF",
+              // "500": "#2323FF",
+              // "600": "#1919DB",
+              // "700": "#1111B7",
+              // "800": "#0B0B93",
+              // "900": "#06067A",
+              DEFAULT: "#8614cc",
+              // foreground: "#e5eeff",
+            },
+            secondary: {
+              DEFAULT: "#8614cc",
+
+              // foreground: "#f2eafc",
+            },
+            focus: {
+              DEFAULT: "#8614cc",
+            },
+            // secondary: {
+            //   DEFAULT: "",
+            // },
+          },
+        },
+        dark: {
+          colors: {
+            background: "#01012e",
+            foreground: "#f2eafc",
+            primary: "#8614cc",
+          },
+        },
+      },
     }),
   ],
 };

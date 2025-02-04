@@ -124,7 +124,7 @@ export default function (props: FolderDataType) {
       }}
       className={`relative flex flex-row items-center rounded-xl h-10 pl-4  hover:bg-surface transition-all ${
         props._id == liveAppData.selectedFolderId
-          ? "bg-surface"
+          ? "bg-secondary-200 text-secondary-700"
           : "bg-transparent"
       }`}
     >

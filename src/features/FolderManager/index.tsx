@@ -62,7 +62,7 @@ export default function () {
   }
 
   return (
-    <div className="px-0 py-0">
+    <div className="lpurpleish bg-secondary-50 rounded-3xl p-2">
       <Accordion defaultExpandedKeys={["0"]}>
         <AccordionItem
           // classNames={{ title: "" }}
@@ -71,7 +71,7 @@ export default function () {
           title={"Folders"}
           classNames={{ heading: "px-2" }}
         >
-          <div className="flex flex-col gap-2 px-2">
+          <div className="flex flex-col gap-2 ">
             <div className="relative flex flex-col w-full h-fit">
               <AnimatePresence>
                 {/* display loading component here when isLoading */}
