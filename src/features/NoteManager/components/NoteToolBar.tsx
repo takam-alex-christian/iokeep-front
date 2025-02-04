@@ -25,6 +25,15 @@ export default function NoteToolBar() {
     rlmd: "By Desc. Last Modified",
   };
 
+  const displayFolderName =
+    !isFolderLoading && liveAppData.selectedFolderId
+      ? folderData[
+          folderData.findIndex(({ _id }) => {
+            return _id == liveAppData.selectedFolderId;
+          })
+        ].folderName
+      : "";
+
   useEffect(() => {
     //noteOrder changed, reorder note by mutate
     console.log(liveAppData.noteOrder);
@@ -118,13 +127,7 @@ export default function NoteToolBar() {
                 className="w-full"
               >
                 <span className=" text-xl font-semibold">
-                  {
-                    folderData[
-                      folderData.findIndex(({ _id }) => {
-                        return _id == liveAppData.selectedFolderId;
-                      })
-                    ].folderName
-                  }
+                  {displayFolderName}
                 </span>
               </motion.div>
             )}

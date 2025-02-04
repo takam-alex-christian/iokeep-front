@@ -64,6 +64,16 @@ export default function (props: FolderDataType) {
   }
 
   function folderDeleteHandler() {
+    //select the next folder inline
+    // if the selected folder is the deleted folder,  select another folder then delete
+    //posibility
+    if (props._id == liveAppData.selectedFolderId) {
+      liveAppDataDispatch({
+        type: "changedSelectedFolder",
+        payload: { folderId: folderData ? folderData[0]._id : "" },
+      });
+    }
+
     deleteFolder(props._id).then((jsonResponse) => {
       if (!jsonResponse.error) {
         if (jsonResponse.success) {
