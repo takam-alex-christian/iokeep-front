@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { liveDataContext } from "@/contexts/liveDataContext";
 import { NoteItemDataType } from "@/types";
 

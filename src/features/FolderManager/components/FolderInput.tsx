@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFolder } from "@fortawesome/free-regular-svg-icons"
 import { } from "@fortawesome/free-solid-svg-icons"
 
-import { Button, Input, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Spacer } from "@nextui-org/react"
+import { Button, Input, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Spacer } from "@heroui/react"
 import { createFolder, renameFolder, useFolders } from "@/lib/folderUtils"
 import { FolderManagerReducerActionType } from "../types"
 import { FolderItemType } from "./FolderItem"

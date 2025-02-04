@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import V2Logo from "@/assets/logo.svg";
 
-import { Button, Switch } from "@nextui-org/react";
+import { Button, Switch } from "@heroui/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

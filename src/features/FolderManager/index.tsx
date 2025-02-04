@@ -2,9 +2,9 @@
 
 import { useReducer, useContext, useEffect } from "react";
 
-import { Accordion, AccordionItem, Button } from "@nextui-org/react";
+import { Accordion, AccordionItem, Button } from "@heroui/react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -124,7 +124,7 @@ export default function () {
             <div>
               <Button
                 onPress={toggleFolderInputHandler} //toggle folder input component
-                color={"success"}
+                color={"primary"}
                 startContent={<FontAwesomeIcon icon={faPlus} />}
               >
                 New Folder

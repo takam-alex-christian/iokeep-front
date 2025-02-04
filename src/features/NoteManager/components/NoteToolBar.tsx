@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import { Button, Select, SelectItem, Skeleton } from "@nextui-org/react";
+import { Button, Select, SelectItem, Skeleton } from "@heroui/react";
 import { liveDataContext } from "@/contexts/liveDataContext";
 import { deleteNote, orderNotes, useNotes } from "@/lib/noteUtils";
 import { LiveDataState, NoteItemDataType } from "@/types";

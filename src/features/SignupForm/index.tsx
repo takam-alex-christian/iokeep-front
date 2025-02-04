@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react"
-import { Input, Button, Link, user } from "@nextui-org/react"
+import { Input, Button, Link, user } from "@heroui/react"
 import { signupRequest } from "@/lib/authUtils"
 
 import { useRouter } from "next/navigation"

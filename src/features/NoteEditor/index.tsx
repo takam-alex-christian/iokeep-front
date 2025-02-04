@@ -5,7 +5,7 @@ import { SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { liveDataContext } from "@/contexts/liveDataContext";
 
 //nextui imports
-import { Button, ButtonProps, Divider } from "@nextui-org/react";
+import { Button, ButtonProps, Divider } from "@heroui/react";
 
 //font awesome lib imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

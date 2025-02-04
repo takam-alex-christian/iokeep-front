@@ -1,4 +1,4 @@
-import { Skeleton } from "@nextui-org/react";
+import { Skeleton } from "@heroui/react";
 
 export default function FoldersSkeleton() {
   const skelItemsNumber = 4; //numbers of folder skeletons to display could vary later with respect to screen size and platform

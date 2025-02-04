@@ -2,7 +2,7 @@
 
 import { useFolders } from "@/lib/folderUtils"
 
-import { Skeleton } from "@nextui-org/react"
+import { Skeleton } from "@heroui/react"
 
 import NoteToolBar from "./components/NoteToolBar"
 
