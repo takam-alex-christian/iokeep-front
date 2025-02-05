@@ -1,6 +1,6 @@
 "use client";
 
-import { Divider, Skeleton, Button } from "@heroui/react";
+import { Divider, ScrollShadow } from "@heroui/react";
 
 import { liveDataContext } from "@/contexts/liveDataContext";
 import { useFolders } from "@/lib/folderUtils";
@@ -31,42 +31,44 @@ export default function () {
 
   return (
     // <></>
-    <div className="py-4 px-4 flex flex-col h-full  overflow-y-auto gap-0 ">
-      {!areNotesLoading &&
-        !areFoldersLoading &&
-        notesData &&
-        notesData?.map((eachNote, i) => {
-          return (
-            <div key={eachNote._id}>
-              <NoteItem key={eachNote._id} {...eachNote} />
-              {notesData.length - 1 != i && (
-                <div className="px-3">
-                  <Divider
-                    className="bg-primary-100/50"
-                    orientation="horizontal"
-                  />
-                </div>
-              )}
+    <ScrollShadow className="h-full">
+      <div className="py-4 px-4 flex flex-col h-full  gap-0 ">
+        {!areNotesLoading &&
+          !areFoldersLoading &&
+          notesData &&
+          notesData?.map((eachNote, i) => {
+            return (
+              <div key={eachNote._id}>
+                <NoteItem key={eachNote._id} {...eachNote} />
+                {notesData.length - 1 != i && (
+                  <div className="px-3">
+                    <Divider
+                      className="bg-primary-100/50"
+                      orientation="horizontal"
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        {/* when folder is empty */}
+        {!areNotesLoading &&
+          !areFoldersLoading &&
+          notesData &&
+          notesData.length == 0 && (
+            <div className=" flex flex-col gap-2 rounded-2xl  h-full w-full justify-center items-center px-6 text-center">
+              <h3 className="font-bold">This Folder is empty</h3>
+              <p className="text-default-500 text-sm">Take some notes </p>
             </div>
-          );
-        })}
-      {/* when folder is empty */}
-      {!areNotesLoading &&
-        !areFoldersLoading &&
-        notesData &&
-        notesData.length == 0 && (
-          <div className=" flex flex-col gap-2 rounded-2xl bg-default-100 h-full w-full justify-center items-center px-6 text-center">
-            <h3 className="font-bold">This Folder is empty</h3>
-            <p className="text-default-500 text-sm">Take some notes </p>
+          )}
+        {(areFoldersLoading || areNotesLoading) && (
+          <div className="flex flex-col gap-2">
+            <NoteSkeleton key={0} />
+            <NoteSkeleton key={1} />
+            <NoteSkeleton key={2} />
           </div>
         )}
-      {(areFoldersLoading || areNotesLoading) && (
-        <div className="flex flex-col gap-2">
-          <NoteSkeleton key={0} />
-          <NoteSkeleton key={1} />
-          <NoteSkeleton key={2} />
-        </div>
-      )}
-    </div>
+      </div>
+    </ScrollShadow>
   );
 }
