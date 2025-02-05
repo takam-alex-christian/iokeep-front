@@ -28,8 +28,6 @@ function folderManagerReducer(
   action: FolderManagerReducerActionType
 ): FolderManagerStateType {
   switch (action.type) {
-    case "changedSelectedFolder":
-      return { ...prevState, selectedFolderId: action.payload.folderId };
     case "toggledFolderInput":
       return { ...prevState, showFolderInput: !prevState.showFolderInput };
     default:
@@ -42,7 +40,7 @@ export default function () {
 
   const [folderManagerState, folderManagerDispatch] = useReducer(
     folderManagerReducer,
-    { showFolderInput: false, selectedFolderId: null }
+    { showFolderInput: false }
   );
 
   const { folderData, isLoading } = useFolders();
@@ -62,7 +60,7 @@ export default function () {
   }
 
   return (
-    <div className="lpurpleish bg-secondary-50 rounded-3xl p-2">
+    <div className="custom-container rounded-3xl p-2">
       <Accordion defaultExpandedKeys={["0"]}>
         <AccordionItem
           // classNames={{ title: "" }}
@@ -111,9 +109,20 @@ export default function () {
                 {folderManagerState.showFolderInput && (
                   <motion.div
                     key={"newFolderForm"}
-                    initial={{ opacity: 0, y: -40, height: 0 }}
-                    animate={{ opacity: 1, y: 0, height: 40 }}
-                    exit={{ opacity: 0, y: -40, height: 0 }}
+                    // className=""
+                    initial={{
+                      opacity: 0,
+                      y: -40,
+                      height: 0,
+                      margin: "0px 0px",
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      height: 40,
+                      margin: "4px 0px",
+                    }}
+                    exit={{ opacity: 0, y: -40, height: 0, margin: "0px 0px" }}
                   >
                     <FolderInput create={{ folderManagerDispatch }} />
                   </motion.div>
@@ -127,7 +136,10 @@ export default function () {
                 color={"primary"}
                 startContent={<FontAwesomeIcon icon={faPlus} />}
               >
-                New Folder
+                {folderManagerState.showFolderInput
+                  ? "Cancel Creation"
+                  : "Create Folder"}
+                {/* New Folder */}
               </Button>
             </div>
           </div>

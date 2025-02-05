@@ -12,6 +12,8 @@ import { deleteNote, orderNotes, useNotes } from "@/lib/noteUtils";
 import { LiveDataState, NoteItemDataType } from "@/types";
 import { useFolders } from "@/lib/folderUtils";
 import { AnimatePresence, motion } from "framer-motion";
+import ArrangeByLettersAZIcon from "@/assets/arrange-by-letters-a-z-stroke-rounded";
+import ArrangeByLettersZAIcon from "@/assets/arrange-by-letters-z-a-stroke-rounded";
 
 export default function NoteToolBar() {
   const { isLoading: isFolderLoading, folderData } = useFolders();
@@ -102,8 +104,8 @@ export default function NoteToolBar() {
     console.log("delete button pressed");
   }
   return (
-    <div className="">
-      <div className="flex flex-row justify-between items-center">
+    <div className=" px-4 py-2">
+      <div className="flex flex-row justify-between items-center  rounded-xl">
         <div className="relative flex w-full items-center">
           <AnimatePresence>
             {isFolderLoading && liveAppData.selectedFolderId == null && (
@@ -141,18 +143,26 @@ export default function NoteToolBar() {
                 selectedKeys={
                   liveAppData.noteOrder ? [liveAppData.noteOrder] : undefined
                 }
+                startContent={
+                  liveAppData.noteOrder == "rcd" ||
+                  liveAppData.noteOrder == "rlmd" ? (
+                    <ArrangeByLettersZAIcon />
+                  ) : (
+                    <ArrangeByLettersAZIcon />
+                  )
+                }
                 classNames={{
                   popoverContent: "absolute w-fit",
                   listbox: "",
                   listboxWrapper: "w-fit",
                 }}
-                color="secondary"
+                color="default"
                 variant="flat"
                 onChange={selectNoteOrderHandler}
               >
                 {Object.keys(noteOrderToText).map((eachKey) => {
                   return (
-                    <SelectItem key={eachKey}>
+                    <SelectItem color="primary" key={eachKey}>
                       {noteOrderToText[eachKey]}
                     </SelectItem>
                   );
@@ -178,7 +188,6 @@ export default function NoteToolBar() {
           </Button>
         </div>
       </div>
-      <div></div>
     </div>
   );
 }

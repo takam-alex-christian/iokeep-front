@@ -20,6 +20,8 @@ import { liveDataContext } from "@/contexts/liveDataContext";
 import { FolderDataType } from "@/types";
 import { deleteFolder, useFolders } from "@/lib/folderUtils";
 import FolderInput from "./FolderInput";
+import SlidersHorizontalIcon from "@/assets/sliders-horizontal-stroke-rounded";
+import MenuTwoLineIcon from "@/assets/menu-two-line-stroke-rounded";
 
 type FolderItemType = {
   isHovered: boolean;
@@ -40,18 +42,20 @@ export default function (props: FolderDataType) {
     isRenamed: false,
   });
 
+  const isFolderSelected = props._id == liveAppData.selectedFolderId;
+
   useEffect(() => {
     if (!itemState.isRenamed) {
       if (itemState.isHovered)
         animateOptionButton(
           optionButtonScope.current,
-          { opacity: 1 },
+          { opacity: 1, x: 0, width: "fit-content" },
           { duration: 0.4 }
         );
       else
         animateOptionButton(
           optionButtonScope.current,
-          { opacity: 0 },
+          { opacity: 0, x: 50, width: 0 },
           { duration: 0.4 }
         );
     }
@@ -122,9 +126,11 @@ export default function (props: FolderDataType) {
           return { ...prevState, isHovered: false };
         });
       }}
-      className={`relative flex flex-row items-center rounded-xl h-10 pl-4  hover:bg-surface transition-all ${
+      className={`relative flex flex-row ${
+        itemState.isRenamed ? "my-3" : " pl-4"
+      } cursor-pointer items-center justify-start rounded-xl min-h-10 overflow-visible transition-all ${
         props._id == liveAppData.selectedFolderId
-          ? "bg-secondary-200 text-secondary-700"
+          ? "bg-primary-50"
           : "bg-transparent"
       }`}
     >
@@ -132,33 +138,44 @@ export default function (props: FolderDataType) {
         <>
           <button
             onClick={folderItemPressHandler}
-            className={`w-full hover:bg-none focus-visible:outline-none`}
+            className={` overflow-hidden w-full hover:bg-none focus-visible:outline-none`}
           >
-            <div className="flex flex-row items-center gap-2">
+            <div className=" flex flex-row items-center gap-2">
               <FontAwesomeIcon icon={faFolder} />
 
-              <div>{props.folderName}</div>
+              <div className="flex flex-row w-full justify-between">
+                <span className="shrink text-ellipsis whitespace-nowrap overflow-hidden ">
+                  {props.folderName}
+                </span>
+
+                <span className=" shrink-0 text-xs w-fit py-1 px-2">
+                  {props.size && <span>{props.size}</span>}
+                </span>
+              </div>
             </div>
           </button>
 
-          <motion.div>
-            <div className="flex items-center justify-center text-xs w-8 py-1 px-2 bg-surface rounded-xl">
-              {props.size && <span>{props.size}</span>}
-            </div>
-          </motion.div>
+          {/* <motion.div></motion.div> */}
 
-          <div className="">
+          <div className="" ref={optionButtonScope}>
             <Dropdown>
               <DropdownTrigger>
-                <Button className="" size={"sm"} variant="light" isIconOnly>
-                  <FontAwesomeIcon
-                    className="opacity-0"
-                    ref={optionButtonScope}
-                    icon={faEllipsisVertical}
-                  />
+                <Button
+                  className=""
+                  size={"sm"}
+                  color={`${isFolderSelected ? "primary" : "default"}`}
+                  variant={`light`}
+                  isIconOnly
+                >
+                  {/* <FontAwesomeIcon className="" icon={faEllipsisVertical} /> */}
+                  <MenuTwoLineIcon />
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu aria-label="folder menu">
+              <DropdownMenu
+                aria-label="folder menu"
+                color="primary"
+                variant="flat"
+              >
                 <DropdownItem key={"edit"} onPress={folderRenameHandler}>
                   Rename
                 </DropdownItem>

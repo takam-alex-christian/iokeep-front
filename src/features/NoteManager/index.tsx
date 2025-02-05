@@ -2,7 +2,7 @@
 
 import { useFolders } from "@/lib/folderUtils";
 
-import { Skeleton } from "@heroui/react";
+import { Divider, Skeleton } from "@heroui/react";
 
 import NoteToolBar from "./components/NoteToolBar";
 
@@ -16,8 +16,9 @@ export default function NoteManager() {
   // let's assume these notes are from the currently selected folder
 
   return (
-    <div className="flex flex-col h-full gap-2 p-4 bg-white rounded-3xl">
+    <div className="custom-container flex flex-col h-full gap-0 py-0 rounded-3xl">
       <NoteToolBar />
+      <Divider className="bg-default-100" />
       <NotesContainer />
     </div>
   );

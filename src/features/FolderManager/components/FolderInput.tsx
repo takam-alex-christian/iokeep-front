@@ -1,4 +1,4 @@
-import React, { useState, useEffect, SetStateAction } from "react";
+import React, { useState, useEffect, SetStateAction, useContext } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFolder } from "@fortawesome/free-regular-svg-icons";
@@ -17,6 +17,7 @@ import {
 import { createFolder, renameFolder, useFolders } from "@/lib/folderUtils";
 import { FolderManagerReducerActionType } from "../types";
 import { FolderItemType } from "./FolderItem";
+import { liveDataContext } from "@/contexts/liveDataContext";
 
 type FormStateType = {
   foldername: {
@@ -47,6 +48,8 @@ export default function (props: FolderInputProps) {
       errorMessage: "",
     },
   });
+
+  const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext);
 
   const { folderData, isLoading, mutate: mutateFolders } = useFolders();
 
@@ -133,10 +136,11 @@ export default function (props: FolderInputProps) {
     if (props.rename) {
       renameFolder(props.rename._id, formState.foldername.value).then(
         (jsonResponse) => {
+          console.log(jsonResponse);
           if (!jsonResponse.error) {
             if (jsonResponse.success) {
               //mutate updated folder
-              let foldersCopy = folderData;
+              let foldersCopy = [...folderData];
               let updatedFolderId = foldersCopy.findIndex((eachFolder) => {
                 return eachFolder._id == props.rename?._id;
               });
@@ -145,6 +149,12 @@ export default function (props: FolderInputProps) {
                 formState.foldername.value;
 
               mutateFolders(foldersCopy);
+
+              //cause a rerender by setting selected folder
+              liveAppDataDispatch({
+                type: "changedSelectedFolder",
+                payload: { folderId: liveAppData.selectedFolderId! },
+              }); //solved the issue of none changing display foldernames
 
               props.rename?.setCallerItemState((prevState) => {
                 return { ...prevState, isRenamed: false };
@@ -169,8 +179,8 @@ export default function (props: FolderInputProps) {
   }
 
   return (
-    <form onSubmit={folderSubmitHandler}>
-      <div className="flex flex-row gap-2 items-center ">
+    <form onSubmit={folderSubmitHandler} className="w-full">
+      <div className="flex flex-row gap-2 items-center  w-full">
         <Tooltip
           placement="right"
           isOpen={formState.foldername.isInvalid}
@@ -198,10 +208,10 @@ export default function (props: FolderInputProps) {
             }
             placeholder="folder name"
             variant="flat"
-            color="secondary"
+            color="primary"
             classNames={{
               input: "",
-              inputWrapper: "h-9 pl-4",
+              inputWrapper: "pl-4",
               innerWrapper: "flex flex-row gap-1",
             }}
           />

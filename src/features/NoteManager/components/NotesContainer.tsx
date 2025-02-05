@@ -31,7 +31,7 @@ export default function () {
 
   return (
     // <></>
-    <div className="py-2 flex flex-col h-full gap-0">
+    <div className="py-4 px-4 flex flex-col h-full  overflow-y-auto gap-0 ">
       {!areNotesLoading &&
         !areFoldersLoading &&
         notesData &&
@@ -41,7 +41,10 @@ export default function () {
               <NoteItem key={eachNote._id} {...eachNote} />
               {notesData.length - 1 != i && (
                 <div className="px-3">
-                  <Divider className="" orientation="horizontal" />
+                  <Divider
+                    className="bg-primary-100/50"
+                    orientation="horizontal"
+                  />
                 </div>
               )}
             </div>

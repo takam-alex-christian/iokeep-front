@@ -435,10 +435,10 @@ function TextEditor(props: {
   };
 
   return (
-    <div className="flex flex-col flex-grow ">
+    <div className="custom-container rounded-3xl overflow-clip flex flex-col flex-grow  ">
       {/* lexical editor */}
       <LexicalComposer initialConfig={initialConfig}>
-        <div className=" flex-grow flex flex-col gap-0 bg-white shadow-sm rounded-xl">
+        <div className=" flex-grow flex flex-col gap-0 shadow-sm rounded-xl">
           <CustomToolBar
             _id={props._id}
             customEditorState={customEditorState}

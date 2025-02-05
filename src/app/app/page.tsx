@@ -35,19 +35,19 @@ export default function () {
   }, []);
 
   return (
-    <main className="flex flex-col gap-6 min-h-screen bg-background">
+    <main className="custom-bg-image flex flex-col gap-6 h-screen overflow-hidden ">
       <Navbar />
-      <div className="flex-grow flex flex-row justify-center">
-        <div className="w-4/5 grid grid-cols-5 gap-8">
+      <div className="flex-grow flex flex-row  overflow-hidden justify-center">
+        <div className="w-4/5 grid h-full overflow-hidden  grid-cols-5 gap-8">
           <div className=" col-span-1">
             <FolderManager />
           </div>
-          <div className=" col-span-4 grid grid-cols-5 gap-8 flex-grow">
-            <div className="col-span-2 rounded-xl">
+          <div className=" col-span-4 grid grid-cols-5 gap-8 h-full overflow-hidden  flex-grow">
+            <div className="col-span-2 rounded-xl h-full overflow-hidden">
               {/* noteManager */}
               <NoteManager />
             </div>
-            <div className="col-span-3 flex-grow flex flex-col ">
+            <div className="col-span-3 h-full overflow-hidden  flex-grow flex flex-col ">
               <NoteEditor />
             </div>
           </div>
