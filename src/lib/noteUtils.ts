@@ -129,16 +129,20 @@ async function updateNote({
   editorState,
   description,
   isPublic,
+  folderId,
 }: {
   _id: string;
   editorState: string;
   description: string[];
   isPublic?: boolean;
+  folderId?: string;
 }) {
   const unHeaders = new Headers();
   unHeaders.append("Content-Type", "application/json");
 
-  const unBody = JSON.stringify({ editorState, description, isPublic });
+  const unBody = JSON.stringify({
+    noteData: { editorState, description, isPublic, folderId },
+  });
 
   const jsonResponse: GenericJsonResponse = await fetch(`be/notes/${_id}`, {
     method: "PATCH",
