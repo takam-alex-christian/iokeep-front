@@ -32,6 +32,7 @@ type AuthJsonResponse = {
 interface NoteItemDataType {
   _id: string;
   folderId: string;
+  editorState: string;
   description: Array<string>; // of size 2
   creationDate: string;
   lastModifiedDate: string;

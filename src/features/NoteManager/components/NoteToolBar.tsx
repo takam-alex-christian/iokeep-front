@@ -16,7 +16,11 @@ import ArrangeByLettersAZIcon from "@/assets/arrange-by-letters-a-z-stroke-round
 import ArrangeByLettersZAIcon from "@/assets/arrange-by-letters-z-a-stroke-rounded";
 
 export default function NoteToolBar() {
-  const { isLoading: isFolderLoading, folderData } = useFolders();
+  const {
+    isLoading: isFolderLoading,
+    folderData,
+    mutate: mutateFoldersData,
+  } = useFolders();
   const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext);
   const { isLoading: isNoteDataLoading, notesData, mutate } = useNotes();
 
@@ -27,14 +31,16 @@ export default function NoteToolBar() {
     rlmd: "By Desc. Last Modified",
   };
 
+  // if !isFolderLoading
+  const indexOfSelectedFolder = !isFolderLoading
+    ? folderData.findIndex((eachFolder) => {
+        return eachFolder._id == liveAppData.selectedFolderId;
+      })
+    : -1;
   const displayFolderName =
-    !isFolderLoading && liveAppData.selectedFolderId
-      ? folderData[
-          folderData.findIndex(({ _id }) => {
-            return _id == liveAppData.selectedFolderId;
-          })
-        ].folderName
-      : "";
+    indexOfSelectedFolder > -1
+      ? folderData[indexOfSelectedFolder].folderName
+      : "nothing";
 
   useEffect(() => {
     //noteOrder changed, reorder note by mutate
@@ -88,6 +94,16 @@ export default function NoteToolBar() {
                 });
               }
             });
+
+            const foldersDataCopy = folderData;
+            const folderIndex = folderData.findIndex((eachFolder) => {
+              return eachFolder._id == liveAppData.selectedFolderId;
+            });
+
+            if (folderIndex) {
+              foldersDataCopy[folderIndex].size! -= 1;
+            }
+            mutateFoldersData(foldersDataCopy);
             //select new not in the list
           } else {
             // inform the user that note was not deleted
