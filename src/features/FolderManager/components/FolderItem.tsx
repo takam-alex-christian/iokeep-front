@@ -22,24 +22,32 @@ import { deleteFolder, useFolders } from "@/lib/folderUtils";
 import FolderInput from "./FolderInput";
 import SlidersHorizontalIcon from "@/assets/sliders-horizontal-stroke-rounded";
 import MenuTwoLineIcon from "@/assets/menu-two-line-stroke-rounded";
+import { updateNote, useNotes } from "@/lib/noteUtils";
 
-type FolderItemType = {
+type FolderItemInternalStateType = {
   isHovered: boolean;
   isRenamed: boolean;
+  isDragEntered: boolean;
 };
 
 export default function (props: FolderDataType) {
   const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext);
 
   const { folderData, isLoading, error, mutate: mutateFolders } = useFolders();
+  const {
+    notesData,
+    isLoading: areNotesDataLoading,
+    mutate: mutateNotes,
+  } = useNotes();
 
   const [folderItemScope, animateFolderItem] = useAnimate();
 
   const [optionButtonScope, animateOptionButton] = useAnimate(); //as in animate option button scrope
 
-  const [itemState, setItemState] = useState<FolderItemType>({
+  const [itemState, setItemState] = useState<FolderItemInternalStateType>({
     isHovered: false,
     isRenamed: false,
+    isDragEntered: false,
   });
 
   const isFolderSelected = props._id == liveAppData.selectedFolderId;
@@ -113,6 +121,71 @@ export default function (props: FolderDataType) {
     console.log("folderManagerSelectedId changed to a new id");
   }
 
+  async function onNoteDropHandler(e: React.DragEvent) {
+    const draggedNoteId = e.dataTransfer.getData("text/plain");
+
+    setItemState((prevState) => {
+      return { ...prevState, isDragEntered: false };
+    });
+
+    await updateNote({
+      _id: draggedNoteId,
+      folderId: props._id,
+    }).then((jsonResponse) => {
+      if (!jsonResponse.error) {
+        if (jsonResponse.success) {
+          if (liveAppData.selectedNoteId == draggedNoteId) {
+            // open the receiving folder insted
+
+            liveAppDataDispatch({
+              type: "changedSelectedFolder",
+              payload: { folderId: props._id },
+            });
+          } else {
+            //mutate note immediately to perceive visual change
+
+            const originFolderIndex = folderData.findIndex((eachFolder) => {
+              return eachFolder._id == liveAppData.selectedFolderId;
+            });
+            const destFolderIndex = folderData.findIndex((eachFolder) => {
+              return eachFolder._id == props._id;
+            });
+            if (!isLoading && folderData.length > 0) {
+              // const receiverFolderIndex
+              const folderDataCopy = folderData;
+              if (originFolderIndex)
+                folderDataCopy[originFolderIndex].size! -= 1;
+              if (destFolderIndex) folderDataCopy[originFolderIndex].size! += 1;
+
+              mutateFolders(folderDataCopy);
+            }
+
+            if (!areNotesDataLoading && notesData.length > 0) {
+              mutateNotes([
+                ...notesData.filter((eachNote) => {
+                  return eachNote._id != draggedNoteId;
+                }),
+              ]);
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function onNoteDragEnterHandler() {
+    setItemState((prevState) => {
+      return { ...prevState, isDragEntered: true };
+    });
+
+    console.log("drag hovering");
+  }
+
+  function onNoteDragLeaveHandler() {
+    setItemState((prevState) => {
+      return { ...prevState, isDragEntered: false };
+    });
+  }
   return (
     <div
       ref={folderItemScope}
@@ -126,14 +199,26 @@ export default function (props: FolderDataType) {
           return { ...prevState, isHovered: false };
         });
       }}
-      className={`relative flex flex-row ${
+      onDrop={onNoteDropHandler}
+      className={`group relative flex flex-row ${
         itemState.isRenamed ? "my-3" : " pl-4"
-      } cursor-pointer items-center justify-start rounded-xl min-h-10 overflow-visible transition-all ${
-        props._id == liveAppData.selectedFolderId
-          ? "bg-primary-50"
-          : "bg-transparent"
+      } cursor-pointer items-center justify-start rounded-xl min-h-10 overflow-visible ${
+        itemState.isDragEntered
+          ? " outline-dashed outline-1 outline-primary-800"
+          : ""
+      } hover:bg-primary-50 transition-colors ${
+        props._id == liveAppData.selectedFolderId ? "bg-primary-50" : ""
       }`}
     >
+      {/* this div is meant to overlay on folder item will be responsible for drag reception */}
+      <div
+        className="absolute group-focus-within:invisible group-hover:invisible z-50 bg-transparent inset-0"
+        onDragOver={(e) => {
+          e.preventDefault(); //allow element to accept drop
+        }}
+        onDragEnter={onNoteDragEnterHandler}
+        onDragLeave={onNoteDragLeaveHandler}
+      ></div>
       {!itemState.isRenamed && (
         <>
           <button
@@ -207,4 +292,4 @@ export default function (props: FolderDataType) {
   );
 }
 
-export type { FolderItemType };
+// export type { FolderItemType };
