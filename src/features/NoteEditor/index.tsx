@@ -55,6 +55,7 @@ import Share01Icon from "@/assets/share-01-stroke-rounded";
 import { AnimatePresence, motion } from "framer-motion";
 import Copy01Icon from "@/assets/copy-01-stroke-rounded";
 import { NoteItemDataType } from "@/types";
+import { useFolders } from "@/lib/folderUtils";
 
 interface CustomEditorStateType {
   description: string[];
@@ -109,6 +110,12 @@ function CustomToolBar(props: {
     isLoading: areNotesLoading,
     error: useNotesError,
   } = useNotes();
+
+  const {
+    folderData,
+    isLoading: areFoldersLoading,
+    mutate: mutateFolders,
+  } = useFolders();
 
   const shareInputRef = useRef<HTMLInputElement>(null);
   const [shareNoteState, setShareNoteState] = useState<{
@@ -186,6 +193,16 @@ function CustomToolBar(props: {
                 editorState,
               } as Partial<NoteItemDataType>,
             ]);
+
+            const folderDataCopy = folderData;
+            const indexOfSelectedFolder = folderDataCopy.findIndex(
+              (eachFolder) => {
+                return eachFolder._id == liveAppData.selectedFolderId;
+              }
+            );
+
+            folderDataCopy[indexOfSelectedFolder].size! += 1;
+            mutateFolders(folderDataCopy);
             //set selectedNoteId to new note id
             liveAppDataDispatch({
               type: "changedSelectedNote",

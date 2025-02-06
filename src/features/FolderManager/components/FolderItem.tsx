@@ -96,12 +96,30 @@ export default function (props: FolderDataType) {
             { duration: 0.4 }
           ).then(() => {
             //mutate folderData
-            mutateFolders(
-              folderData.filter((eachFolder) => {
-                return eachFolder._id != props._id;
-              })
-            );
           });
+
+          const indexOfFolder = folderData.findIndex((eachFolder) => {
+            return eachFolder._id == liveAppData.selectedFolderId;
+          });
+
+          const newSelectedFolderIndex = indexOfFolder == 0 ? 1 : 0;
+
+          mutateFolders(
+            folderData.filter((eachFolder) => {
+              return eachFolder._id != props._id;
+            })
+          );
+
+          if (liveAppData.selectedFolderId == props._id) {
+            if (folderData.length > 1) {
+              liveAppDataDispatch({
+                type: "changedSelectedFolder",
+                payload: {
+                  folderId: folderData[newSelectedFolderIndex]._id,
+                },
+              });
+            }
+          }
 
           //animate presence
         } // remove folder from folderData
@@ -134,6 +152,31 @@ export default function (props: FolderDataType) {
     }).then((jsonResponse) => {
       if (!jsonResponse.error) {
         if (jsonResponse.success) {
+          const originFolderIndex = folderData.findIndex((eachFolder) => {
+            return eachFolder._id == liveAppData.selectedFolderId;
+          });
+          const destFolderIndex = folderData.findIndex((eachFolder) => {
+            return eachFolder._id == props._id;
+          });
+
+          const folderDataCopy = folderData;
+          if (originFolderIndex) folderDataCopy[originFolderIndex].size! -= 1;
+          if (destFolderIndex) folderDataCopy[originFolderIndex].size! += 1;
+
+          if (!isLoading && folderData.length > 0) {
+            // const receiverFolderIndex
+
+            mutateFolders(folderDataCopy);
+          }
+
+          if (!areNotesDataLoading && notesData.length > 0) {
+            mutateNotes([
+              ...notesData.filter((eachNote) => {
+                return eachNote._id != draggedNoteId;
+              }),
+            ]);
+          }
+
           if (liveAppData.selectedNoteId == draggedNoteId) {
             // open the receiving folder insted
 
@@ -143,30 +186,6 @@ export default function (props: FolderDataType) {
             });
           } else {
             //mutate note immediately to perceive visual change
-
-            const originFolderIndex = folderData.findIndex((eachFolder) => {
-              return eachFolder._id == liveAppData.selectedFolderId;
-            });
-            const destFolderIndex = folderData.findIndex((eachFolder) => {
-              return eachFolder._id == props._id;
-            });
-            if (!isLoading && folderData.length > 0) {
-              // const receiverFolderIndex
-              const folderDataCopy = folderData;
-              if (originFolderIndex)
-                folderDataCopy[originFolderIndex].size! -= 1;
-              if (destFolderIndex) folderDataCopy[originFolderIndex].size! += 1;
-
-              mutateFolders(folderDataCopy);
-            }
-
-            if (!areNotesDataLoading && notesData.length > 0) {
-              mutateNotes([
-                ...notesData.filter((eachNote) => {
-                  return eachNote._id != draggedNoteId;
-                }),
-              ]);
-            }
           }
         }
       }

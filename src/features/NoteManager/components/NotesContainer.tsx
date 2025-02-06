@@ -16,18 +16,18 @@ export default function () {
   const { isLoading: areFoldersLoading } = useFolders();
   const { notesData, isLoading: areNotesLoading, error } = useNotes(); //because this componenet renders its content only when folders are done loading
 
-  useEffect(() => {
-    if (!areNotesLoading && notesData && notesData.length > 0) {
-      liveAppDataDispatch({
-        type: "changedSelectedNote",
-        payload: { noteId: notesData[0]._id },
-      });
-    } else
-      liveAppDataDispatch({
-        type: "changedSelectedNote",
-        payload: { noteId: "" },
-      });
-  }, [liveAppData.selectedFolderId, areNotesLoading]);
+  // useEffect(() => {
+  //   // if (!areNotesLoading && notesData && notesData.length > 0) {
+  //   //   liveAppDataDispatch({
+  //   //     type: "changedSelectedNote",
+  //   //     payload: { noteId: notesData[0]._id },
+  //   //   });
+  //   // } else
+  //   //   liveAppDataDispatch({
+  //   //     type: "changedSelectedNote",
+  //   //     payload: { noteId: "" },
+  //   //   });
+  // }, [liveAppData.selectedFolderId, areNotesLoading]);
 
   return (
     // <></>
