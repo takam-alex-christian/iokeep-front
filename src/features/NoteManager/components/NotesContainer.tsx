@@ -16,18 +16,47 @@ export default function () {
   const { isLoading: areFoldersLoading } = useFolders();
   const { notesData, isLoading: areNotesLoading, error } = useNotes(); //because this componenet renders its content only when folders are done loading
 
+  useEffect(() => {
+    if (
+      liveAppData.selectedNoteId != null &&
+      liveAppData.selectedFolderId !=
+        window.localStorage.getItem("persistedNoteId")
+    ) {
+      window.localStorage.setItem(
+        "persistedNoteId",
+        liveAppData.selectedNoteId ? liveAppData.selectedNoteId : ""
+      );
+      if (!areNotesLoading && notesData) {
+        const selectedNote = notesData.find((eachNote) => {
+          return eachNote._id == liveAppData.selectedNoteId;
+        });
+        if (selectedNote)
+          window.localStorage.setItem(
+            "persistedFolderId",
+            selectedNote.folderId
+          );
+      }
+    } else {
+      liveAppDataDispatch({
+        type: "changedSelectedNote",
+        payload: {
+          noteId: window.localStorage.getItem("persistedNoteId")!,
+        },
+      });
+    }
+  }, [liveAppData.selectedNoteId]);
+
   // useEffect(() => {
-  //   // if (!areNotesLoading && notesData && notesData.length > 0) {
-  //   //   liveAppDataDispatch({
-  //   //     type: "changedSelectedNote",
-  //   //     payload: { noteId: notesData[0]._id },
-  //   //   });
-  //   // } else
-  //   //   liveAppDataDispatch({
-  //   //     type: "changedSelectedNote",
-  //   //     payload: { noteId: "" },
-  //   //   });
-  // }, [liveAppData.selectedFolderId, areNotesLoading]);
+  //   let persistedNoteId = window.localStorage.getItem("persistedNoteId");
+
+  //   if (notesData && notesData.length > 0)
+  //     liveAppDataDispatch({
+  //       type: "changedSelectedNote",
+  //       payload: {
+  //         noteId: persistedNoteId ? persistedNoteId : notesData[0]._id,
+  //       },
+  //     });
+  // }, []);
 
   return (
     // <></>
