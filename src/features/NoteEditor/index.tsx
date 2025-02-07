@@ -435,6 +435,7 @@ function TextEditor(props: {
   editorState?: string;
   _id?: string;
   isPublic?: boolean;
+  isEditable?: boolean;
 }) {
   const [customEditorState, setCustomEditorState] =
     useState<CustomEditorStateType>({
@@ -445,6 +446,7 @@ function TextEditor(props: {
 
   const initialConfig = {
     editorState: props.editorState,
+    editable: props.isEditable != undefined ? props.isEditable : true,
     namespace: "TextEditor",
     theme,
     onError,
@@ -456,10 +458,13 @@ function TextEditor(props: {
       {/* lexical editor */}
       <LexicalComposer initialConfig={initialConfig}>
         <div className=" flex-grow flex flex-col gap-0 shadow-sm rounded-xl">
-          <CustomToolBar
-            _id={props._id}
-            customEditorState={customEditorState}
-          />
+          {props.isEditable && (
+            <CustomToolBar
+              _id={props._id}
+              customEditorState={customEditorState}
+            />
+          )}
+
           {/* <Divider orientation="horizontal" /> */}
           {/* <Divider orientation="horizontal" /> */}
           <div className=" relative flex flex-col flex-grow py-2 px-6">
@@ -477,14 +482,33 @@ function TextEditor(props: {
           </div>
         </div>
 
-        <HistoryPlugin />
-        <UpdateNoteDescription setCustomEditorState={setCustomEditorState} />
-        <ClearEditorPlugin />
-        <AutoClearEditorOnDelete />
+        {props.isEditable && (
+          <>
+            <HistoryPlugin />
+            <UpdateNoteDescription
+              setCustomEditorState={setCustomEditorState}
+            />
+            <ClearEditorPlugin />
+            <AutoClearEditorOnDelete />
+          </>
+        )}
       </LexicalComposer>
     </div>
   );
 }
+
+function ReadOnlyEditor(props: NoteItemDataType & { isEditable: boolean }) {
+  return (
+    <TextEditor
+      key={props._id}
+      _id={props._id}
+      editorState={props.editorState}
+      isEditable={props.isEditable}
+    />
+  );
+}
+
+export { NoteEditor, ReadOnlyEditor };
 
 export default function NoteEditor() {
   const { noteData } = useSelectedNote();
@@ -493,6 +517,7 @@ export default function NoteEditor() {
     <TextEditor
       key={noteData?._id}
       _id={noteData?._id}
+      isEditable={true}
       editorState={noteData?.editorState}
       isPublic={noteData?.isPublic}
     />
