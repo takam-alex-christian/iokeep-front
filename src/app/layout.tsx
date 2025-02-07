@@ -11,8 +11,8 @@ import { NextUiProviderWrapper } from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Iokeepv2",
-  description: "A nextgen note taking app",
+  title: "Iokeepv3",
+  description: " A note taking web application.",
 };
 
 export default function RootLayout({
