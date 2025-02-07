@@ -16,7 +16,7 @@ import {
 } from "@heroui/react";
 import { createFolder, renameFolder, useFolders } from "@/lib/folderUtils";
 import { FolderManagerReducerActionType } from "../types";
-import { FolderItemType } from "./FolderItem";
+import { FolderItemInternalStateType } from "./FolderItem";
 import { liveDataContext } from "@/contexts/liveDataContext";
 
 type FormStateType = {
@@ -35,7 +35,9 @@ interface FolderInputProps {
   rename?: {
     _id: string;
     initialValue: string;
-    setCallerItemState: React.Dispatch<SetStateAction<FolderItemType>>;
+    setCallerItemState: React.Dispatch<
+      SetStateAction<FolderItemInternalStateType>
+    >;
   };
 }
 
