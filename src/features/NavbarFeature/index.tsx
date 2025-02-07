@@ -53,8 +53,14 @@ export default function () {
     <header className="custom-navbar-bg px-2 py-4 flex flex-row justify-center ">
       <div className="w-4/5 flex flex-row justify-between items-center ">
         {/* logo */}
-        <Link href={"/app"}>
+        <Link href={"/app"} className="flex flex-row gap-0 items-center">
           <Image width={48} src={V2Logo} alt={"iokeep v2 logo"} />
+          <span>
+            Iokeep
+            <span className="text-primary-800 bg-primary-100 py-1 ml-1 px-2 rounded-full font-semibold">
+              v3
+            </span>
+          </span>
         </Link>
 
         <div className="flex flex-row justify-center items-center gap-2">
