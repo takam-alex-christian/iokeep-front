@@ -7,9 +7,6 @@ import { Divider, Skeleton } from "@heroui/react";
 import NoteToolBar from "./components/NoteToolBar";
 
 import NotesContainer from "./components/NotesContainer";
-import { useContext } from "react";
-import { liveDataContext } from "@/contexts/liveDataContext";
-import { useNotes } from "@/lib/noteUtils";
 
 export default function NoteManager() {
   // some app contex will tell what folder is selected
