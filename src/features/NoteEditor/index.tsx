@@ -5,7 +5,16 @@ import { SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { liveDataContext } from "@/contexts/liveDataContext";
 
 //nextui imports
-import { Button, ButtonProps, Divider } from "@heroui/react";
+import {
+  Button,
+  ButtonProps,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@heroui/react";
 
 //font awesome lib imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -127,6 +136,12 @@ function CustomToolBar(props: {
   });
 
   const [editor] = useLexicalComposerContext();
+
+  const {
+    isOpen: isShareModalOpen,
+    onOpen: onShareModalOpen,
+    onOpenChange: onShareModalOpenChange,
+  } = useDisclosure();
 
   function boldButtonHandler() {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
@@ -269,24 +284,16 @@ function CustomToolBar(props: {
     setShareNoteState((prevState) => {
       return { ...prevState, showPublicNoteLink: true };
     });
+
+    onShareModalOpen();
   }
+
   function shareButtonCopyToClipboardHandler() {
     shareInputRef.current?.select();
 
     navigator.clipboard.writeText(
       shareInputRef.current?.value ? shareInputRef.current?.value : ""
     );
-
-    //
-    setShareNoteState((prevState) => {
-      return { ...prevState, showPublicNoteLink: false, showCopiedAlert: true };
-    });
-
-    setTimeout(() => {
-      setShareNoteState((prevState) => {
-        return { ...prevState, showCopiedAlert: false };
-      });
-    }, 800);
   }
 
   return (
@@ -327,42 +334,52 @@ function CustomToolBar(props: {
             <Share01Icon />
           </ToolButton>
           <div className="relative">
-            <AnimatePresence>
-              {shareNoteState.showPublicNoteLink && (
-                <motion.div
-                  key="shareLink"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute flex flex-row gap-2 overflow-hidden bg-surface rounded-lg p-2"
-                >
-                  <input
-                    ref={shareInputRef}
-                    className="min-w-20 w-full bg-transparent focus:outline-none"
-                    readOnly
-                    value={"link"}
-                  />
-                  <Button
-                    onPress={shareButtonCopyToClipboardHandler}
-                    isIconOnly
-                    size="sm"
-                  >
-                    <Copy01Icon />
-                  </Button>
-                </motion.div>
-              )}
-              {shareNoteState.showCopiedAlert && (
-                <motion.div
-                  key="shareCopied"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute flex flex-row gap-2 overflow-hidden bg-green-400 rounded-lg p-2"
-                >
-                  copied!
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <Modal
+              isOpen={isShareModalOpen}
+              onOpenChange={onShareModalOpenChange}
+            >
+              <ModalContent>
+                {(onClose) => (
+                  <>
+                    <ModalHeader>Copy Link</ModalHeader>
+                    <ModalBody>
+                      <p>
+                        You can share this link with your friends. They'll
+                        probably enjoy reading through this note
+                      </p>
+                      <div className="bg-primary-50 p-2 w-full rounded-xl">
+                        <input
+                          ref={shareInputRef}
+                          className="min-w-20 w-full bg-transparent focus:outline-none"
+                          readOnly
+                          value={`https://iokeep.com/notes/${props._id}`}
+                        />
+                      </div>
+                      {/* <Button
+                        onPress={shareButtonCopyToClipboardHandler}
+                        isIconOnly
+                        size="sm"
+                      >
+                        <Copy01Icon />
+                      </Button> */}
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button
+                        startContent={<Copy01Icon />}
+                        onPress={shareButtonCopyToClipboardHandler}
+                        variant="solid"
+                        color="primary"
+                      >
+                        Copy
+                      </Button>
+                      {/* <Button onPress={onClose} color="danger" variant="flat">
+                        Close
+                      </Button> */}
+                    </ModalFooter>
+                  </>
+                )}
+              </ModalContent>
+            </Modal>
           </div>
         </div>
 
