@@ -22,6 +22,7 @@ import FolderInput from "./components/FolderInput";
 import { liveDataContext } from "@/contexts/liveDataContext";
 import { useFolders } from "@/lib/folderUtils";
 import FoldersSkeleton from "./components/FoldersSkeleton";
+import { useNotes } from "@/lib/noteUtils";
 
 function folderManagerReducer(
   prevState: FolderManagerStateType,
@@ -44,14 +45,39 @@ export default function () {
   );
 
   const { folderData, isLoading } = useFolders();
+  const { notesData, isLoading: areNotesLoading } = useNotes();
+
+  useEffect(() => {
+    //when selectedFolder changes, we persist it with an effect
+    if (
+      liveAppData.selectedFolderId != null &&
+      liveAppData.selectedFolderId !=
+        window.localStorage.getItem("persistedFolderId")
+    ) {
+      //persist when folder matches selected note
+
+      if (!liveAppData.selectedNoteId) {
+        window.localStorage.setItem(
+          "persistedFolderId",
+          liveAppData.selectedFolderId ? liveAppData.selectedFolderId : ""
+        );
+      }
+    }
+  }, [liveAppData.selectedFolderId]);
 
   useEffect(() => {
     if (!isLoading && folderData) {
-      if (folderData.length > 0)
+      //get persisted folderid
+      let persistedFolderId = window.localStorage.getItem("persistedFolderId");
+
+      if (folderData.length > 0) {
         liveAppDataDispatch({
           type: "changedSelectedFolder",
-          payload: { folderId: folderData[0]._id },
+          payload: {
+            folderId: persistedFolderId ? persistedFolderId : folderData[0]._id,
+          },
         });
+      }
     }
   }, [isLoading]);
 
@@ -120,7 +146,7 @@ export default function () {
                       opacity: 1,
                       y: 0,
                       height: 40,
-                      margin: "4px 0px",
+                      margin: "12px 0px",
                     }}
                     exit={{ opacity: 0, y: -40, height: 0, margin: "0px 0px" }}
                   >
