@@ -184,6 +184,9 @@ export default function (props: FolderDataType) {
               type: "changedSelectedFolder",
               payload: { folderId: props._id },
             });
+
+            //persist newly selected folder folder
+            window.localStorage.setItem("persistedFolderId", props._id);
           } else {
             //mutate note immediately to perceive visual change
           }
@@ -311,4 +314,4 @@ export default function (props: FolderDataType) {
   );
 }
 
-// export type { FolderItemType };
+export type { FolderItemInternalStateType };
