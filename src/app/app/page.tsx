@@ -4,7 +4,7 @@ import FolderManager from "@/features/FolderManager";
 import NoteEditor from "@/features/NoteEditor";
 import NoteManager from "@/features/NoteManager";
 import Footer from "@/layouts/Footer";
-import Navbar from "@/features/NavbarFeature";
+import NavbarFeature from "@/features/NavbarFeature";
 
 import { getAccessToken } from "@/lib/authUtils";
 import { useEffect } from "react";
@@ -36,7 +36,7 @@ export default function () {
 
   return (
     <main className="custom-bg-image flex flex-col gap-6 h-screen overflow-hidden ">
-      <Navbar />
+      <NavbarFeature />
       <div className="flex-grow flex flex-row  overflow-hidden justify-center">
         <div className="w-4/5 grid h-full overflow-hidden  grid-cols-5 gap-8">
           <div className=" col-span-1">
