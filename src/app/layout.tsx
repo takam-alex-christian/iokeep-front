@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -8,7 +8,11 @@ config.autoAddCss = false;
 
 import { NextUiProviderWrapper } from "./providers";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
+const poppinsFont = Poppins({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Iokeepv3",
@@ -22,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className}`}>
+      <body className={`${poppinsFont.className}`}>
         <NextUiProviderWrapper>{children}</NextUiProviderWrapper>
       </body>
     </html>
