@@ -72,7 +72,8 @@ export default function Home() {
               <p>
                 Physical notebooks are not about to be replaced just yet.
                 It&apos;s still a big part of our daily productivity tools. Just
-                like me, i&apos;m sure you've used a lot of them over the years.
+                like me, i&apos;m sure you&apos;ve used a lot of them over the
+                years.
               </p>
               <p>
                 Iokeep is a great alternative which allows you to create
