@@ -276,6 +276,18 @@ function CustomToolBar(props: {
       }).then((jsonResponse) => {
         if (!jsonResponse.error) {
           console.log(jsonResponse.info);
+
+          //mutate notes
+          let indexOfPublishedNote = notesData.findIndex((eachNote) => {
+            return eachNote._id == props._id;
+          });
+
+          if (indexOfPublishedNote) {
+            let copiedNotesData = notesData;
+            copiedNotesData[indexOfPublishedNote].isPublic = true;
+
+            mutateNotesData(copiedNotesData);
+          }
         } else {
           console.log(jsonResponse.success);
         }
