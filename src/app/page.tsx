@@ -3,11 +3,11 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-svh">
+    <main className="min-h-svh h-screen flex flex-col gap-2 ">
       <PublicNavBar />
-      <section>
-        <div className="w-full flex flex-col items-center">
-          <div className=" flex flex-col gap-4 max-w-screen-lg px-6 text-center">
+      <section className="flex-grow flex flex-col ">
+        <div className="flex-grow w-full flex flex-col items-center justify-center  h-full">
+          <div className=" flex flex-col gap-8 max-w-screen-lg px-6 text-center">
             <h1 className="text-7xl font-semibold">
               Start taking{" "}
               <span className="font-bold text-primary-600">Notes</span> <br />{" "}
