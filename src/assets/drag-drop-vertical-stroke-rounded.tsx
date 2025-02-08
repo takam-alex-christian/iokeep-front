@@ -1,6 +1,6 @@
 import React from "react";
 
-const ArrowUp01Icon = (props: React.SVGProps<SVGSVGElement>) => (
+const DragDropVerticalIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -10,13 +10,13 @@ const ArrowUp01Icon = (props: React.SVGProps<SVGSVGElement>) => (
     {...props}
   >
     <path
-      d="M17.9998 15C17.9998 15 13.5809 9.00001 11.9998 9C10.4187 8.99999 5.99985 15 5.99985 15"
+      d="M8 6H8.00635M8 12H8.00635M8 18H8.00635M15.9937 6H16M15.9937 12H16M15.9937 18H16"
       stroke="currentColor"
-      strokeWidth="1.5"
+      strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
   </svg>
 );
 
-export default ArrowUp01Icon;
+export default DragDropVerticalIcon;

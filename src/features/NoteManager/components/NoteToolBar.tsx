@@ -6,15 +6,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-import { Button, Select, SelectItem, Skeleton } from "@nextui-org/react";
+import { Button, Select, SelectItem, Skeleton } from "@heroui/react";
 import { liveDataContext } from "@/contexts/liveDataContext";
 import { deleteNote, orderNotes, useNotes } from "@/lib/noteUtils";
 import { LiveDataState, NoteItemDataType } from "@/types";
 import { useFolders } from "@/lib/folderUtils";
 import { AnimatePresence, motion } from "framer-motion";
+import ArrangeByLettersAZIcon from "@/assets/arrange-by-letters-a-z-stroke-rounded";
+import ArrangeByLettersZAIcon from "@/assets/arrange-by-letters-z-a-stroke-rounded";
 
 export default function NoteToolBar() {
-  const { isLoading: isFolderLoading, folderData } = useFolders();
+  const {
+    isLoading: isFolderLoading,
+    folderData,
+    mutate: mutateFoldersData,
+  } = useFolders();
   const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext);
   const { isLoading: isNoteDataLoading, notesData, mutate } = useNotes();
 
@@ -24,6 +30,17 @@ export default function NoteToolBar() {
     lmd: "By Last Modified Date",
     rlmd: "By Desc. Last Modified",
   };
+
+  // if !isFolderLoading
+  const indexOfSelectedFolder = !isFolderLoading
+    ? folderData.findIndex((eachFolder) => {
+        return eachFolder._id == liveAppData.selectedFolderId;
+      })
+    : -1;
+  const displayFolderName =
+    indexOfSelectedFolder > -1
+      ? folderData[indexOfSelectedFolder].folderName
+      : "nothing";
 
   useEffect(() => {
     //noteOrder changed, reorder note by mutate
@@ -77,6 +94,16 @@ export default function NoteToolBar() {
                 });
               }
             });
+
+            const foldersDataCopy = folderData;
+            const folderIndex = folderData.findIndex((eachFolder) => {
+              return eachFolder._id == liveAppData.selectedFolderId;
+            });
+
+            if (folderIndex) {
+              foldersDataCopy[folderIndex].size! -= 1;
+            }
+            mutateFoldersData(foldersDataCopy);
             //select new not in the list
           } else {
             // inform the user that note was not deleted
@@ -93,8 +120,8 @@ export default function NoteToolBar() {
     console.log("delete button pressed");
   }
   return (
-    <div className="">
-      <div className="flex flex-row justify-between items-center">
+    <div className=" px-4 py-2">
+      <div className="flex flex-row justify-between items-center  rounded-xl">
         <div className="relative flex w-full items-center">
           <AnimatePresence>
             {isFolderLoading && liveAppData.selectedFolderId == null && (
@@ -118,19 +145,13 @@ export default function NoteToolBar() {
                 className="w-full"
               >
                 <span className=" text-xl font-semibold">
-                  {
-                    folderData[
-                      folderData.findIndex(({ _id }) => {
-                        return _id == liveAppData.selectedFolderId;
-                      })
-                    ].folderName
-                  }
+                  {displayFolderName}
                 </span>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-        <div className="flex flex-row items-center justify-between bg-subsurface pl-2 rounded-xl">
+        <div className="flex flex-row items-center justify-between pl-2 rounded-xl">
           <div className="relative mr-2">
             <div className="">
               <Select
@@ -138,16 +159,26 @@ export default function NoteToolBar() {
                 selectedKeys={
                   liveAppData.noteOrder ? [liveAppData.noteOrder] : undefined
                 }
+                startContent={
+                  liveAppData.noteOrder == "rcd" ||
+                  liveAppData.noteOrder == "rlmd" ? (
+                    <ArrangeByLettersZAIcon />
+                  ) : (
+                    <ArrangeByLettersAZIcon />
+                  )
+                }
                 classNames={{
                   popoverContent: "absolute w-fit",
                   listbox: "",
                   listboxWrapper: "w-fit",
                 }}
+                color="default"
+                variant="flat"
                 onChange={selectNoteOrderHandler}
               >
                 {Object.keys(noteOrderToText).map((eachKey) => {
                   return (
-                    <SelectItem key={eachKey}>
+                    <SelectItem color="primary" key={eachKey}>
                       {noteOrderToText[eachKey]}
                     </SelectItem>
                   );
@@ -164,6 +195,7 @@ export default function NoteToolBar() {
           </Button>
           <Button
             variant="light"
+            // color="danger"
             onPress={deleteButtonHandler}
             isIconOnly
             isDisabled={liveAppData.selectedNoteId ? false : true}
@@ -172,7 +204,6 @@ export default function NoteToolBar() {
           </Button>
         </div>
       </div>
-      <div></div>
     </div>
   );
 }

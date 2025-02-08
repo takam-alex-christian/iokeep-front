@@ -8,7 +8,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import { useAnimate, motion } from "framer-motion";
 
@@ -20,38 +20,50 @@ import { liveDataContext } from "@/contexts/liveDataContext";
 import { FolderDataType } from "@/types";
 import { deleteFolder, useFolders } from "@/lib/folderUtils";
 import FolderInput from "./FolderInput";
+import SlidersHorizontalIcon from "@/assets/sliders-horizontal-stroke-rounded";
+import MenuTwoLineIcon from "@/assets/menu-two-line-stroke-rounded";
+import { updateNote, useNotes } from "@/lib/noteUtils";
 
-type FolderItemType = {
+type FolderItemInternalStateType = {
   isHovered: boolean;
   isRenamed: boolean;
+  isDragEntered: boolean;
 };
 
 export default function (props: FolderDataType) {
   const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext);
 
   const { folderData, isLoading, error, mutate: mutateFolders } = useFolders();
+  const {
+    notesData,
+    isLoading: areNotesDataLoading,
+    mutate: mutateNotes,
+  } = useNotes();
 
   const [folderItemScope, animateFolderItem] = useAnimate();
 
   const [optionButtonScope, animateOptionButton] = useAnimate(); //as in animate option button scrope
 
-  const [itemState, setItemState] = useState<FolderItemType>({
+  const [itemState, setItemState] = useState<FolderItemInternalStateType>({
     isHovered: false,
     isRenamed: false,
+    isDragEntered: false,
   });
+
+  const isFolderSelected = props._id == liveAppData.selectedFolderId;
 
   useEffect(() => {
     if (!itemState.isRenamed) {
       if (itemState.isHovered)
         animateOptionButton(
           optionButtonScope.current,
-          { opacity: 1 },
+          { opacity: 1, x: 0, width: "fit-content" },
           { duration: 0.4 }
         );
       else
         animateOptionButton(
           optionButtonScope.current,
-          { opacity: 0 },
+          { opacity: 0, x: 50, width: 0 },
           { duration: 0.4 }
         );
     }
@@ -64,6 +76,16 @@ export default function (props: FolderDataType) {
   }
 
   function folderDeleteHandler() {
+    //select the next folder inline
+    // if the selected folder is the deleted folder,  select another folder then delete
+    //posibility
+    if (props._id == liveAppData.selectedFolderId) {
+      liveAppDataDispatch({
+        type: "changedSelectedFolder",
+        payload: { folderId: folderData ? folderData[0]._id : "" },
+      });
+    }
+
     deleteFolder(props._id).then((jsonResponse) => {
       if (!jsonResponse.error) {
         if (jsonResponse.success) {
@@ -74,12 +96,30 @@ export default function (props: FolderDataType) {
             { duration: 0.4 }
           ).then(() => {
             //mutate folderData
-            mutateFolders(
-              folderData.filter((eachFolder) => {
-                return eachFolder._id != props._id;
-              })
-            );
           });
+
+          const indexOfFolder = folderData.findIndex((eachFolder) => {
+            return eachFolder._id == liveAppData.selectedFolderId;
+          });
+
+          const newSelectedFolderIndex = indexOfFolder == 0 ? 1 : 0;
+
+          mutateFolders(
+            folderData.filter((eachFolder) => {
+              return eachFolder._id != props._id;
+            })
+          );
+
+          if (liveAppData.selectedFolderId == props._id) {
+            if (folderData.length > 1) {
+              liveAppDataDispatch({
+                type: "changedSelectedFolder",
+                payload: {
+                  folderId: folderData[newSelectedFolderIndex]._id,
+                },
+              });
+            }
+          }
 
           //animate presence
         } // remove folder from folderData
@@ -99,6 +139,75 @@ export default function (props: FolderDataType) {
     console.log("folderManagerSelectedId changed to a new id");
   }
 
+  async function onNoteDropHandler(e: React.DragEvent) {
+    const draggedNoteId = e.dataTransfer.getData("text/plain");
+
+    setItemState((prevState) => {
+      return { ...prevState, isDragEntered: false };
+    });
+
+    await updateNote({
+      _id: draggedNoteId,
+      folderId: props._id,
+    }).then((jsonResponse) => {
+      if (!jsonResponse.error) {
+        if (jsonResponse.success) {
+          const originFolderIndex = folderData.findIndex((eachFolder) => {
+            return eachFolder._id == liveAppData.selectedFolderId;
+          });
+          const destFolderIndex = folderData.findIndex((eachFolder) => {
+            return eachFolder._id == props._id;
+          });
+
+          const folderDataCopy = folderData;
+          if (originFolderIndex) folderDataCopy[originFolderIndex].size! -= 1;
+          if (destFolderIndex) folderDataCopy[originFolderIndex].size! += 1;
+
+          if (!isLoading && folderData.length > 0) {
+            // const receiverFolderIndex
+
+            mutateFolders(folderDataCopy);
+          }
+
+          if (!areNotesDataLoading && notesData.length > 0) {
+            mutateNotes([
+              ...notesData.filter((eachNote) => {
+                return eachNote._id != draggedNoteId;
+              }),
+            ]);
+          }
+
+          if (liveAppData.selectedNoteId == draggedNoteId) {
+            // open the receiving folder insted
+
+            liveAppDataDispatch({
+              type: "changedSelectedFolder",
+              payload: { folderId: props._id },
+            });
+
+            //persist newly selected folder folder
+            window.localStorage.setItem("persistedFolderId", props._id);
+          } else {
+            //mutate note immediately to perceive visual change
+          }
+        }
+      }
+    });
+  }
+
+  function onNoteDragEnterHandler() {
+    setItemState((prevState) => {
+      return { ...prevState, isDragEntered: true };
+    });
+
+    console.log("drag hovering");
+  }
+
+  function onNoteDragLeaveHandler() {
+    setItemState((prevState) => {
+      return { ...prevState, isDragEntered: false };
+    });
+  }
   return (
     <div
       ref={folderItemScope}
@@ -112,43 +221,68 @@ export default function (props: FolderDataType) {
           return { ...prevState, isHovered: false };
         });
       }}
-      className={`relative flex flex-row items-center rounded-xl h-10 pl-4  hover:bg-surface transition-all ${
-        props._id == liveAppData.selectedFolderId
-          ? "bg-surface"
-          : "bg-transparent"
+      onDrop={onNoteDropHandler}
+      className={`group relative flex flex-row ${
+        itemState.isRenamed ? "my-3" : " pl-4"
+      } cursor-pointer items-center justify-start rounded-xl min-h-10 overflow-visible ${
+        itemState.isDragEntered
+          ? " outline-dashed outline-1 outline-primary-800"
+          : ""
+      } hover:bg-primary-50 transition-colors ${
+        props._id == liveAppData.selectedFolderId ? "bg-primary-50" : ""
       }`}
     >
+      {/* this div is meant to overlay on folder item will be responsible for drag reception */}
+      <div
+        className="absolute group-focus-within:invisible group-hover:invisible z-50 bg-transparent inset-0"
+        onDragOver={(e) => {
+          e.preventDefault(); //allow element to accept drop
+        }}
+        onDragEnter={onNoteDragEnterHandler}
+        onDragLeave={onNoteDragLeaveHandler}
+      ></div>
       {!itemState.isRenamed && (
         <>
           <button
             onClick={folderItemPressHandler}
-            className={`w-full hover:bg-none focus-visible:outline-none`}
+            className={` overflow-hidden w-full hover:bg-none focus-visible:outline-none`}
           >
-            <div className="flex flex-row items-center gap-2">
+            <div className=" flex flex-row items-center gap-2">
               <FontAwesomeIcon icon={faFolder} />
 
-              <div>{props.folderName}</div>
+              <div className="flex flex-row w-full justify-between">
+                <span className="shrink text-ellipsis whitespace-nowrap overflow-hidden ">
+                  {props.folderName}
+                </span>
+
+                <span className=" shrink-0 text-xs w-fit py-1 px-2">
+                  {props.size && <span>{props.size}</span>}
+                </span>
+              </div>
             </div>
           </button>
 
-          <motion.div>
-            <div className="flex items-center justify-center text-xs w-8 py-1 px-2 bg-surface rounded-xl">
-              {props.size && <span>{props.size}</span>}
-            </div>
-          </motion.div>
+          {/* <motion.div></motion.div> */}
 
-          <div className="">
+          <div className="" ref={optionButtonScope}>
             <Dropdown>
               <DropdownTrigger>
-                <Button className="" size={"sm"} variant="light" isIconOnly>
-                  <FontAwesomeIcon
-                    className="opacity-0"
-                    ref={optionButtonScope}
-                    icon={faEllipsisVertical}
-                  />
+                <Button
+                  className=""
+                  size={"sm"}
+                  color={`${isFolderSelected ? "primary" : "default"}`}
+                  variant={`light`}
+                  isIconOnly
+                >
+                  {/* <FontAwesomeIcon className="" icon={faEllipsisVertical} /> */}
+                  <MenuTwoLineIcon />
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu aria-label="folder menu">
+              <DropdownMenu
+                aria-label="folder menu"
+                color="primary"
+                variant="flat"
+              >
                 <DropdownItem key={"edit"} onPress={folderRenameHandler}>
                   Rename
                 </DropdownItem>
@@ -180,4 +314,4 @@ export default function (props: FolderDataType) {
   );
 }
 
-export type { FolderItemType };
+export type { FolderItemInternalStateType };

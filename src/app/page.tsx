@@ -1,113 +1,120 @@
-import Image from 'next/image'
+import PublicNavBar from "@/layouts/PublicNavBar";
+import Link from "next/link";
+import Image from "next/image";
+
+import lighAppImage from "../../public/light-app-image.png";
+import Footer from "@/layouts/Footer";
+import AiMagicIcon from "@/assets/ai-magic-stroke-rounded";
+
+function AppArticle(props: { title: string; children: React.ReactNode }) {
+  return (
+    <article>
+      <div className="flex flex-col gap-2 p-2">
+        <h2 className="text-3xl font-semibold text-primary-600">
+          {props.title}
+        </h2>
+        <div className="flex flex-col gap-4">{props.children}</div>
+      </div>
+    </article>
+  );
+}
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="min-h-screen flex flex-col gap-2 ">
+      <PublicNavBar />
+      <section className="flex-grow flex flex-col">
+        <div className="flex-grow w-full flex flex-col items-center justify-center  h-full">
+          <div className=" flex flex-col gap-8 items-center  px-6 my-40 text-center">
+            <h1 className="text-3xl md:text-7xl  font-semibold">
+              Start taking{" "}
+              <span className="font-bold text-primary-600 dark:text-primary-400 drop-shadow-lg">
+                Notes
+              </span>{" "}
+              <br /> <span className="">The smart way</span>
+              <span className="text-7xl leading-3 text-primary-500">.</span>
+            </h1>
+            <p className=" text-xl md:text-2xl">
+              {/* A comprehensive web app to boost your note taking process.  */}
+              Opensource and Still under{" "}
+              <span className="bg-primary-50 rounded-full py-[2px] px-2">
+                development.
+              </span>{" "}
+              <span className="flex flex-row items-center justify-center gap-2">
+                <AiMagicIcon />
+                Ai and more features coming soon.
+              </span>{" "}
+            </p>
+            <div className="flex flex-col-reverse md:flex-row gap-4 items-center justify-center">
+              <Link
+                href="/signup"
+                className="bg-primary-800 dark:bg-primary-500 text-white rounded-full py-3 px-5 hover:rotate-12 transition-transform"
+              >
+                Get Started
+              </Link>
+              <Link
+                href="/signup"
+                className="border-2 border-primary-500 text-primary-500 rounded-full py-2 px-4 hover:rotate-3 transition-transform"
+              >
+                Participate in the development
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
+      <section>
+        <div className="flex  flex-col  gap-6 items-center justify-center">
+          <div className=" w-full max-w-screen-lg rounded-2xl overflow-hidden shadow-2xl">
+            <Image src={lighAppImage} width={1024} alt="Iokeep app image" />
+          </div>
+          <div className="max-w-screen-sm flex flex-col gap-10 py-8">
+            <AppArticle title="A digital Notebook">
+              <p>
+                Physical notebooks are not about to be replaced just yet. It's
+                still a big part of our daily productivity tools. Just like me,
+                i'm sure you've used a lot of them over the years.
+              </p>
+              <p>
+                Iokeep is a great alternative which allows you to create
+                multiple notebooks or folders within a single account. These
+                folder can then be populated with contextual notes by your own
+                convenience. A special folder for work specific matters, a
+                personal journal to document your periodic activities or even
+                just a public notebook to share your ideas ? Iokeep has got you
+                covered.
+              </p>
+            </AppArticle>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+            <AppArticle title="Powered by the Cloud">
+              <p>
+                While a lot of other note taking apps really just store your
+                notes locally just like your conventional paper notebook, iokeep
+                takes a different approach.
+              </p>
+              <p>
+                iokeep stores all your notes on a remote server. This not only
+                allows you to access them across devices but also shields you
+                from potential issues with a particular node be it a compromised
+                phone or an accidental flush of local data.
+              </p>
+            </AppArticle>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+            <AppArticle title="Multi-Device support">
+              <p>
+                We've all been there. You can take notes on your mac but can't
+                view or edit them on your android ? you can use the Samsung
+                notes app on your phone but can't access it on your PC ?{" "}
+              </p>
+              <p>
+                Iokeep is a full stack web app that can be accessible from a
+                browser, be it on your phone or your pc irrespective of your
+                operating system.
+              </p>
+            </AppArticle>
+          </div>
+        </div>
+      </section>
+      <Footer />
     </main>
-  )
+  );
 }

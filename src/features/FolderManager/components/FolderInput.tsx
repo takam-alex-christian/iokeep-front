@@ -1,167 +1,226 @@
+import React, { useState, useEffect, SetStateAction, useContext } from "react";
 
-import React, { useState, useEffect, SetStateAction } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFolder } from "@fortawesome/free-regular-svg-icons";
+import {} from "@fortawesome/free-solid-svg-icons";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faFolder } from "@fortawesome/free-regular-svg-icons"
-import { } from "@fortawesome/free-solid-svg-icons"
-
-import { Button, Input, Tooltip, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Spacer } from "@nextui-org/react"
-import { createFolder, renameFolder, useFolders } from "@/lib/folderUtils"
-import { FolderManagerReducerActionType } from "../types"
-import { FolderItemType } from "./FolderItem"
+import {
+  Button,
+  Input,
+  Tooltip,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Spacer,
+} from "@heroui/react";
+import { createFolder, renameFolder, useFolders } from "@/lib/folderUtils";
+import { FolderManagerReducerActionType } from "../types";
+import { FolderItemInternalStateType } from "./FolderItem";
+import { liveDataContext } from "@/contexts/liveDataContext";
 
 type FormStateType = {
-    foldername: {
-        value: string,
-        isEngaged: boolean,
-        isInvalid: boolean,
-        errorMessage: string
-    }
-}
+  foldername: {
+    value: string;
+    isEngaged: boolean;
+    isInvalid: boolean;
+    errorMessage: string;
+  };
+};
 
 interface FolderInputProps {
-    create?: {
-        folderManagerDispatch: React.Dispatch<FolderManagerReducerActionType>
-    },
-    rename?: {
-        _id: string,
-        initialValue: string,
-        setCallerItemState: React.Dispatch<SetStateAction<FolderItemType>>
-    }
+  create?: {
+    folderManagerDispatch: React.Dispatch<FolderManagerReducerActionType>;
+  };
+  rename?: {
+    _id: string;
+    initialValue: string;
+    setCallerItemState: React.Dispatch<
+      SetStateAction<FolderItemInternalStateType>
+    >;
+  };
 }
 
 export default function (props: FolderInputProps) {
+  const [formState, setFormState] = useState<FormStateType>({
+    foldername: {
+      value: props.rename ? props.rename.initialValue : "",
+      isEngaged: false,
+      isInvalid: false,
+      errorMessage: "",
+    },
+  });
 
-    const [formState, setFormState] = useState<FormStateType>({
-        foldername: {
-            value: props.rename? props.rename.initialValue : "",
-            isEngaged: false,
-            isInvalid: false,
-            errorMessage: ""
-        }
-    })
+  const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext);
 
-    const { folderData, isLoading, mutate: mutateFolders } = useFolders()
+  const { folderData, isLoading, mutate: mutateFolders } = useFolders();
 
-    useEffect(() => {
+  useEffect(() => {
+    if (formState.foldername.isEngaged) validateFolderName();
+  }, [formState.foldername.value]);
 
-        if (formState.foldername.isEngaged) validateFolderName()
+  function folderNameChangeHandler(value: string) {
+    setFormState((prevState) => {
+      return {
+        ...prevState,
+        foldername: { ...prevState.foldername, value, isEngaged: true },
+      };
+    });
+  }
 
-    }, [formState.foldername.value])
+  function validateFolderName() {
+    let isInvalid: boolean = false;
+    let errorMessage: string = "";
 
-
-    function folderNameChangeHandler(value: string) {
-        setFormState((prevState) => {
-            return { ...prevState, foldername: { ...prevState.foldername, value, isEngaged: true } }
+    if (formState.foldername.value.length != 0) {
+      if (
+        !isLoading &&
+        folderData.find(({ folderName }) => {
+          return folderName == formState.foldername.value;
         })
+      ) {
+        isInvalid = true;
+        errorMessage = "foldername unavailable!";
+      }
+    } else {
+      isInvalid = true;
+      errorMessage = "empty folder name";
     }
 
-    function validateFolderName() {
+    setFormState((prevState) => {
+      return {
+        ...prevState,
+        foldername: { ...prevState.foldername, isInvalid, errorMessage },
+      };
+    });
+  }
 
-        let isInvalid: boolean = false
-        let errorMessage: string = ""
+  function folderSubmitHandler(e: React.FormEvent) {
+    e.preventDefault();
 
-        if (formState.foldername.value.length != 0) {
-            if (!isLoading && folderData.find(({ folderName }) => { return folderName == formState.foldername.value })) {
-                isInvalid = true
-                errorMessage = "foldername unavailable!"
-            }
+    /** Todo
+     * Display loading state
+     * clear formState
+     */
+    if (props.create) {
+      createFolder(formState.foldername.value).then((jsonResponse) => {
+        if (!jsonResponse.error) {
+          if (jsonResponse.success) {
+            //mutate folders
+            mutateFolders([
+              ...folderData,
+              {
+                _id: jsonResponse.data.folderId,
+                folderName: formState.foldername.value,
+              },
+            ]); //empties first, to be fixed
+
+            //hide folderInput
+            props.create?.folderManagerDispatch({ type: "toggledFolderInput" });
+          } else {
+            alert("failed");
+          }
         } else {
-            isInvalid = true
-            errorMessage = "empty folder name"
+          setFormState((prevState) => {
+            return {
+              ...prevState,
+              foldername: {
+                ...prevState.foldername,
+                errorMessage: jsonResponse.error!.message,
+                isInvalid: true,
+              },
+            };
+          });
         }
-
-        setFormState((prevState) => {
-            return { ...prevState, foldername: { ...prevState.foldername, isInvalid, errorMessage } }
-        })
+      });
     }
 
-    function folderSubmitHandler(e: React.FormEvent) {
-        e.preventDefault()
+    if (props.rename) {
+      renameFolder(props.rename._id, formState.foldername.value).then(
+        (jsonResponse) => {
+          console.log(jsonResponse);
+          if (!jsonResponse.error) {
+            if (jsonResponse.success) {
+              //mutate updated folder
+              let foldersCopy = [...folderData];
+              let updatedFolderId = foldersCopy.findIndex((eachFolder) => {
+                return eachFolder._id == props.rename?._id;
+              });
 
-        /** Todo
-         * Display loading state
-         * clear formState
-        */
-        if (props.create) {
-            createFolder(formState.foldername.value).then((jsonResponse) => {
-                if (!jsonResponse.error) {
-                    if (jsonResponse.success) {
-                        //mutate folders
-                        mutateFolders([...folderData, { _id: jsonResponse.data.folderId, folderName: formState.foldername.value }]) //empties first, to be fixed
+              foldersCopy[updatedFolderId].folderName =
+                formState.foldername.value;
 
-                        //hide folderInput
-                        props.create?.folderManagerDispatch({ type: "toggledFolderInput" })
+              mutateFolders(foldersCopy);
 
-                    } else {
-                        alert("failed")
-                    }
-                } else {
-                    setFormState((prevState) => {
-                        return { ...prevState, foldername: { ...prevState.foldername, errorMessage: jsonResponse.error!.message, isInvalid: true } }
-                    })
-                }
-            })
+              //cause a rerender by setting selected folder
+              liveAppDataDispatch({
+                type: "changedSelectedFolder",
+                payload: { folderId: liveAppData.selectedFolderId! },
+              }); //solved the issue of none changing display foldernames
+
+              props.rename?.setCallerItemState((prevState) => {
+                return { ...prevState, isRenamed: false };
+              });
+            } else {
+            }
+          } else {
+            setFormState((prevState) => {
+              return {
+                ...prevState,
+                foldername: {
+                  ...prevState.foldername,
+                  errorMessage: jsonResponse.error!.message,
+                  isInvalid: true,
+                },
+              };
+            });
+          }
         }
-
-        if (props.rename){
-            renameFolder(props.rename._id, formState.foldername.value).then((jsonResponse)=>{
-                if (!jsonResponse.error){
-                    if (jsonResponse.success){
-
-                        //mutate updated folder
-                        let foldersCopy = folderData
-                        let updatedFolderId = foldersCopy.findIndex((eachFolder)=>{ return eachFolder._id == props.rename?._id})
-                        
-                        foldersCopy[updatedFolderId].folderName = formState.foldername.value
-
-                        mutateFolders(foldersCopy)
-
-                        props.rename?.setCallerItemState((prevState)=>{
-                            return {...prevState, isRenamed: false}
-                        })
-                    }else {
-
-                    }
-                }else {
-                    setFormState((prevState) => {
-                        return { ...prevState, foldername: { ...prevState.foldername, errorMessage: jsonResponse.error!.message, isInvalid: true } }
-                    })
-                }
-            })
-        }
-
-
+      );
     }
+  }
 
-    return (
-        <form onSubmit={folderSubmitHandler}>
-            <div className="flex flex-row gap-2 items-center ">
-                <Tooltip placement="right" isOpen={formState.foldername.isInvalid} offset={20} showArrow={true} content={
-                    <div className="h-10 flex justify-center items-center">{formState.foldername.errorMessage}</div>
-                } color="default">
-                    <Input
-                        autoFocus
-
-                        value={formState.foldername.value}
-                        onValueChange={folderNameChangeHandler}
-
-                        isRequired
-
-                        isInvalid={formState.foldername.isInvalid && formState.foldername.isEngaged}
-                        // errorMessage={formState.foldername.errorMessage}
-
-                        startContent={<FontAwesomeIcon className="text-sm" icon={faFolder} />}
-                        placeholder="folder name"
-                        variant="flat"
-                        color="default"
-                        classNames={{ input: "", inputWrapper: "h-9 px-4", innerWrapper: "flex flex-row gap-[2px]" }}
-                    />
-                </Tooltip>
-
-                {/* <Button isIconOnly size={"sm"} variant="flat" color={"primary"}><FontAwesomeIcon icon={faPlus} /></Button> */}
+  return (
+    <form onSubmit={folderSubmitHandler} className="w-full">
+      <div className="flex flex-row gap-2 items-center  w-full">
+        <Tooltip
+          placement="right"
+          isOpen={formState.foldername.isInvalid}
+          offset={20}
+          showArrow={true}
+          content={
+            <div className="h-10 flex justify-center items-center">
+              {formState.foldername.errorMessage}
             </div>
+          }
+          color="default"
+        >
+          <Input
+            autoFocus
+            value={formState.foldername.value}
+            onValueChange={folderNameChangeHandler}
+            isRequired
+            isInvalid={
+              formState.foldername.isInvalid && formState.foldername.isEngaged
+            }
+            // errorMessage={formState.foldername.errorMessage}
 
-        </form>
-    )
+            startContent={
+              <FontAwesomeIcon className="text-base" icon={faFolder} />
+            }
+            placeholder="folder name"
+            variant="flat"
+            color="primary"
+            classNames={{
+              input: "",
+              inputWrapper: "pl-4",
+              innerWrapper: "flex flex-row gap-1",
+            }}
+          />
+        </Tooltip>
+
+        {/* <Button isIconOnly size={"sm"} variant="flat" color={"primary"}><FontAwesomeIcon icon={faPlus} /></Button> */}
+      </div>
+    </form>
+  );
 }

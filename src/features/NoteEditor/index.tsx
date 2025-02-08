@@ -5,7 +5,16 @@ import { SetStateAction, useContext, useEffect, useRef, useState } from "react";
 import { liveDataContext } from "@/contexts/liveDataContext";
 
 //nextui imports
-import { Button, ButtonProps, Divider } from "@nextui-org/react";
+import {
+  Button,
+  ButtonProps,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@heroui/react";
 
 //font awesome lib imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -55,6 +64,7 @@ import Share01Icon from "@/assets/share-01-stroke-rounded";
 import { AnimatePresence, motion } from "framer-motion";
 import Copy01Icon from "@/assets/copy-01-stroke-rounded";
 import { NoteItemDataType } from "@/types";
+import { useFolders } from "@/lib/folderUtils";
 
 interface CustomEditorStateType {
   description: string[];
@@ -110,6 +120,12 @@ function CustomToolBar(props: {
     error: useNotesError,
   } = useNotes();
 
+  const {
+    folderData,
+    isLoading: areFoldersLoading,
+    mutate: mutateFolders,
+  } = useFolders();
+
   const shareInputRef = useRef<HTMLInputElement>(null);
   const [shareNoteState, setShareNoteState] = useState<{
     showPublicNoteLink: boolean;
@@ -120,6 +136,12 @@ function CustomToolBar(props: {
   });
 
   const [editor] = useLexicalComposerContext();
+
+  const {
+    isOpen: isShareModalOpen,
+    onOpen: onShareModalOpen,
+    onOpenChange: onShareModalOpenChange,
+  } = useDisclosure();
 
   function boldButtonHandler() {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
@@ -186,6 +208,16 @@ function CustomToolBar(props: {
                 editorState,
               } as Partial<NoteItemDataType>,
             ]);
+
+            const folderDataCopy = folderData;
+            const indexOfSelectedFolder = folderDataCopy.findIndex(
+              (eachFolder) => {
+                return eachFolder._id == liveAppData.selectedFolderId;
+              }
+            );
+
+            folderDataCopy[indexOfSelectedFolder].size! += 1;
+            mutateFolders(folderDataCopy);
             //set selectedNoteId to new note id
             liveAppDataDispatch({
               type: "changedSelectedNote",
@@ -244,6 +276,18 @@ function CustomToolBar(props: {
       }).then((jsonResponse) => {
         if (!jsonResponse.error) {
           console.log(jsonResponse.info);
+
+          //mutate notes
+          let indexOfPublishedNote = notesData.findIndex((eachNote) => {
+            return eachNote._id == props._id;
+          });
+
+          if (indexOfPublishedNote) {
+            let copiedNotesData = notesData;
+            copiedNotesData[indexOfPublishedNote].isPublic = true;
+
+            mutateNotesData(copiedNotesData);
+          }
         } else {
           console.log(jsonResponse.success);
         }
@@ -252,30 +296,22 @@ function CustomToolBar(props: {
     setShareNoteState((prevState) => {
       return { ...prevState, showPublicNoteLink: true };
     });
+
+    onShareModalOpen();
   }
+
   function shareButtonCopyToClipboardHandler() {
     shareInputRef.current?.select();
 
     navigator.clipboard.writeText(
       shareInputRef.current?.value ? shareInputRef.current?.value : ""
     );
-
-    //
-    setShareNoteState((prevState) => {
-      return { ...prevState, showPublicNoteLink: false, showCopiedAlert: true };
-    });
-
-    setTimeout(() => {
-      setShareNoteState((prevState) => {
-        return { ...prevState, showCopiedAlert: false };
-      });
-    }, 800);
   }
 
   return (
     <div className="flex flex-row gap-2 justify-between p-2 bg-default/10 rounded-t-xl">
       <div className="flex flex-row flex-grow gap-6">
-        <div className="flex flex-row gap-0 bg-default/20 rounded-xl">
+        <div className="flex flex-row gap-0 items-center bg-default/20 rounded-xl">
           <ToolButton onPress={undoButtonHandler}>
             <FontAwesomeIcon icon={faRotateBackward} />
           </ToolButton>
@@ -310,42 +346,52 @@ function CustomToolBar(props: {
             <Share01Icon />
           </ToolButton>
           <div className="relative">
-            <AnimatePresence>
-              {shareNoteState.showPublicNoteLink && (
-                <motion.div
-                  key="shareLink"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute flex flex-row gap-2 overflow-hidden bg-surface rounded-lg p-2"
-                >
-                  <input
-                    ref={shareInputRef}
-                    className="min-w-20 w-full bg-transparent focus:outline-none"
-                    readOnly
-                    value={"link"}
-                  />
-                  <Button
-                    onPress={shareButtonCopyToClipboardHandler}
-                    isIconOnly
-                    size="sm"
-                  >
-                    <Copy01Icon />
-                  </Button>
-                </motion.div>
-              )}
-              {shareNoteState.showCopiedAlert && (
-                <motion.div
-                  key="shareCopied"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute flex flex-row gap-2 overflow-hidden bg-green-400 rounded-lg p-2"
-                >
-                  copied!
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <Modal
+              isOpen={isShareModalOpen}
+              onOpenChange={onShareModalOpenChange}
+            >
+              <ModalContent>
+                {(onClose) => (
+                  <>
+                    <ModalHeader>Copy Link</ModalHeader>
+                    <ModalBody>
+                      <p>
+                        You can share this link with your friends. They'll
+                        probably enjoy reading through this note
+                      </p>
+                      <div className="bg-primary-50 p-2 w-full rounded-xl">
+                        <input
+                          ref={shareInputRef}
+                          className="min-w-20 w-full bg-transparent focus:outline-none"
+                          readOnly
+                          value={`https://iokeep.com/notes/${props._id}`}
+                        />
+                      </div>
+                      {/* <Button
+                        onPress={shareButtonCopyToClipboardHandler}
+                        isIconOnly
+                        size="sm"
+                      >
+                        <Copy01Icon />
+                      </Button> */}
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button
+                        startContent={<Copy01Icon />}
+                        onPress={shareButtonCopyToClipboardHandler}
+                        variant="solid"
+                        color="primary"
+                      >
+                        Copy
+                      </Button>
+                      {/* <Button onPress={onClose} color="danger" variant="flat">
+                        Close
+                      </Button> */}
+                    </ModalFooter>
+                  </>
+                )}
+              </ModalContent>
+            </Modal>
           </div>
         </div>
 
@@ -418,6 +464,7 @@ function TextEditor(props: {
   editorState?: string;
   _id?: string;
   isPublic?: boolean;
+  isEditable?: boolean;
 }) {
   const [customEditorState, setCustomEditorState] =
     useState<CustomEditorStateType>({
@@ -428,6 +475,7 @@ function TextEditor(props: {
 
   const initialConfig = {
     editorState: props.editorState,
+    editable: props.isEditable != undefined ? props.isEditable : true,
     namespace: "TextEditor",
     theme,
     onError,
@@ -435,14 +483,16 @@ function TextEditor(props: {
   };
 
   return (
-    <div className="flex flex-col flex-grow ">
+    <div className="custom-container rounded-3xl overflow-hidden flex flex-col flex-grow  ">
       {/* lexical editor */}
       <LexicalComposer initialConfig={initialConfig}>
-        <div className=" flex-grow flex flex-col gap-0 bg-white shadow-sm rounded-xl">
+        {props.isEditable && (
           <CustomToolBar
             _id={props._id}
             customEditorState={customEditorState}
           />
+        )}
+        <div className=" flex-grow flex overflow-y-auto  flex-col gap-0 shadow-sm rounded-xl">
           {/* <Divider orientation="horizontal" /> */}
           {/* <Divider orientation="horizontal" /> */}
           <div className=" relative flex flex-col flex-grow py-2 px-6">
@@ -460,14 +510,33 @@ function TextEditor(props: {
           </div>
         </div>
 
-        <HistoryPlugin />
-        <UpdateNoteDescription setCustomEditorState={setCustomEditorState} />
-        <ClearEditorPlugin />
-        <AutoClearEditorOnDelete />
+        {props.isEditable && (
+          <>
+            <HistoryPlugin />
+            <UpdateNoteDescription
+              setCustomEditorState={setCustomEditorState}
+            />
+            <ClearEditorPlugin />
+            <AutoClearEditorOnDelete />
+          </>
+        )}
       </LexicalComposer>
     </div>
   );
 }
+
+function ReadOnlyEditor(props: NoteItemDataType & { isEditable: boolean }) {
+  return (
+    <TextEditor
+      key={props._id}
+      _id={props._id}
+      editorState={props.editorState}
+      isEditable={props.isEditable}
+    />
+  );
+}
+
+export { NoteEditor, ReadOnlyEditor };
 
 export default function NoteEditor() {
   const { noteData } = useSelectedNote();
@@ -476,6 +545,7 @@ export default function NoteEditor() {
     <TextEditor
       key={noteData?._id}
       _id={noteData?._id}
+      isEditable={true}
       editorState={noteData?.editorState}
       isPublic={noteData?.isPublic}
     />

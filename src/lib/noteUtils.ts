@@ -124,27 +124,24 @@ function useNotes() {
   };
 }
 
-async function updateNote({
-  _id,
-  editorState,
-  description,
-  isPublic,
-}: {
-  _id: string;
-  editorState: string;
-  description: string[];
-  isPublic?: boolean;
-}) {
+async function updateNote(
+  noteDoc: Partial<Omit<NoteItemDataType, "_id">> & { _id: string }
+) {
   const unHeaders = new Headers();
   unHeaders.append("Content-Type", "application/json");
 
-  const unBody = JSON.stringify({ editorState, description, isPublic });
+  const unBody = JSON.stringify({
+    noteData: { ...noteDoc, _id: undefined },
+  });
 
-  const jsonResponse: GenericJsonResponse = await fetch(`be/notes/${_id}`, {
-    method: "PATCH",
-    headers: unHeaders,
-    body: unBody,
-  }).then((res) => res.json());
+  const jsonResponse: GenericJsonResponse = await fetch(
+    `be/notes/${noteDoc._id}`,
+    {
+      method: "PATCH",
+      headers: unHeaders,
+      body: unBody,
+    }
+  ).then((res) => res.json());
 
   return jsonResponse;
 }
