@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useContext, useState, useRef, ReactElement } from "react";
-import { Button } from "@heroui/react";
+import { Button, Tooltip } from "@heroui/react";
 import { liveDataContext } from "@/contexts/liveDataContext";
 import { NoteItemDataType } from "@/types";
 import DragDropVerticalIcon from "@/assets/drag-drop-vertical-stroke-rounded";
+import InternetIcon from "@/assets/internet-icon";
 
 export default function NoteItem(props: NoteItemDataType) {
   const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext);
@@ -118,6 +119,14 @@ export default function NoteItem(props: NoteItemDataType) {
           </div>
         </div>
       </Button>
+      {props.isPublic && (
+        <div className="absolute bottom-3 right-3 z-50">
+          {/* public status indicator */}
+          <Tooltip content="This note is public">
+            <InternetIcon width={16} className="text-success-700" />
+          </Tooltip>
+        </div>
+      )}
     </div>
   );
 }
