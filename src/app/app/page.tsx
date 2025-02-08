@@ -9,7 +9,7 @@ import NavbarFeature from "@/features/NavbarFeature";
 import { getAccessToken } from "@/lib/authUtils";
 import { useEffect } from "react";
 
-export default function () {
+export default function LandingPage() {
   //verify token and query new token at every interval before token expire
   //access_token lifetime is 10 minutes
 

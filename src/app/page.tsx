@@ -70,9 +70,10 @@ export default function Home() {
           <div className="max-w-screen-sm flex flex-col gap-10 py-8">
             <AppArticle title="A digital Notebook">
               <p>
-                Physical notebooks are not about to be replaced just yet. It's
-                still a big part of our daily productivity tools. Just like me,
-                i'm sure you've used a lot of them over the years.
+                Physical notebooks are not about to be replaced just yet.
+                It&apos;s still a big part of our daily productivity tools. Just
+                like me, i&apos;m sure you&apos;ve used a lot of them over the
+                years.
               </p>
               <p>
                 Iokeep is a great alternative which allows you to create
@@ -101,9 +102,10 @@ export default function Home() {
 
             <AppArticle title="Multi-Device support">
               <p>
-                We've all been there. You can take notes on your mac but can't
-                view or edit them on your android ? you can use the Samsung
-                notes app on your phone but can't access it on your PC ?{" "}
+                We&apos;ve all been there. You can take notes on your mac but
+                can&apos;t view or edit them on your android ? you can use the
+                Samsung notes app on your phone but can&apos;t access it on your
+                PC ?{" "}
               </p>
               <p>
                 Iokeep is a full stack web app that can be accessible from a

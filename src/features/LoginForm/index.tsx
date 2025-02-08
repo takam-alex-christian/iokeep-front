@@ -20,7 +20,7 @@ interface FormState {
   password: FormTextInputType;
 }
 
-export default function () {
+export default function LoginForm() {
   const initialTextInputData = {
     value: "",
     isInvalid: false,
