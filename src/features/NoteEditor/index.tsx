@@ -311,7 +311,7 @@ function CustomToolBar(props: {
   return (
     <div className="flex flex-row gap-2 justify-between p-2 bg-default/10 rounded-t-xl">
       <div className="flex flex-row flex-grow gap-6">
-        <div className="flex flex-row gap-0 bg-default/20 rounded-xl">
+        <div className="flex flex-row gap-0 items-center bg-default/20 rounded-xl">
           <ToolButton onPress={undoButtonHandler}>
             <FontAwesomeIcon icon={faRotateBackward} />
           </ToolButton>
@@ -483,17 +483,16 @@ function TextEditor(props: {
   };
 
   return (
-    <div className="custom-container rounded-3xl overflow-clip flex flex-col flex-grow  ">
+    <div className="custom-container rounded-3xl overflow-hidden flex flex-col flex-grow  ">
       {/* lexical editor */}
       <LexicalComposer initialConfig={initialConfig}>
-        <div className=" flex-grow flex flex-col gap-0 shadow-sm rounded-xl">
-          {props.isEditable && (
-            <CustomToolBar
-              _id={props._id}
-              customEditorState={customEditorState}
-            />
-          )}
-
+        {props.isEditable && (
+          <CustomToolBar
+            _id={props._id}
+            customEditorState={customEditorState}
+          />
+        )}
+        <div className=" flex-grow flex overflow-y-auto  flex-col gap-0 shadow-sm rounded-xl">
           {/* <Divider orientation="horizontal" /> */}
           {/* <Divider orientation="horizontal" /> */}
           <div className=" relative flex flex-col flex-grow py-2 px-6">
