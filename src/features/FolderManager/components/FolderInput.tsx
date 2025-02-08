@@ -41,7 +41,7 @@ interface FolderInputProps {
   };
 }
 
-export default function (props: FolderInputProps) {
+export default function FolderInput(props: FolderInputProps) {
   const [formState, setFormState] = useState<FormStateType>({
     foldername: {
       value: props.rename ? props.rename.initialValue : "",
@@ -57,7 +57,11 @@ export default function (props: FolderInputProps) {
 
   useEffect(() => {
     if (formState.foldername.isEngaged) validateFolderName();
-  }, [formState.foldername.value]);
+  }, [
+    formState.foldername.value,
+    validateFolderName,
+    formState.foldername.isEngaged,
+  ]);
 
   function folderNameChangeHandler(value: string) {
     setFormState((prevState) => {

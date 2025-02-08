@@ -36,7 +36,7 @@ function folderManagerReducer(
   }
 }
 
-export default function () {
+export default function FolderManager() {
   const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext);
 
   const [folderManagerState, folderManagerDispatch] = useReducer(

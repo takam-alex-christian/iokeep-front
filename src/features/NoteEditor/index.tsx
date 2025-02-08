@@ -356,7 +356,7 @@ function CustomToolBar(props: {
                     <ModalHeader>Copy Link</ModalHeader>
                     <ModalBody>
                       <p>
-                        You can share this link with your friends. They'll
+                        You can share this link with your friends. They&apos;ll
                         probably enjoy reading through this note
                       </p>
                       <div className="bg-primary-50 p-2 w-full rounded-xl">
@@ -502,7 +502,7 @@ function TextEditor(props: {
               }
               placeholder={
                 <div className="absolute top-8 left-6 z-10 text-neutral-400">
-                  Don't stop writing...
+                  Don&apos;t stop writing...
                 </div>
               }
               ErrorBoundary={LexicalErrorBoundary}

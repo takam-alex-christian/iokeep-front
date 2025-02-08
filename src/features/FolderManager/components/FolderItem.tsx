@@ -30,7 +30,7 @@ type FolderItemInternalStateType = {
   isDragEntered: boolean;
 };
 
-export default function (props: FolderDataType) {
+export default function FolderItem(props: FolderDataType) {
   const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext);
 
   const { folderData, isLoading, error, mutate: mutateFolders } = useFolders();

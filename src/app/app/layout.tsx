@@ -1,18 +1,16 @@
 "use client";
 
-import React, { useReducer, useRef, useEffect } from "react";
+import React, { useReducer } from "react";
 
 import { initialLiveData, liveDataContext } from "@/contexts/liveDataContext";
 
 import liveDataReducer from "@/lib/liveDataReducer";
 
-import { LiveDataDispatchAction, LiveDataState } from "@/types";
-
-export default function ({ children }: { children: React.ReactNode }) {
-  const [liveAppData, liveAppDataDispatch] = useReducer<
-    React.Reducer<LiveDataState, LiveDataDispatchAction>,
-    React.AnyActionArg
-  >(liveDataReducer, initialLiveData);
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const [liveAppData, liveAppDataDispatch] = useReducer(
+    liveDataReducer,
+    initialLiveData
+  );
 
   return (
     <liveDataContext.Provider value={{ liveAppData, liveAppDataDispatch }}>

@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 
 import { useTheme } from "next-themes";
 
-export default function () {
+export default function NavbarFeature() {
   const router = useRouter();
 
   const { theme: preferedTheme, setTheme } = useTheme();

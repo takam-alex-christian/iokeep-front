@@ -10,7 +10,7 @@ import { useContext, useEffect } from "react";
 import NoteItem from "./NoteItem";
 import NoteSkeleton from "./NoteSkeleton";
 
-export default function () {
+export default function NotesContainer() {
   const { liveAppData, liveAppDataDispatch } = useContext(liveDataContext);
 
   const { isLoading: areFoldersLoading } = useFolders();

@@ -27,7 +27,7 @@ interface FormState {
   };
 }
 
-export default function () {
+export default function SignupForm() {
   const [formState, setFormState] = useState<FormState>({
     username: {
       value: "",
