@@ -14,7 +14,7 @@ import {
   DropdownItem,
   Spacer,
 } from "@heroui/react";
-import { createFolder, renameFolder, useFolders } from "@/lib/folderUtils";
+import { createFolder, updateFolder, useFolders } from "@/lib/folderUtils";
 import { FolderManagerReducerActionType } from "../types";
 import { FolderItemInternalStateType } from "./FolderItem";
 import { liveDataContext } from "@/contexts/liveDataContext";
@@ -57,11 +57,7 @@ export default function FolderInput(props: FolderInputProps) {
 
   useEffect(() => {
     if (formState.foldername.isEngaged) validateFolderName();
-  }, [
-    formState.foldername.value,
-    validateFolderName,
-    formState.foldername.isEngaged,
-  ]);
+  }, [formState.foldername.value]);
 
   function folderNameChangeHandler(value: string) {
     setFormState((prevState) => {
@@ -140,47 +136,47 @@ export default function FolderInput(props: FolderInputProps) {
     }
 
     if (props.rename) {
-      renameFolder(props.rename._id, formState.foldername.value).then(
-        (jsonResponse) => {
-          console.log(jsonResponse);
-          if (!jsonResponse.error) {
-            if (jsonResponse.success) {
-              //mutate updated folder
-              let foldersCopy = [...folderData];
-              let updatedFolderId = foldersCopy.findIndex((eachFolder) => {
-                return eachFolder._id == props.rename?._id;
-              });
-
-              foldersCopy[updatedFolderId].folderName =
-                formState.foldername.value;
-
-              mutateFolders(foldersCopy);
-
-              //cause a rerender by setting selected folder
-              liveAppDataDispatch({
-                type: "changedSelectedFolder",
-                payload: { folderId: liveAppData.selectedFolderId! },
-              }); //solved the issue of none changing display foldernames
-
-              props.rename?.setCallerItemState((prevState) => {
-                return { ...prevState, isRenamed: false };
-              });
-            } else {
-            }
-          } else {
-            setFormState((prevState) => {
-              return {
-                ...prevState,
-                foldername: {
-                  ...prevState.foldername,
-                  errorMessage: jsonResponse.error!.message,
-                  isInvalid: true,
-                },
-              };
+      updateFolder(props.rename._id, {
+        folderName: formState.foldername.value,
+      }).then((jsonResponse) => {
+        console.log(jsonResponse);
+        if (!jsonResponse.error) {
+          if (jsonResponse.success) {
+            //mutate updated folder
+            let foldersCopy = [...folderData];
+            let updatedFolderId = foldersCopy.findIndex((eachFolder) => {
+              return eachFolder._id == props.rename?._id;
             });
+
+            foldersCopy[updatedFolderId].folderName =
+              formState.foldername.value;
+
+            mutateFolders(foldersCopy);
+
+            //cause a rerender by setting selected folder
+            liveAppDataDispatch({
+              type: "changedSelectedFolder",
+              payload: { folderId: liveAppData.selectedFolderId! },
+            }); //solved the issue of none changing display foldernames
+
+            props.rename?.setCallerItemState((prevState) => {
+              return { ...prevState, isRenamed: false };
+            });
+          } else {
           }
+        } else {
+          setFormState((prevState) => {
+            return {
+              ...prevState,
+              foldername: {
+                ...prevState.foldername,
+                errorMessage: jsonResponse.error!.message,
+                isInvalid: true,
+              },
+            };
+          });
         }
-      );
+      });
     }
   }
 
