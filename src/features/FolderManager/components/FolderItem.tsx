@@ -8,6 +8,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Tooltip,
 } from "@heroui/react";
 
 import { useAnimate, motion } from "framer-motion";
@@ -18,11 +19,12 @@ import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 
 import { liveDataContext } from "@/contexts/liveDataContext";
 import { FolderDataType } from "@/types";
-import { deleteFolder, useFolders } from "@/lib/folderUtils";
+import { deleteFolder, updateFolder, useFolders } from "@/lib/folderUtils";
 import FolderInput from "./FolderInput";
 import SlidersHorizontalIcon from "@/assets/sliders-horizontal-stroke-rounded";
 import MenuTwoLineIcon from "@/assets/menu-two-line-stroke-rounded";
 import { updateNote, useNotes } from "@/lib/noteUtils";
+import { mutateArrayUtil } from "@/lib/utils";
 
 type FolderItemInternalStateType = {
   isHovered: boolean;
@@ -73,6 +75,34 @@ export default function FolderItem(props: FolderDataType) {
     setItemState((prevState) => {
       return { ...prevState, isRenamed: true };
     });
+  }
+  useEffect(() => {
+    console.log(folderData);
+  }, [folderData]);
+
+  function folderPublishHandler() {
+    updateFolder(props._id, { isPublic: !props.isPublic }).then(
+      (jsonResponse) => {
+        if (!jsonResponse.error) {
+          mutateArrayUtil<FolderDataType>(
+            props._id,
+            mutateFolders,
+            folderData,
+            {
+              isPublic: !props.isPublic,
+            }
+          );
+        } else {
+          // mutateArrayUtil<FolderDataType>(
+          //   props._id,
+          //   mutateFolders,
+          //   folderData,
+          //   { isPublic: !props.isPublic }
+          // );
+          // inform user of failure to publish note
+        }
+      }
+    );
   }
 
   function folderDeleteHandler() {
@@ -243,24 +273,34 @@ export default function FolderItem(props: FolderDataType) {
       ></div>
       {!itemState.isRenamed && (
         <>
-          <button
-            onClick={folderItemPressHandler}
-            className={` overflow-hidden w-full hover:bg-none focus-visible:outline-none`}
+          <Tooltip
+            content={
+              props.isPublic
+                ? "This folder is public"
+                : "This Folder is private"
+            }
           >
-            <div className=" flex flex-row items-center gap-2">
-              <FontAwesomeIcon icon={faFolder} />
+            <button
+              onClick={folderItemPressHandler}
+              className={` overflow-hidden w-full hover:bg-none focus-visible:outline-none`}
+            >
+              <div className=" flex flex-row items-center gap-2">
+                <FontAwesomeIcon icon={faFolder} />
 
-              <div className="flex flex-row w-full justify-between">
-                <span className="shrink text-ellipsis whitespace-nowrap overflow-hidden ">
-                  {props.folderName}
-                </span>
+                <div className="flex flex-row w-full justify-between">
+                  <span className="shrink text-ellipsis whitespace-nowrap overflow-hidden ">
+                    {props.folderName}
+                  </span>
 
-                <span className=" shrink-0 text-xs w-fit py-1 px-2">
-                  {props.size && <span>{props.size}</span>}
-                </span>
+                  <span className=" shrink-0 text-xs w-fit py-1 px-2">
+                    {props.size && <span>{props.size}</span>}
+                  </span>
+                </div>
               </div>
-            </div>
-          </button>
+            </button>
+          </Tooltip>
+
+          {/* add modal to copy folder link */}
 
           {/* <motion.div></motion.div> */}
 
@@ -285,6 +325,9 @@ export default function FolderItem(props: FolderDataType) {
               >
                 <DropdownItem key={"edit"} onPress={folderRenameHandler}>
                   Rename
+                </DropdownItem>
+                <DropdownItem key={"publish"} onPress={folderPublishHandler}>
+                  {props.isPublic ? "Unpublish" : "Publish"}
                 </DropdownItem>
                 <DropdownItem
                   onPress={folderDeleteHandler}
