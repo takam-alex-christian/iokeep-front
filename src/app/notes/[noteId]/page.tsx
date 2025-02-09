@@ -3,6 +3,8 @@ import { ReadOnlyEditor } from "@/features/NoteEditor";
 import Footer from "@/layouts/Footer";
 import { NoteItemDataType } from "@/types";
 
+import { beUrl } from "@/lib/config";
+
 export default async function NoteReaderPage({
   params,
 }: {
@@ -12,7 +14,7 @@ export default async function NoteReaderPage({
 
   let noteData: NoteItemDataType | null = null;
   //fetch the note and return it
-  await fetch(`${process.env.BE_URL}/notes/${noteId}`)
+  await fetch(`${beUrl}/notes/${noteId}`)
     .then((res) => res.json())
     .then((jsonResponse) => {
       if (!jsonResponse.error) {
