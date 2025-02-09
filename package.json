@@ -17,6 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@heroui/react": "^2.6.14",
     "@lexical/react": "^0.12.6",
+    "@vercel/analytics": "^1.4.1",
     "lexical": "^0.12.6",
     "motion": "^12.0.11",
     "next": "15.1.6",
