@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "test": " next build && NODE_ENV=test next start",
+    "dev": "NODE_ENV=development next dev  --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production next start",
     "lint": "next lint"
   },
   "dependencies": {

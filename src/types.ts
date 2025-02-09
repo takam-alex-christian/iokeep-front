@@ -19,6 +19,7 @@ type FolderDataType = {
   folderName: string;
   creationDate: string;
   size?: number;
+  isPublic: boolean;
 };
 
 type AuthJsonResponse = {
