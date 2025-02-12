@@ -7,6 +7,8 @@ import { Input, Button, Link } from "@heroui/react";
 import { loginRequest } from "@/lib/authUtils";
 
 import { useRouter } from "next/navigation";
+import LoadingIndicator from "@/components/LoadingIndicator";
+import FormButton from "@/components/FormButton";
 
 interface FormTextInputType {
   value: string;
@@ -18,6 +20,7 @@ interface FormTextInputType {
 interface FormState {
   username: FormTextInputType;
   password: FormTextInputType;
+  isLoading: boolean;
 }
 
 export default function LoginForm() {
@@ -31,6 +34,7 @@ export default function LoginForm() {
   const [formState, setFormState] = useState<FormState>({
     username: initialTextInputData,
     password: initialTextInputData,
+    isLoading: false,
   });
 
   const router = useRouter();
@@ -96,6 +100,11 @@ export default function LoginForm() {
   function formSubmitHandler(e: React.FormEvent) {
     e.preventDefault();
 
+    //set form to loading
+    setFormState((prevState) => {
+      return { ...prevState, isLoading: true };
+    });
+
     //validate inputs
 
     //initiate request
@@ -104,21 +113,25 @@ export default function LoginForm() {
       password: formState.password.value,
     })
       .then((jsonResponse) => {
+        setFormState((prevState) => {
+          return { ...prevState, isLoading: false };
+        });
+
         if (process.env.NODE_ENV === "development")
           console.log(`loginRequest Response ${jsonResponse}`);
 
         if (jsonResponse.error) {
-          alert(jsonResponse.error.message);
+          console.error(jsonResponse.error.message);
         } else {
           if (jsonResponse.success) {
             router.replace("/app");
           } else {
-            alert(jsonResponse.info);
+            console.error(jsonResponse.info);
           }
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   }
   return (
@@ -141,6 +154,8 @@ export default function LoginForm() {
               size="lg"
               autoFocus
               autoComplete="username"
+              //disabled
+              isDisabled={formState.isLoading}
             />
             <div className="flex flex-row justify-end pt-2 pb-0">
               <Link href={"#"}>password forgoten ?</Link>
@@ -157,12 +172,12 @@ export default function LoginForm() {
               errorMessage={formState.password.errorMessage}
               size="lg"
               autoComplete="password"
+              //disabled
+              isDisabled={formState.isLoading}
             />
           </div>
 
-          <Button size="lg" color="primary" variant="solid" type="submit">
-            Log in
-          </Button>
+          <FormButton label="Log in" isLoading={formState.isLoading} />
         </div>
       </form>
       <div className="flex flex-row justify-center items-center gap-2 px-2 py-4">

@@ -5,6 +5,7 @@ import { Input, Button, Link, user } from "@heroui/react";
 import { signupRequest } from "@/lib/authUtils";
 
 import { useRouter } from "next/navigation";
+import FormButton from "@/components/FormButton";
 
 interface FormState {
   username: {
@@ -25,6 +26,7 @@ interface FormState {
     errorMessage: string;
     isEngaged: boolean;
   };
+  isLoading: boolean;
 }
 
 export default function SignupForm() {
@@ -47,6 +49,7 @@ export default function SignupForm() {
       errorMessage: "",
       isEngaged: false,
     },
+    isLoading: false,
   });
 
   const router = useRouter();
@@ -158,17 +161,23 @@ export default function SignupForm() {
     e.preventDefault();
 
     //activate a loading state
+    setFormState((prevState) => {
+      return { ...prevState, isLoading: true };
+    });
 
     signupRequest({
       username: formState.username.value,
       password: formState.password.value,
     })
       .then((jsonResponse) => {
-        if (jsonResponse.error) alert(jsonResponse.error.message);
+        setFormState((prevState) => {
+          return { ...prevState, isLoading: false };
+        });
+        if (jsonResponse.error) console.error(jsonResponse.error.message);
         else {
           if (jsonResponse.success) router.push("/login");
           //communicate to the user that they just singed up and should login to access app
-          else alert(jsonResponse.info);
+          else console.log(jsonResponse.info);
         }
       })
       .catch((err) => {
@@ -220,9 +229,7 @@ export default function SignupForm() {
             />
           </div>
 
-          <Button type="submit" size="lg" color="primary" variant="solid">
-            Sign Up
-          </Button>
+          <FormButton isLoading={formState.isLoading} label="Sign Up" />
         </div>
       </form>
       <div className="flex flex-row gap-2 px-2 py-4 justify-center items-center">
