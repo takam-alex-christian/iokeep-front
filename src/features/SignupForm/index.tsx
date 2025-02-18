@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Input, Button, Link, user } from "@heroui/react";
+import { Input, Button, Link, user, Alert } from "@heroui/react";
 import { signupRequest } from "@/lib/authUtils";
 
 import { useRouter } from "next/navigation";
 import FormButton from "@/components/FormButton";
+import { AnimatePresence, motion } from "motion/react";
 
 interface FormState {
   username: {
@@ -27,6 +28,7 @@ interface FormState {
     isEngaged: boolean;
   };
   isLoading: boolean;
+  beAlert: string;
 }
 
 export default function SignupForm() {
@@ -50,6 +52,7 @@ export default function SignupForm() {
       isEngaged: false,
     },
     isLoading: false,
+    beAlert: "",
   });
 
   const router = useRouter();
@@ -65,6 +68,16 @@ export default function SignupForm() {
     formState.password.value,
     formState.confirmPassword.value,
   ]);
+
+  useEffect(() => {
+    if (formState.beAlert.length > 0) {
+      setTimeout(() => {
+        setFormState((prevState) => {
+          return { ...prevState, beAlert: "" };
+        });
+      }, 2000);
+    }
+  }, [formState.beAlert]);
 
   function usernameChangeHandler(value: string) {
     setFormState((prevState: FormState) => {
@@ -173,8 +186,12 @@ export default function SignupForm() {
         setFormState((prevState) => {
           return { ...prevState, isLoading: false };
         });
-        if (jsonResponse.error) console.error(jsonResponse.error.message);
-        else {
+        if (jsonResponse.error) {
+          // console.error(jsonResponse.error.message);
+          setFormState((prevState) => {
+            return { ...prevState, beAlert: jsonResponse.error?.message! };
+          });
+        } else {
           if (jsonResponse.success) router.push("/login");
           //communicate to the user that they just singed up and should login to access app
           else console.log(jsonResponse.info);
@@ -237,6 +254,19 @@ export default function SignupForm() {
         <Link href={"/login"} showAnchorIcon={true}>
           Log in
         </Link>
+      </div>
+      <div>
+        <AnimatePresence>
+          {formState.beAlert.length != 0 && (
+            <motion.div
+              initial={{ opacity: 0, height: "0px" }}
+              animate={{ opacity: 1, height: "40px" }}
+              exit={{ opacity: 0, height: "0px" }}
+            >
+              <Alert description={formState.beAlert} color="danger" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
