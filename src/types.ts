@@ -30,6 +30,10 @@ type AuthJsonResponse = {
   timeStamp: number;
 };
 
+type UserAuthJsonResponseType = Pick<AuthJsonResponse, "error" | "success"> & {
+  userData: { username: string } | null;
+};
+
 interface NoteItemDataType {
   _id: string;
   folderId: string;
@@ -45,6 +49,7 @@ export type {
   LiveDataState,
   LiveDataDispatchAction,
   AuthJsonResponse,
+  UserAuthJsonResponseType,
   FolderDataType,
   NoteItemDataType,
 };
