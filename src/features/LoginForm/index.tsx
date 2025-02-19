@@ -2,12 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 
-import { Input, Button, Link, Alert } from "@heroui/react";
+import { Input, Link, Alert } from "@heroui/react";
 
 import { loginRequest } from "@/lib/authUtils";
 
 import { useRouter } from "next/navigation";
-import LoadingIndicator from "@/components/LoadingIndicator";
 import FormButton from "@/components/FormButton";
 import { AnimatePresence, motion } from "motion/react";
 
@@ -139,10 +138,14 @@ export default function LoginForm() {
             return { ...prevState, beAlert: jsonResponse.error?.message! };
           });
         } else {
-          if (jsonResponse.success) {
-            router.replace("/app");
-          } else {
-            console.error(jsonResponse.info);
+          if (jsonResponse.success && jsonResponse.userData) {
+            window.localStorage.clear();
+
+            window.localStorage.setItem(
+              "username",
+              jsonResponse.userData.username
+            );
+            router.push(`/app`);
           }
         }
       })
