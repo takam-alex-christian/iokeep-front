@@ -4,38 +4,17 @@ import Link from "next/link";
 
 import V2Logo from "@/assets/logo.svg";
 
-import { Button, Switch } from "@heroui/react";
+import { Button } from "@heroui/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faRightFromBracket,
-  faCircleHalfStroke,
-} from "@fortawesome/free-solid-svg-icons";
-import { logoutRequest } from "@/lib/authUtils";
+import { faCircleHalfStroke } from "@fortawesome/free-solid-svg-icons";
 
-import { useRouter } from "next/navigation";
+import ProfileManager from "@/features/ProfileManager";
 
 import { useTheme } from "next-themes";
 
 export default function NavbarFeature() {
-  const router = useRouter();
-
   const { theme: preferedTheme, setTheme } = useTheme();
-
-  function logoutButtonHandler() {
-    logoutRequest().then((jsonResponse) => {
-      if (jsonResponse.error) {
-        //maybe show a modal to communicate the error with user for improved user experience
-        alert(jsonResponse.error.message);
-      } else {
-        if (jsonResponse.success) {
-          router.replace("/login");
-        } else {
-          alert(jsonResponse.info);
-        }
-      }
-    });
-  }
 
   function selectedThemeChangeHandler() {
     // let currentTheme = window.localStorage.getItem("iokeepSelectedTheme");
@@ -72,14 +51,7 @@ export default function NavbarFeature() {
           >
             <FontAwesomeIcon icon={faCircleHalfStroke} />
           </Button>
-          <Button
-            onPress={logoutButtonHandler}
-            variant="flat"
-            color="default"
-            isIconOnly
-          >
-            <FontAwesomeIcon icon={faRightFromBracket} />
-          </Button>
+          <ProfileManager />
         </div>
       </div>
     </header>
