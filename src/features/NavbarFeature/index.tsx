@@ -30,7 +30,7 @@ export default function NavbarFeature() {
 
   return (
     <header className="custom-navbar-bg px-2 py-4 flex flex-row justify-center ">
-      <div className="w-4/5 flex flex-row justify-between items-center ">
+      <div className="w-full px-10 flex flex-row justify-between items-center ">
         {/* logo */}
         <Link href={"/app"} className="flex flex-row gap-0 items-center">
           <Image width={48} src={V2Logo} alt={"iokeep v2 logo"} />

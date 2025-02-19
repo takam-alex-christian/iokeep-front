@@ -61,7 +61,7 @@ export default function NotesContainer() {
   return (
     // <></>
     <ScrollShadow className="h-full">
-      <div className="py-4 px-4 flex flex-col h-full  gap-0 ">
+      <div className="py-4 px-4 flex flex-col h-full  gap-1 ">
         {!areNotesLoading &&
           !areFoldersLoading &&
           notesData &&

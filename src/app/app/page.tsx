@@ -38,7 +38,7 @@ export default function LandingPage() {
     <main className="custom-bg-image flex flex-col gap-6 h-screen overflow-hidden ">
       <NavbarFeature />
       <div className="flex-grow flex flex-row  overflow-hidden justify-center">
-        <div className="w-4/5 grid h-full overflow-hidden  grid-cols-5 gap-8">
+        <div className="w-full px-10 grid h-full overflow-hidden  grid-cols-5 gap-8">
           <div className=" col-span-1">
             <FolderManager />
           </div>

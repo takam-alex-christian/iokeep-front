@@ -120,7 +120,7 @@ export default function FolderManager() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                   >
-                    <ul className="flex flex-col gap-0">
+                    <ul className="flex flex-col gap-1">
                       {folderData.map((eachFolder, i) => {
                         return (
                           <li key={eachFolder._id}>

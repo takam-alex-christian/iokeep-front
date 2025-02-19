@@ -70,12 +70,6 @@ export default function Home() {
           <div className="max-w-screen-sm flex flex-col gap-10 py-8">
             <AppArticle title="A digital Notebook">
               <p>
-                Physical notebooks are not about to be replaced just yet.
-                It&apos;s still a big part of our daily productivity tools. Just
-                like me, i&apos;m sure you&apos;ve used a lot of them over the
-                years.
-              </p>
-              <p>
                 Iokeep is a great alternative which allows you to create
                 multiple notebooks or folders within a single account. These
                 folder can then be populated with contextual notes by your own
@@ -88,11 +82,6 @@ export default function Home() {
 
             <AppArticle title="Powered by the Cloud">
               <p>
-                While a lot of other note taking apps really just store your
-                notes locally just like your conventional paper notebook, iokeep
-                takes a different approach.
-              </p>
-              <p>
                 iokeep stores all your notes on a remote server. This not only
                 allows you to access them across devices but also shields you
                 from potential issues with a particular node be it a compromised
@@ -101,12 +90,6 @@ export default function Home() {
             </AppArticle>
 
             <AppArticle title="Multi-Device support">
-              <p>
-                We&apos;ve all been there. You can take notes on your mac but
-                can&apos;t view or edit them on your android ? you can use the
-                Samsung notes app on your phone but can&apos;t access it on your
-                PC ?{" "}
-              </p>
               <p>
                 Iokeep is a full stack web app that can be accessible from a
                 browser, be it on your phone or your pc irrespective of your
