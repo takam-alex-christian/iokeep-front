@@ -10,12 +10,25 @@ import {
 } from "@heroui/react";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function ProfileManager() {
   const router = useRouter();
 
-  const storedUsername = window.localStorage.getItem("username");
+  const [profileState, setProfileState] = useState<{
+    username: string;
+  }>({
+    username: "",
+  });
+
+  useEffect(() => {
+    setProfileState((prevState) => {
+      return {
+        ...prevState,
+        username: window.localStorage.getItem("username")!,
+      };
+    });
+  }, []);
 
   function logoutButtonHandler() {
     logoutRequest().then((jsonResponse) => {
@@ -37,7 +50,7 @@ function ProfileManager() {
       <Dropdown>
         <DropdownTrigger>
           <Button className="hover:bg-primary-100 hover:text-primary-900 bg-default-200">
-            {storedUsername}
+            {profileState.username ? profileState.username : "Loading..."}
           </Button>
         </DropdownTrigger>
         <DropdownMenu>
