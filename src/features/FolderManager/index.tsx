@@ -86,8 +86,8 @@ export default function FolderManager() {
   }
 
   return (
-    <div className="custom-container rounded-3xl p-2">
-      <Accordion defaultExpandedKeys={["0"]}>
+    <div className="custom-container rounded-3xl p-2 overflow-x-hidden">
+      <Accordion defaultExpandedKeys={["0"]} >
         <AccordionItem
           // classNames={{ title: "" }}
           key={0}
