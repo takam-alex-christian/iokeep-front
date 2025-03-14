@@ -8,14 +8,16 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Tooltip,
 } from "@heroui/react";
 
-import { useAnimate, motion } from "framer-motion";
+import {HugeiconsIcon} from "@hugeicons/react"
+import {Folder01Icon, FolderShared02Icon} from "@hugeicons/core-free-icons"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFolder } from "@fortawesome/free-regular-svg-icons";
-import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+import { useAnimate, motion } from "framer-motion";
+//
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faFolder } from "@fortawesome/free-regular-svg-icons";
+// import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
 
 import { liveDataContext } from "@/contexts/liveDataContext";
 import { FolderDataType } from "@/types";
@@ -273,19 +275,17 @@ export default function FolderItem(props: FolderDataType) {
       ></div>
       {!itemState.isRenamed && (
         <>
-          <Tooltip
-            content={
-              props.isPublic
-                ? "This folder is public"
-                : "This Folder is private"
-            }
-          >
+
             <button
               onClick={folderItemPressHandler}
               className={` overflow-hidden w-full hover:bg-none focus-visible:outline-none`}
             >
               <div className=" flex flex-row items-center gap-2">
-                <FontAwesomeIcon icon={faFolder} />
+                {/*<FontAwesomeIcon icon={faFolder} />*/}
+                <HugeiconsIcon icon={props.isPublic? FolderShared02Icon: Folder01Icon} size={24}/>
+
+
+
 
                 <div className="flex flex-row w-full justify-between">
                   <span className="shrink text-ellipsis whitespace-nowrap overflow-hidden ">
@@ -298,7 +298,6 @@ export default function FolderItem(props: FolderDataType) {
                 </div>
               </div>
             </button>
-          </Tooltip>
 
           {/* add modal to copy folder link */}
 
