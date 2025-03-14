@@ -1,18 +1,13 @@
 import React, { useState, useEffect, SetStateAction, useContext } from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFolder } from "@fortawesome/free-regular-svg-icons";
 import {} from "@fortawesome/free-solid-svg-icons";
 
+import {HugeiconsIcon} from "@hugeicons/react"
+import {Folder01Icon} from "@hugeicons/core-free-icons";
+
 import {
-  Button,
   Input,
   Tooltip,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Spacer,
 } from "@heroui/react";
 import { createFolder, updateFolder, useFolders } from "@/lib/folderUtils";
 import { FolderManagerReducerActionType } from "../types";
@@ -206,7 +201,7 @@ export default function FolderInput(props: FolderInputProps) {
             // errorMessage={formState.foldername.errorMessage}
 
             startContent={
-              <FontAwesomeIcon className="text-base" icon={faFolder} />
+              <HugeiconsIcon icon={Folder01Icon} size={24}/>
             }
             placeholder="folder name"
             variant="flat"
