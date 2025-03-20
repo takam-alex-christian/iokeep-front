@@ -40,6 +40,9 @@ import { NoteItemDataType } from "@/types";
 import { useFolders } from "@/lib/folderUtils";
 import CustomToolBar, { CustomEditorStateType } from "./components/ToolBar";
 
+//sub-component import
+import EditorLoadingOverlay from "@/features/NoteEditor/components/EditorLoadingOverlay";
+
 const theme = {
   heading: {
     h1: "text-3xl font-medium my-2",
@@ -199,9 +202,11 @@ function ReadOnlyEditor(props: NoteItemDataType & { isEditable: boolean }) {
 export { NoteEditor, ReadOnlyEditor };
 
 export default function NoteEditor() {
-  const { noteData } = useSelectedNote();
+  const { noteData, isLoading: isSelectedNoteLoading } = useSelectedNote();
 
   return (
+      <>
+
     <TextEditor
       key={noteData?._id}
       _id={noteData?._id}
@@ -209,5 +214,7 @@ export default function NoteEditor() {
       editorState={noteData?.editorState}
       isPublic={noteData?.isPublic}
     />
+        <EditorLoadingOverlay isLoading={isSelectedNoteLoading} />
+      </>
   );
 }

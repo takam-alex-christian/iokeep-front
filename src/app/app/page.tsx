@@ -47,7 +47,7 @@ export default function LandingPage() {
               {/* noteManager */}
               <NoteManager />
             </div>
-            <div className="col-span-3 h-full overflow-hidden  flex-grow flex flex-col ">
+            <div className=" relative col-span-3 h-full overflow-hidden  flex-grow flex flex-col ">
               <NoteEditor />
             </div>
           </div>
