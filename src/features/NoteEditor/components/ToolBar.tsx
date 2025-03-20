@@ -1,6 +1,8 @@
 "use client";
 import { useContext, useReducer, useRef, useState } from "react";
 
+import {usePathname} from "next/navigation"
+
 //nextui imports
 import {
   Button,
@@ -147,6 +149,10 @@ function CustomToolBar(props: {
     onOpen: onShareModalOpen,
     onOpenChange: onShareModalOpenChange,
   } = useDisclosure();
+
+  // const pathName = usePathname()
+
+  const baseOrigin = window.location.origin;
 
   function boldButtonHandler() {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
@@ -398,7 +404,7 @@ function CustomToolBar(props: {
                           ref={shareInputRef}
                           className="min-w-20 w-full bg-transparent focus:outline-none"
                           readOnly
-                          value={`https://iokeep.com/notes/${props._id}`}
+                          value={`${(new URL("notes/" + props._id, baseOrigin)).toString() }`}
                         />
                       </div>
                       {/* <Button
