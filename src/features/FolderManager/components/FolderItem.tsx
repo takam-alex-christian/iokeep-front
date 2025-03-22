@@ -282,7 +282,9 @@ export default function FolderItem(props: FolderDataType) {
             >
               <div className=" flex flex-row items-center gap-2">
                 {/*<FontAwesomeIcon icon={faFolder} />*/}
+                <div className="shrink-0">
                 <HugeiconsIcon icon={props.isPublic? FolderShared02Icon: Folder01Icon} size={24}/>
+                </div>
 
 
 
