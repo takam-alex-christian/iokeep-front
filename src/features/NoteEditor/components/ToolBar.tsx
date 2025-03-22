@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useReducer, useRef, useState } from "react";
+import { useContext, useEffect, useReducer, useRef, useState } from "react";
 
 import {usePathname} from "next/navigation"
 
@@ -151,8 +151,11 @@ function CustomToolBar(props: {
   } = useDisclosure();
 
   // const pathName = usePathname()
+  const [baseOrigin, setBaseOrigin] = useState<string>("");
 
-  const baseOrigin = window.location.origin;
+  useEffect(()=>{
+    setBaseOrigin(window.location.origin);
+  }, [])
 
   function boldButtonHandler() {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
