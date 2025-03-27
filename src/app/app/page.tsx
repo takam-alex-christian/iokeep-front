@@ -27,7 +27,7 @@ export default function LandingPage() {
         .catch((err) => {
           console.log(err);
         });
-    }, 59000); // this time corresponds to the validity period of a token, ideally should be a few tens of seconds lower than the actual token validity period
+    }, 59000); // this time corresponds to the validity period of an access token, ideally should be a few tens of seconds lower than the actual token validity period
 
     return () => {
       clearInterval(gati);
