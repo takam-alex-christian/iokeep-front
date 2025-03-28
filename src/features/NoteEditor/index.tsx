@@ -1,6 +1,6 @@
 "use client";
 
-import { SetStateAction, useContext, useEffect, useRef, useState } from "react";
+import { SetStateAction, useContext, useEffect, useReducer, useRef, useState } from "react";
 
 import { liveDataContext } from "@/contexts/liveDataContext";
 
@@ -42,6 +42,8 @@ import CustomToolBar, { CustomEditorStateType } from "./components/ToolBar";
 
 //sub-component import
 import EditorLoadingOverlay from "@/features/NoteEditor/components/EditorLoadingOverlay";
+import { CustomNoteEditorContext, customEditorReducer, initialCustomNoteEditorState } from "./libs/customEditorContext";
+import StatusBar from "./components/StatusBar";
 
 const theme = {
   heading: {
@@ -136,6 +138,8 @@ function TextEditor(props: {
       isNoteDeleted: false,
     });
 
+
+
   const initialConfig = {
     editorState: props.editorState,
     editable: props.isEditable != undefined ? props.isEditable : true,
@@ -181,6 +185,7 @@ function TextEditor(props: {
             />
             <ClearEditorPlugin />
             <AutoClearEditorOnDelete />
+            <StatusBar />
           </>
         )}
       </LexicalComposer>
@@ -202,19 +207,22 @@ function ReadOnlyEditor(props: NoteItemDataType & { isEditable: boolean }) {
 export { NoteEditor, ReadOnlyEditor };
 
 export default function NoteEditor() {
+
   const { noteData, isLoading: isSelectedNoteLoading } = useSelectedNote();
+  
+  const [customNoteEditorState, customNoteEditorDispatch] = useReducer(customEditorReducer, initialCustomNoteEditorState)
 
   return (
-      <>
+      <CustomNoteEditorContext.Provider value={{customNoteEditorState: customNoteEditorState, customNoteEditorDispatch: customNoteEditorDispatch}}>
 
-    <TextEditor
-      key={noteData?._id}
-      _id={noteData?._id}
-      isEditable={true}
-      editorState={noteData?.editorState}
-      isPublic={noteData?.isPublic}
-    />
+        <TextEditor
+          key={noteData?._id}
+          _id={noteData?._id}
+          isEditable={true}
+          editorState={noteData?.editorState}
+          isPublic={noteData?.isPublic}
+        />
         <EditorLoadingOverlay isLoading={isSelectedNoteLoading} />
-      </>
+      </CustomNoteEditorContext.Provider>
   );
 }
