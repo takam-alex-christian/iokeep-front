@@ -29,14 +29,13 @@ function orderNotes(
     switch (orderType) {
       case "cd": {
         //algo to sort note by creation date
-        console.log(
+
           outputNoteArr.sort((a, b) => {
             return (
               -new Date(a.creationDate).getTime() +
               new Date(b.creationDate).getTime()
             );
           })
-        );
         break;
       }
       case "rcd": {
