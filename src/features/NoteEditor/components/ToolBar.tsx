@@ -59,6 +59,8 @@ import Copy01Icon from "@/assets/copy-01-stroke-rounded";
 import { NoteItemDataType } from "@/types";
 import { useFolders } from "@/lib/folderUtils";
 
+import { CustomNoteEditorContext } from "../libs/customEditorContext";
+
 function ToolButton(props: ButtonProps) {
   return (
     <Button
@@ -108,6 +110,7 @@ function toolBarReducer(
     }
   }
 }
+
 function CustomToolBar(props: {
   _id?: string;
   customEditorState: CustomEditorStateType;
@@ -152,6 +155,8 @@ function CustomToolBar(props: {
 
   // const pathName = usePathname()
   const [baseOrigin, setBaseOrigin] = useState<string>("");
+
+  const {customNoteEditorDispatch} = useContext(CustomNoteEditorContext)
 
   useEffect(()=>{
     setBaseOrigin(window.location.origin);
@@ -203,6 +208,8 @@ function CustomToolBar(props: {
 
     const editorState = JSON.stringify(editor.getEditorState().toJSON()); //this version of the editor state can be stringified and stored
 
+    customNoteEditorDispatch({type: "sync_state_changed", payload: "syncing"})
+    
     if (liveAppData.selectedFolderId && !props._id) {
       console.log(
         `note create description ${props.customEditorState.description}`
@@ -222,6 +229,8 @@ function CustomToolBar(props: {
                 editorState,
               } as Partial<NoteItemDataType>,
             ]);
+
+            customNoteEditorDispatch({type: "sync_state_changed", payload: "synced"})
 
             const folderDataCopy = folderData;
             const indexOfSelectedFolder = folderDataCopy.findIndex(
@@ -265,6 +274,8 @@ function CustomToolBar(props: {
             props.customEditorState.description;
 
           mutateNotesData(newNotes);
+          
+          customNoteEditorDispatch({type: "sync_state_changed", payload: "synced"})
         } else {
           console.log(
             `error while updating note \nserver says: ${jsonResponse.error.message}`
