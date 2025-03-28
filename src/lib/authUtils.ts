@@ -64,7 +64,7 @@ function signupRequest({
 function getAccessToken(): Promise<AuthJsonResponse> {
   return new Promise((resolve, reject) => {
     fetch(`/be/auth/access_token`, {
-      method: "POST",
+      method: "GET",
     })
       .then((res) => {
         resolve({ ...res.json() });
