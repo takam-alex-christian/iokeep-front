@@ -208,7 +208,7 @@ function CustomToolBar(props: {
 
     const editorState = JSON.stringify(editor.getEditorState().toJSON()); //this version of the editor state can be stringified and stored
 
-    customNoteEditorDispatch({type: "sync_state_changed", payload: "syncing"})
+    // customNoteEditorDispatch({type: "sync_state_changed", payload: "syncing"})
     
     if (liveAppData.selectedFolderId && !props._id) {
       console.log(
@@ -230,7 +230,7 @@ function CustomToolBar(props: {
               } as Partial<NoteItemDataType>,
             ]);
 
-            customNoteEditorDispatch({type: "sync_state_changed", payload: "synced"})
+            // customNoteEditorDispatch({type: "sync_state_changed", payload: "synced"})
 
             const folderDataCopy = folderData;
             const indexOfSelectedFolder = folderDataCopy.findIndex(
@@ -275,7 +275,7 @@ function CustomToolBar(props: {
 
           mutateNotesData(newNotes);
           
-          customNoteEditorDispatch({type: "sync_state_changed", payload: "synced"})
+          // customNoteEditorDispatch({type: "sync_state_changed", payload: "synced"})
         } else {
           console.log(
             `error while updating note \nserver says: ${jsonResponse.error.message}`
