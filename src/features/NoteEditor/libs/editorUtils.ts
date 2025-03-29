@@ -10,20 +10,29 @@ import { CustomEditorDispatchActions, CustomNoteEditorContext } from "./customEd
  * 
  */
 
-type SyncNoteUtilProps = {
-    noteId?: string, // when null, create new note
-    folderId?: string, // currently selected folder id. must be provided if noteId is not provided
+
+
+type CompulsoryEditorProps = {
     editorState: string, // stringified lexical editor state
     description: string[], // Text description of the note
 }
 
+type UpdateNoteProps = {noteId: string} & CompulsoryEditorProps
+
+type CreateNoteProps = {folderId: string} & CompulsoryEditorProps
+
+type SyncNoteUtilProps = UpdateNoteProps | CreateNoteProps
+
+// this is how we can use the type
+// let l: SyncNoteUtilProps = {noteId: "123", editorState: "123", description: ["123"]} //update note
+// let b: SyncNoteUtilProps = {folderId: "123", editorState: "123", description: ["123"]} //create note
 
 
 function syncNote(props: SyncNoteUtilProps): Promise<{success: boolean, error?: string}>{
     const {customNoteEditorDispatch} = useContext(CustomNoteEditorContext)
 
     return new Promise((resolve, reject) => {
-        if (props.noteId){
+        if ("noteId" in props){
             // update existing note
             customNoteEditorDispatch({type: "sync_state_changed", payload: {isSyncing: true}})
             //here we can set isSyncing to true
@@ -41,7 +50,7 @@ function syncNote(props: SyncNoteUtilProps): Promise<{success: boolean, error?: 
                 }
             })
 
-        } else if(props.folderId) {
+        } else if("folderId" in props){
             // create new note
             customNoteEditorDispatch({type: "sync_state_changed", payload: {isSyncing: true}})
             createNote({
