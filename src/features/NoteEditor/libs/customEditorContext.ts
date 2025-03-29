@@ -10,7 +10,7 @@ type CustomNoteEditorStateType = {
     isIdle: boolean,
 }
 
-type CustomEditorDispatchActions = {type: "sync_state_changed", payload: {isSyncing: boolean}}
+type CustomEditorDispatchActions = {type: "sync_state_changed", payload: {isSyncing: boolean}} | {type: "idle_state_changed", payload: {isIdle: boolean}}
 
 const initialCustomNoteEditorState: CustomNoteEditorStateType = {
     isSyncing: false,
@@ -29,6 +29,8 @@ function customEditorReducer(state: CustomNoteEditorStateType, action: CustomEdi
     switch (action.type) {
         case "sync_state_changed":
             return { ...state, isSyncing: action.payload.isSyncing }
+        case "idle_state_changed":
+            return { ...state, isIdle: action.payload.isIdle }
         default:
             return state
     }
