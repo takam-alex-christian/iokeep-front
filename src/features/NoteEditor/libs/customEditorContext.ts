@@ -35,4 +35,4 @@ function customEditorReducer(state: CustomNoteEditorStateType, action: CustomEdi
 }
 
 
-export {CustomNoteEditorContext, customEditorReducer, initialCustomNoteEditorState}
+export {CustomNoteEditorContext, customEditorReducer, initialCustomNoteEditorState, type CustomEditorDispatchActions}
