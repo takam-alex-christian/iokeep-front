@@ -7,7 +7,7 @@ function CustomLexicalOnChagePlugin(){
 
     const {customNoteEditorState, customNoteEditorDispatch} = useContext(CustomNoteEditorContext)
 
-    const idleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(createTimeout())
+    const idleTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null) // should be always be initialized to null and set on editor update
 
     function createTimeout(){
 
@@ -24,16 +24,13 @@ function CustomLexicalOnChagePlugin(){
 
             idleTimeoutRef.current && clearTimeout(idleTimeoutRef.current) // clear timeout if it exists
 
-            idleTimeoutRef.current = createTimeout() // create new timeout
-
             // set idle to false immediately
             customNoteEditorDispatch({type: "idle_state_changed", payload: {isIdle: false}})
 
+            idleTimeoutRef.current = createTimeout() // create new timeout
+
         })
 
-        return ()=>{
-            idleTimeoutRef.current && clearTimeout(idleTimeoutRef.current)
-        }
     }, [])
 
 
@@ -44,6 +41,8 @@ function CustomLexicalOnChagePlugin(){
             console.log("not idle")
         }
     }, [customNoteEditorState.isIdle])
+
+    return null
 }
 
 export {CustomLexicalOnChagePlugin}
