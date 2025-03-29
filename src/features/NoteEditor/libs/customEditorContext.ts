@@ -1,18 +1,18 @@
 import { ActionDispatch, createContext, Dispatch, SetStateAction } from "react";
 
-import { NoteSyncState } from "./types";
+
 
 
 
 
 type CustomNoteEditorStateType = {
-    syncState: NoteSyncState,
+    isSyncing: boolean,
 }
 
-type CustomEditorDispatchActions = {type: "sync_state_changed", payload: NoteSyncState}
+type CustomEditorDispatchActions = {type: "sync_state_changed", payload: {isSyncing: boolean}}
 
 const initialCustomNoteEditorState: CustomNoteEditorStateType = {
-    syncState: "idle",
+    isSyncing: false,
 }
 
 const CustomNoteEditorContext = createContext<{
@@ -26,7 +26,7 @@ const CustomNoteEditorContext = createContext<{
 function customEditorReducer(state: CustomNoteEditorStateType, action: CustomEditorDispatchActions): CustomNoteEditorStateType {
     switch (action.type) {
         case "sync_state_changed":
-            return { ...state, syncState: action.payload }
+            return { ...state, isSyncing: action.payload.isSyncing }
         default:
             return state
     }
