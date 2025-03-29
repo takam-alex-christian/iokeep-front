@@ -7,12 +7,14 @@ import { ActionDispatch, createContext, Dispatch, SetStateAction } from "react";
 
 type CustomNoteEditorStateType = {
     isSyncing: boolean,
+    isIdle: boolean,
 }
 
 type CustomEditorDispatchActions = {type: "sync_state_changed", payload: {isSyncing: boolean}}
 
 const initialCustomNoteEditorState: CustomNoteEditorStateType = {
     isSyncing: false,
+    isIdle: true,
 }
 
 const CustomNoteEditorContext = createContext<{
