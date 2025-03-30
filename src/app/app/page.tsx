@@ -18,9 +18,12 @@ function getAccessTokenFuction(){
     else {
       if (!jsonResponse.success) console.log(jsonResponse.info);
     }
+    //TODO: remove this console.log
     console.log("new auth token received");
   })
   .catch((err) => {
+    //TODO: remove this console.log
+    //TODO: handle the error
     console.log(err);
   });
 }
@@ -36,7 +39,7 @@ export default function LandingPage() {
     const gati = setInterval(() => {
       //get access token interval
       getAccessTokenFuction()
-    }, 59000); // this time corresponds to the validity period of an access token, ideally should be a few tens of seconds lower than the actual token validity period
+    }, 590000); // this time corresponds to the validity period of an access token, ideally should be a few tens of seconds lower than the actual token validity period
 
     return () => {
       clearInterval(gati);
