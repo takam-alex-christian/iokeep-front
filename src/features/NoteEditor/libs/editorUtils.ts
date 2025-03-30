@@ -1,7 +1,8 @@
 
 import {createNote, updateNote} from "@/lib/noteUtils"
-import { Dispatch, useContext } from "react"
-import { CustomEditorDispatchActions, CustomNoteEditorContext } from "./customEditorContext"
+// import { Dispatch, useContext } from "react"
+// import { CustomEditorDispatchActions, CustomNoteEditorContext } from "./customEditorContext"
+import { NoteItemDataType } from "@/types"
 /*
     this file contains utility functions for the editor
 */
@@ -28,13 +29,12 @@ type SyncNoteUtilProps = UpdateNoteProps | CreateNoteProps
 // let b: SyncNoteUtilProps = {folderId: "123", editorState: "123", description: ["123"]} //create note
 
 
-function syncNote(props: SyncNoteUtilProps): Promise<{success: boolean, error?: string}>{
-    const {customNoteEditorDispatch} = useContext(CustomNoteEditorContext)
+function syncNote(props: SyncNoteUtilProps): Promise<{success: boolean, error?: string, data?: Partial<Omit<NoteItemDataType, "_id">> & {_id: string}}>{
 
     return new Promise((resolve, reject) => {
         if ("noteId" in props){
             // update existing note
-            customNoteEditorDispatch({type: "sync_state_changed", payload: {isSyncing: true}})
+            
             //here we can set isSyncing to true
             updateNote({
                 _id: props.noteId,
@@ -42,7 +42,6 @@ function syncNote(props: SyncNoteUtilProps): Promise<{success: boolean, error?: 
                 description: props.description,
             }).then((jsonResponse)=>{
                 //set isSyncing to false
-                customNoteEditorDispatch({type: "sync_state_changed", payload: {isSyncing: false}})
                 if (jsonResponse.success){
                     resolve({success: true})
                 } else {
@@ -52,15 +51,14 @@ function syncNote(props: SyncNoteUtilProps): Promise<{success: boolean, error?: 
 
         } else if("folderId" in props){
             // create new note
-            customNoteEditorDispatch({type: "sync_state_changed", payload: {isSyncing: true}})
             createNote({
                 folderId: props.folderId,
                 editorState: props.editorState,
                 description: props.description,
             }).then((jsonResponse)=>{
-                customNoteEditorDispatch({type: "sync_state_changed", payload: {isSyncing: false}})
-                if (jsonResponse.success){
-                    resolve({success: true})
+
+                if (jsonResponse.success && !jsonResponse.error){
+                    resolve({success: true, data: jsonResponse.data})
                 } else {
                     reject({success: false, error: jsonResponse.error})
                 }
