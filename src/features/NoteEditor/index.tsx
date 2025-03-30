@@ -44,7 +44,7 @@ import CustomToolBar, { CustomEditorStateType } from "./components/ToolBar";
 import EditorLoadingOverlay from "@/features/NoteEditor/components/EditorLoadingOverlay";
 import { CustomNoteEditorContext, customEditorReducer, initialCustomNoteEditorState } from "./libs/customEditorContext";
 import StatusBar from "./components/StatusBar";
-import { CustomLexicalOnChagePlugin } from "./components/CustomLexicalOnChagePlugin";
+import { AutoSyncPlugin } from "./components/AutoSyncPlugin";
 
 const theme = {
   heading: {
@@ -186,7 +186,7 @@ function TextEditor(props: {
             />
             <ClearEditorPlugin />
             <AutoClearEditorOnDelete />
-            <CustomLexicalOnChagePlugin /> {/* custom lexical plugin that updates the idle state of the editor */}
+            <AutoSyncPlugin /> {/* custom lexical plugin that updates the idle state of the editor */}
             <StatusBar />
           </>
         )}

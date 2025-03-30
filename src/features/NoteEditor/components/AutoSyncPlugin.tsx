@@ -12,7 +12,7 @@ import { useNotes } from "@/lib/noteUtils";
 
 //ToDo rename this plugin to AutoSyncPlugin
 
-function CustomLexicalOnChagePlugin(){
+function AutoSyncPlugin(){
     const [editor] = useLexicalComposerContext()
 
     const {customNoteEditorState, customNoteEditorDispatch} = useContext(CustomNoteEditorContext)
@@ -186,4 +186,4 @@ function CustomLexicalOnChagePlugin(){
 }
 
 
-export {CustomLexicalOnChagePlugin, CustomLexicalOnChagePlugin as AutoSyncPlugin}
+export {AutoSyncPlugin}
